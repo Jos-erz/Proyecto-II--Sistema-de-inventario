@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignacion de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Asignacion de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Solicitud de Equipo</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="comp-solicitud">Número de solicitud <span class="req">*</span></label>
+                        <input type="text" id="comp-solicitud" name="comp-solicitud"
+                            placeholder="Correlativo de control" maxlength="15">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-fecha">Fecha de solicitud <span class="req">*</span></label>
+                        <input type="text" id="comp-fecha" name="comp-fecha" placeholder="Formato: dd/mm/aaaa"
+                            maxlength="10">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-estatus">Estatus <span class="req">*</span></label>
+                        <select name="comp-estatus">
+
+                            <option value="">Seleccionar...</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Aprobada">Aprobada</option>
+                            <option value="Rechazada">Rechazada</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-Descripcion">Descripción <span class="req">*</span></label>
+                        <input type="text" id="comp-Descripcion" name="comp-Descripcion"
+                            placeholder="Motivo o detalle del requerimiento" maxlength="255">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <form method="get" action="Departamento.html">
+            <div class="form-actions">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+        </form>
+        <form method="get" action="../../dashboard/index.html">
+            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </div>
+        </form>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+    </main>
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+</body>
+
+</html>

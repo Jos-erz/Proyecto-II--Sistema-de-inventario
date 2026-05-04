@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Diagnostico</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="tipo_falla">Tipo de falla <span class="req">*</span></label>
+                        <input type="text" id="tipo_falla" name="tipo_falla" placeholder="Hardware,Software, electrico"
+                            maxlength="20">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="hallazgo">Hallazgo <span class="req">*</span></label>
+                        <input type="text" id="hallazgo" name="hallazgo" placeholder="Observacion tecnica"
+                            maxlength="50">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="respuesta">Respuesta <span class="req">*</span></label>
+                        <textarea id="respuesta" name="respuesta" rows="3" placeholder="Acción tomada o solucion"
+                            maxlength="255"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="estatus_final">Estatus <span class="req">*</span></label>
+                        <input type="text" id="estatus_final" name="estatus_final"
+                            placeholder="Pendiente,En proceso, completado" maxlength="15">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <form method="post" action="Actividad.html">
+            <div class="form-actions">
+
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+
+        </form>
+        <form method="post" action="documento.html">
+
+            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </div>
+
+
+        </form>
+
+
+    </main>
+
+</body>
+
+</html>

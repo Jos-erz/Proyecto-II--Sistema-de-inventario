@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<!-- [Head] start -->
+
+<head>
+  @@include('../layouts/head-page-meta.html', {'title': 'Inicio'}) @@include('../layouts/head-css.html')
+</head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
+
+<body @@bodySetup>
+  @@include('../layouts/layout-vertical.html')
+
+  <!-- [ Main Content ] start -->
+  <div class="pc-container">
+    <div class="pc-content">
+      @@include('../layouts/breadcrumb.html', {'breadcrumb-item': 'Panel', 'breadcrumb-item-active': 'Inicio'})
+      <!-- [ Main Content ] start -->
+      <div class="row">
+
+
+
+
+
+
+        <!-- [ Recent Users ] start -->
+        <div class="col-xl-8 col-md-6">
+          <div class="card Recent-Users table-card">
+            <div class="card-header">
+              <h5>Ultimos Equipos Agregados</h5>
+            </div>
+            <div class="card-body px-0 py-3">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>Tipo</th>
+                      <th>Equipo / Marca</th>
+                      <th>Fecha de Ingreso</th>
+                      <th>Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="unread">
+                      <td>
+                        <div class="avtar avtar-s bg-light-primary"><i class="ph ph-desktop f-20"></i></div>
+                      </td>
+                      <td>
+                        <h6 class="mb-1">PC de Escritorio - VIT E2230</h6>
+                        <p class="m-0 text-muted">S/N: VIT-98237498</p>
+                      </td>
+                      <td>
+                        <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>03 MAY 10:30
+                        </h6>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="VIT E2230"
+                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                      </td>
+                    </tr>
+                    <tr class="unread">
+                      <td>
+                        <div class="avtar avtar-s bg-light-info"><i class="ph ph-laptop f-20"></i></div>
+                      </td>
+                      <td>
+                        <h6 class="mb-1">Laptop - Síragon NB-3100</h6>
+                        <p class="m-0 text-muted">S/N: SIR-NB31-293</p>
+                      </td>
+                      <td>
+                        <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>02 MAY 14:15
+                        </h6>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="Síragon NB-3100"
+                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                      </td>
+                    </tr>
+                    <tr class="unread">
+                      <td>
+                        <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
+                      </td>
+                      <td>
+                        <h6 class="mb-1">Laptop - Canaima Educativo (Docente)</h6>
+                        <p class="m-0 text-muted">S/N: CAN-DOC-5591</p>
+                      </td>
+                      <td>
+                        <h6 class="text-muted"><i class="ti ti-circle-filled text-danger f-10 m-r-15"></i>28 ABR 09:00
+                        </h6>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="Canaima Docente"
+                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                      </td>
+                    </tr>
+                    <tr class="unread">
+                      <td>
+                        <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
+                      </td>
+                      <td>
+                        <h6 class="mb-1">Laptop - Canaima Escolar</h6>
+                        <p class="m-0 text-muted">S/N: CAN-47892-56</p>
+                      </td>
+                      <td>
+                        <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>25 ABR 16:45
+                        </h6>
+                      </td>
+                      <td>
+                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="HP LaserJet Pro"
+                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- [ Recent Users ] end -->
+      </div>
+      <!-- [ Main Content ] end -->
+    </div>
+  </div>
+  <!-- [ Main Content ] end -->
+
+  <!-- Modal Detalles de Equipo -->
+  <div class="modal fade" id="equipmentModal" tabindex="-1" aria-labelledby="equipmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="equipmentModalLabel">Detalles del Equipo: <span id="modalEqName"
+              class="text-primary"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="comp-tab" data-bs-toggle="tab" data-bs-target="#comp-pane"
+                type="button" role="tab" aria-controls="comp-pane" aria-selected="true">Componentes Internos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="perif-tab" data-bs-toggle="tab" data-bs-target="#perif-pane" type="button"
+                role="tab" aria-controls="perif-pane" aria-selected="false">Periféricos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="hist-tab" data-bs-toggle="tab" data-bs-target="#hist-pane" type="button"
+                role="tab" aria-controls="hist-pane" aria-selected="false">Historial</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="comp-pane" role="tabpanel" aria-labelledby="comp-tab"
+              tabindex="0">
+              <table class="table table-bordered">
+                <tr>
+                  <th>Procesador</th>
+                  <td>Intel Core i5 (7ma Gen)</td>
+                </tr>
+                <tr>
+                  <th>Memoria RAM</th>
+                  <td>8GB DDR4</td>
+                </tr>
+                <tr>
+                  <th>Almacenamiento</th>
+                  <td>500GB HDD Sata</td>
+                </tr>
+                <tr>
+                  <th>Tarjeta Madre</th>
+                  <td>Biostar H110</td>
+                </tr>
+              </table>
+            </div>
+            <div class="tab-pane fade" id="perif-pane" role="tabpanel" aria-labelledby="perif-tab" tabindex="0">
+              <table class="table table-bordered">
+                <tr>
+                  <th>Monitor</th>
+                  <td>VIT 19" LED</td>
+                </tr>
+                <tr>
+                  <th>Teclado</th>
+                  <td>Teclado USB VIT Estándar</td>
+                </tr>
+                <tr>
+                  <th>Mouse</th>
+                  <td>Mouse Óptico USB Síragon</td>
+                </tr>
+                <tr>
+                  <th>Regulador</th>
+                  <td>Regulador de Voltaje 1200VA</td>
+                </tr>
+              </table>
+            </div>
+            <div class="tab-pane fade" id="hist-pane" role="tabpanel" aria-labelledby="hist-tab" tabindex="0">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Ingreso al Almacén Principal</div>
+                    Registrado por: Administrador
+                  </div>
+                  <span class="badge bg-primary rounded-pill">03 MAY</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Mantenimiento Preventivo</div>
+                    Limpieza de hardware y cambio de pasta térmica.
+                  </div>
+                  <span class="badge bg-warning text-dark rounded-pill">04 MAY</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Asignación de Equipo</div>
+                    Asignado a: Dpto. de Recursos Humanos
+                  </div>
+                  <span class="badge bg-success rounded-pill">Hoy</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  @@include('../layouts/footer-block.html')
+
+  <!-- [Page Specific JS] start -->
+  <!-- apexcharts js -->
+  <script src="../assets/js/plugins/apexcharts.min.js"></script>
+
+  <script src="../assets/js/plugins/jsvectormap.min.js"></script>
+  <script src="../assets/js/plugins/world.js"></script>
+
+  <script src="../assets/js/dashboard/dashboard-default.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var viewBtns = document.querySelectorAll('.view-details-btn');
+      viewBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var eqName = this.getAttribute('data-eq');
+          var modalName = document.getElementById('modalEqName');
+          if (modalName) modalName.textContent = eqName;
+        });
+      });
+    });
+  </script>
+  <!-- [Page Specific JS] end -->
+  @@include('../layouts/footer-js.html')
+</body>
+<!-- [Body] end -->
+
+</html>

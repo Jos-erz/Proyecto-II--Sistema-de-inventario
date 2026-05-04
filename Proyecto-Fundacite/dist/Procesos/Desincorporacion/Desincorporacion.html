@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desincorporación | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Desincorporación de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Desincorporación</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="n_informe">Número de informe <span class="req">*</span></label>
+                        <input type="text" id="n_informe" name="n_informe" placeholder="Correlativo de registro"
+                            maxlength="15">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label for="justificacion">Justificación <span class="req">*</span></label>
+                        <input type="text" id="justificacion" name="justificacion"
+                            placeholder="Motivo detallado de la desincorporacion" maxlength="255">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label for="estatus_desincorporacion">Estatus <span class="req">*</span></label>
+                        <select name="estatus_desincorporacion">
+
+                            <option value="">Seleccionar...</option>
+                            <option value="En Espera">En Espera</option>
+                            <option value="Aprobado">Aprobado</option>
+                            <option value="Rechazado">Rechazado</option>
+                        </select>
+                    </td>
+                </tr>
+
+            </table>
+        </section>
+
+        <div class="form-actions">
+            <form method="get" action="../Mantenimiento/Diagnostico.html">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+</body>
+
+</html>

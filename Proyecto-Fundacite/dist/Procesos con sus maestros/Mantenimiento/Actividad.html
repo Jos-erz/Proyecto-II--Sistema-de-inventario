@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Actividad</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="Nro_report">Numero de reporte <span class="req">*</span></label>
+                        <input type="text" id="Nro_report" name="Nro_report" placeholder="Nro de reporte"
+                            maxlength="15">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="estado_operativo">Estado opertivo <span class="req">*</span></label>
+                        <input type="text" id="estado_operativo" name="estado_operativo"
+                            placeholder="Operativo, fuera de sevicio" maxlength="15">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="fecha_cierre">Fecha de cierre <span class="req">*</span></label>
+                        <input type="date" id="fecha_cierre" name="fecha_cierre">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="estatus_operativo">Estatus <span class="req">*</span></label>
+                        <input type="text" id="estatus_operativo" name="estatus_operativo"
+                            placeholder="Finalizado,Cancelado" maxlength="10">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <form method="post" action="Solicituddemantenimiento.html">
+            <div class="form-actions">
+
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+
+        </form>
+        <form method="post" action="Diagnostico.html">
+
+            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </div>
+
+
+        </form>
+
+
+    </main>
+
+</body>
+
+</html>

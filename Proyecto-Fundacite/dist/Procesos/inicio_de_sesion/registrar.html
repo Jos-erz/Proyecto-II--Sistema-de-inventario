@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <img src="Logofundacite.webp" alt="Fundacite Yaracuy Logo" class="login-logo">
+
+        <section class="clase-card login-card">
+            <div class="clase-titulo">
+                <h3>Crear Cuenta</h3>
+            </div>
+
+            <form method="post" action="Login.html">
+                <table class="clase-tabla">
+                    <tr>
+                        <td>
+                            <label for="nombres">Nombres <span class="req">*</span></label>
+                            <input type="text" id="nombres" name="nombres" placeholder="Ingrese sus nombres" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="apellidos">Apellidos <span class="req">*</span></label>
+                            <input type="text" id="apellidos" name="apellidos" placeholder="Ingrese sus apellidos"
+                                required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="correo">Correo Electrónico <span class="req">*</span></label>
+                            <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="usuario">Usuario <span class="req">*</span></label>
+                            <input type="text" id="usuario" name="usuario" placeholder="Cree un usuario" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="contrasena">Contraseña <span class="req">*</span></label>
+                            <input type="password" id="contrasena" name="contrasena" placeholder="Cree una contraseña"
+                                required>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="form-actions" style="justify-content: center; flex-direction: column; gap: 15px;">
+                    <input type="submit" value="REGISTRARSE" class="btn btn-primary" style="width: 100%;">
+                    <div style="text-align: center; font-size: 0.85rem;">
+                        ¿Ya tienes una cuenta? <a href="Login.html"
+                            style="color: #2a6cb8; text-decoration: none; font-weight: bold;">Inicia sesión aquí</a>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+
+</html>

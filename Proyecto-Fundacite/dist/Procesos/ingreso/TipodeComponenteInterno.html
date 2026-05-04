@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Tipo de Componente Interno</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="tcomp-id">Identificador de componente <span class="req">*</span></label>
+                        <input type="text" id="tcomp-id" name="tcomp-id" placeholder="Identificador de categoría"
+                            maxlength="10">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="tcomp-nombre">Nombre del tipo <span class="req">*</span></label>
+                        <input type="text" id="tcomp-nombre" name="tcomp-nombre"
+                            placeholder="Disco duro, RAM, fuente de poder, procesador" maxlength="40">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="tcomp-descripcion">Descripción <span class="req">*</span></label>
+                        <textarea id="tcomp-descripcion" name="tcomp-descripcion" rows="2"
+                            placeholder="Explicación del uso del componente" maxlength="150"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="tcomp-unidad">Unidad de medida <span class="req">*</span></label>
+                        <input type="text" id="tcomp-unidad" name="tcomp-unidad"
+                            placeholder="GB, TB, MHz, Vatios, Voltios" maxlength="15">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <form method="get" action="Modelo.html">
+            <div class="form-actions">
+
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+
+        </form>
+        <form method="get" action="Tipodeperiferico.html">
+
+            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </div>
+
+
+        </form>
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+    </main>
+
+</body>
+
+</html>

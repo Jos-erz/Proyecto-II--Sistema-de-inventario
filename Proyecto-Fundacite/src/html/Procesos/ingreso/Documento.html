@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Documento</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="doc-fecha">Fecha de emisión <span class="req">*</span></label>
+                        <input type="date" id="doc-fecha" name="doc-fecha">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="doc-archivo">Archivo digital <span class="req">*</span></label>
+                        <input type="text" id="doc-archivo" name="doc-archivo"
+                            placeholder="Dirección de almacenamiento o nombre del archivo" maxlength="100">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="doc-numero">Número de Documento <span class="req">*</span></label>
+                        <input type="text" id="doc-numero" name="doc-numero" placeholder="Correlativo de registro"
+                            maxlength="15">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <form method="get" action="Periferico.html">
+            <div class="form-actions">
+
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+
+        </form>
+        <form method="get" action="../../dashboard/index.html">
+
+            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </div>
+
+
+        </form>
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+    </main>
+
+</body>
+
+</html>

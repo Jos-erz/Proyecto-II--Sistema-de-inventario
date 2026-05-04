@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Componentes Internos</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="comp-serial">Número de Serie <span class="req">*</span></label>
+                        <input type="text" id="comp-serial" name="comp-serial"
+                            placeholder="Identificación única del componente" maxlength="30">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-estado">Estado físico <span class="req">*</span></label>
+                        <input type="text" id="comp-estado" name="comp-estado" placeholder="Nuevo, usado, reparado"
+                            maxlength="15">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-estatus">Estatus <span class="req">*</span></label>
+                        <input type="text" id="comp-estatus" name="comp-estatus"
+                            placeholder="Instalado, disponible, dañado" maxlength="20">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-capacidad">Capacidad <span class="req">*</span></label>
+                        <input type="text" id="comp-capacidad" name="comp-capacidad"
+                            placeholder="Medida técnica del componente" maxlength="20">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <div class="form-actions">
+            <form method="get" action="EquipoInformatico.html">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="Periferico.html">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+    </main>
+
+</body>
+
+</html>

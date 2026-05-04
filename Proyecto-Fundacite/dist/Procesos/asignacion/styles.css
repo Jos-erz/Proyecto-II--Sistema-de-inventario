@@ -1,0 +1,271 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f3f7;
+  color: #1f2937;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* === HEADER === */
+header {
+  background: #1e5694;
+  color: #fff;
+  padding: 10px 24px;
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 100px;
+  width: auto;
+}
+
+/* === principal === */
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+/* === INTRO === */
+.page-intro {
+  margin-bottom: 2rem;
+}
+
+.page-intro h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1e5694;
+  margin-bottom: 0.4rem;
+}
+
+.page-intro p {
+  font-size: 0.88rem;
+  color: #6b7785;
+}
+
+/* === FASE HEADER === */
+.fase-header {
+  margin-top: 2.5rem;
+  margin-bottom: 1.2rem;
+  padding: 1rem 1.4rem;
+  background: #1e5694;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.fase-header.fase-2 {
+  background: #2a6cb8;
+}
+
+.fase-header.fase-3 {
+  background: #1a4a7a;
+}
+
+.fase-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 12px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.fase-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  border: none;
+  color: #fff;
+  padding: 0;
+}
+
+.fase-header h2 small {
+  font-weight: 400;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  color: #fff;
+}
+
+.fase-header p {
+  font-size: 0.8rem;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* === CLASE CARD === */
+.clase-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  border-left: 4px solid #2a6cb8;
+}
+
+.clase-titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e6eb;
+}
+
+
+.clase-titulo h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.dependencia {
+  font-size: 0.73rem;
+  color: #fff;
+  background: #e98a1e;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* === TABLA DE CAMPOS === */
+.clase-tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.clase-tabla td {
+  padding: 0 0 1.2rem 0;
+}
+
+.clase-tabla tr:last-child td {
+  padding-bottom: 0;
+}
+
+label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 4px;
+}
+
+.req {
+  color: #dc2626;
+}
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 0.9rem;
+  border: 1.5px solid #cdd3da;
+  border-radius: 6px;
+  background: #f8f9fb;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #2a6cb8;
+  box-shadow: 0 0 0 3px rgba(42, 108, 184, 0.1);
+  background: #fff;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+small {
+  display: block;
+  font-size: 0.72rem;
+  color: #9ba5b2;
+  margin-top: 3px;
+}
+
+/* === FOOTER === */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.78rem;
+  color: #9ba5b2;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+  main {
+    padding: 1rem 0.8rem 2rem;
+  }
+
+  .clase-card {
+    padding: 1rem 1.2rem;
+  }
+
+  .clase-titulo {
+    gap: 8px;
+  }
+
+  .dependencia {
+    font-size: 0.68rem;
+  }
+}
+
+/* === BOTONES === */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s, color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-secondary {
+  background-color: #e2e6eb;
+  color: #374151;
+}
+
+.btn-secondary:hover {
+  background-color: #cdd3da;
+}
+
+.btn-primary {
+  background-color: #2a6cb8;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #1e5694;
+}

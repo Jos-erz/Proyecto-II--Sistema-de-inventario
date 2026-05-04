@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Equipo Informático</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="equipo-codigo">Código <span class="req">*</span></label>
+                        <input type="text" id="equipo-codigo" name="equipo-codigo"
+                            placeholder="Código de inventario institucional" maxlength="20">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="equipo-serial">Serial <span class="req">*</span></label>
+                        <input type="text" id="equipo-serial" name="equipo-serial"
+                            placeholder="Identificación del fabricante" maxlength="30">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="equipo-estado">Estado físico <span class="req">*</span></label>
+                        <input type="text" id="equipo-estado" name="equipo-estado"
+                            placeholder="Operativo, regular o deteriorado" maxlength="15">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="equipo-color">Color <span class="req">*</span></label>
+                        <input type="text" id="equipo-color" name="equipo-color" placeholder="Color del equipo"
+                            maxlength="20">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="equipo-descripcion">Descripción <span class="req">*</span></label>
+                        <textarea id="equipo-descripcion" name="equipo-descripcion" rows="3"
+                            placeholder="Detalles del equipo" maxlength="255"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <div class="form-actions">
+            <form method="get" action="Adquisicion.html">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="componenteinterno.html">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mantenimiento de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Mantenimiento de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Solicitud de Mantenimiento</h3>
+            </div>
+
+            <table class="clase-tabla">
+
+                <tr>
+                    <td>
+                        <label for="ID_solicitud">ID Solicitud <span class="req">*</span></label>
+                        <input type="text" id="ID_solicitud" name="ID_solicitud" placeholder="Correlativo de registro"
+                            maxlength="15">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="fecha_solicitud">Fecha <span class="req">*</span></label>
+                        <input type="date" id="fecha_solicitud" name="fecha_solicitud">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="descrip_falla">Descripcion de la falla <span class="req">*</span></label>
+                        <input type="text" id="descrip_falla" name="descrip_falla"
+                            placeholder="Detalle del problema detectado" maxlength="255">
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <label for="estatus_solicitud">Estatus <span class="req">*</span></label>
+                        <select name="estatus_solicitud">
+                            <option value="">Seleccionar...</option>
+                            <option value="Recibido">Recibido</option>
+                            <option value="En revisión">En revisión</option>
+                            <option value="Procesado">Procesado</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <div class="form-actions">
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="Actividad.html">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+    </main>
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Modelo</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="modelo-id">Identificador <span class="req">*</span></label>
+                        <input type="text" id="modelo-id" name="modelo-id" placeholder="Identificador de modelo"
+                            maxlength="10">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="modelo-nombre">Nombre <span class="req">*</span></label>
+                        <input type="text" id="modelo-nombre" name="modelo-nombre" placeholder="Nombre del modelo"
+                            maxlength="60">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="modelo-especificaciones">Especificaciones <span class="req">*</span></label>
+                        <textarea id="modelo-especificaciones" name="modelo-especificaciones" rows="3"
+                            placeholder="Detalles técnicos (procesador, RAM, disco)" maxlength="255"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <div class="form-actions">
+            <form method="get" action="MARCA.html">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="TipodeComponenteInterno.html">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+    </main>
+
+</body>
+
+</html>

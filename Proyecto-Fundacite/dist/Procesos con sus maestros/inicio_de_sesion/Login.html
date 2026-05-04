@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <img src="Logofundacite.webp" alt="Fundacite Yaracuy Logo" class="login-logo">
+
+        <section class="clase-card login-card">
+            <div class="clase-titulo">
+                <h3>Iniciar Sesión</h3>
+            </div>
+
+            <form id="loginForm" novalidate>
+                <table class="clase-tabla">
+                    <tr>
+                        <td>
+                            <label for="usuario">Usuario <span class="req">*</span></label>
+                            <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="contrasena">Contraseña <span class="req">*</span></label>
+                            <input type="password" id="contrasena" name="contrasena" placeholder="Ingrese su contraseña"
+                                required>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="form-actions" style="justify-content: center; flex-direction: column; gap: 15px;">
+                    <input type="submit" value="INGRESAR" class="btn btn-primary" style="width: 100%;">
+                    <div style="text-align: center; font-size: 0.85rem;">
+                        ¿No tienes una cuenta? <a href="registrar.html"
+                            style="color: #2a6cb8; text-decoration: none; font-weight: bold;">Regístrate aquí</a>
+                    </div>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var usuario = document.getElementById('usuario').value.trim();
+            var contrasena = document.getElementById('contrasena').value.trim();
+
+            if (!usuario || !contrasena) {
+                alert('Por favor, complete todos los campos.');
+                return;
+            }
+
+            // Redirigir a la página principal (dashboard)
+            window.location.href = '../../dashboard/index.html';
+        });
+    </script>
+</body>
+
+</html>

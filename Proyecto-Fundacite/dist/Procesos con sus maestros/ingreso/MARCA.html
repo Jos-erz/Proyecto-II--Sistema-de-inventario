@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Marca</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="marca-id">Identificador <span class="req">*</span></label>
+                        <input type="text" id="marca-id" name="marca-id" placeholder="Identificador único"
+                            maxlength="10">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="marca-nombre">Nombre <span class="req">*</span></label>
+                        <input type="text" id="marca-nombre" name="marca-nombre" placeholder="Nombre del fabricante"
+                            maxlength="50">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="marca-descripcion">Descripción <span class="req">*</span></label>
+                        <textarea id="marca-descripcion" name="marca-descripcion" rows="2"
+                            placeholder="Información adicional sobre la marca" maxlength="150"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </section>
+        <form method="get" action="INSTITUCION.html">
+            <div class="form-actions">
+
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+
+        </form>
+        <form method="get" action="Modelo.html">
+
+            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </div>
+
+
+        </form>
+
+
+    </main>
+
+</body>
+
+</html>

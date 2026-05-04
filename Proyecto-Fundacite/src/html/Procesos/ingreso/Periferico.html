@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Periféricos</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="per-serial">Serial <span class="req">*</span></label>
+                        <input type="text" id="per-serial" name="per-serial"
+                            placeholder="Identificación única del periférico" maxlength="30">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="per-nombre">Nombre <span class="req">*</span></label>
+                        <input type="text" id="per-nombre" name="per-nombre" placeholder="Tipo de dispositivo"
+                            maxlength="50">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <div class="form-actions">
+            <form method="get" action="componenteinterno.html">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="Documento.html">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+    </main>
+
+</body>
+
+</html>

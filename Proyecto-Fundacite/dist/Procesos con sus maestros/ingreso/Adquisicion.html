@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Adquisición</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="adq-fecha">Fecha de Ingreso <span class="req">*</span></label>
+                        <input type="date" id="adq-fecha" name="adq-fecha">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="adq-origen">Origen <span class="req">*</span></label>
+                        <input type="text" id="adq-origen" name="adq-origen" placeholder="Compra, donación, asignación"
+                            maxlength="50">
+                    </td>
+                </tr>
+            </table>
+        </section>
+
+        <form method="get" action="Tipodeperiferico.html">
+            <div class="form-actions">
+
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+
+        </form>
+        <form method="get" action="EquipoInformatico.html">
+
+            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </div>
+
+
+        </form>
+
+
+    </main>
+
+</body>
+
+</html>

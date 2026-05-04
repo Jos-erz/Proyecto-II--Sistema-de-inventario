@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignacion de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Asignacion de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Empleado</h3>
+            </div>
+
+            <table class="clase-tabla">
+                <tr>
+                    <td>
+                        <label for="comp-Cedula">Cedula <span class="req">*</span></label>
+                        <input type="text" id="comp-Cedula" name="comp-Cedula" placeholder="Documento de identidad"
+                            maxlength="8">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-nombre">Nombre <span class="req">*</span></label>
+                        <input type="text" id="comp-nombre" name="comp-nombre" placeholder="1er y 2do nombre"
+                            maxlength="30">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-apellido">Apellido <span class="req">*</span></label>
+                        <input type="text" id="comp-apellido" name="comp-apellido" placeholder="1er y 2do apellido"
+                            maxlength="30">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-genero">Genero <span class="req">*</span></label>
+                        <input type="radio" name="comp-genero" value="M"> Masculino
+                        <input type="radio" name="comp-genero" value="F"> Femenino
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-telefono">Telefono <span class="req">*</span></label>
+                        <input type="text" name="comp-telefono" value="" placeholder="Numero de telefono"
+                            maxlength="11">
+                    </td>
+                </tr>
+
+            </table>
+        </section>
+
+        <div class="form-actions">
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="Cargo.html">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+
+
+    </main>
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+
+</body>
+
+</html>
