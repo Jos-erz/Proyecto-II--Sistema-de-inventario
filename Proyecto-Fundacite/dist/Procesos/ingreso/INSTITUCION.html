@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+  <title>Registro de Institución | Fundacite Yaracuy</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -47,22 +47,48 @@
     </section>
 
     <div class="form-actions">
-      <form method="get" action="../../dashboard/index.html">
-        <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-      </form>
-      <form method="get" action="MARCA.html">
-        <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
-      </form>
+      <button type="button" class="btn btn-secondary" onclick="window.history.back()">ATRÁS</button>
+      <button type="button" class="btn btn-primary" onclick="guardarInstitucion()">GUARDAR Y FINALIZAR</button>
     </div>
 
     <br><br><br>
     <center>
-      <form method="get" action="../../dashboard/index.html">
-        <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
-      </form>
+        <button type="button" class="btn btn-primary" onclick="window.location.href='../../dashboard/index.html'">SALIR</button>
     </center>
 
   </main>
+
+  <script>
+    function guardarInstitucion() {
+        const rif = document.getElementById('inst-rif').value;
+        const nombre = document.getElementById('inst-nombre').value;
+        const direccion = document.getElementById('inst-direccion').value;
+
+        if (!rif || !nombre) {
+            if(window.showStyledAlert) showStyledAlert('Debe completar el RIF y el Nombre.', 'Atención', 'ph-warning', '#dc2626');
+            else alert('Debe completar el RIF y el Nombre.');
+            return;
+        }
+
+        const instituciones = JSON.parse(localStorage.getItem('instituciones') || '[]');
+        
+        if (!instituciones.some(i => i.rif === rif)) {
+            instituciones.push({ rif, nombre, direccion });
+            localStorage.setItem('instituciones', JSON.stringify(instituciones));
+        }
+
+        if(window.showStyledAlert) {
+            showStyledAlert('Institución "' + nombre + '" registrada correctamente.', 'Éxito', 'ph-check-circle', '#10b981');
+            setTimeout(() => {
+                if(window.goHome) window.goHome();
+                else window.location.href = '../../dashboard/index.html';
+            }, 1500);
+        } else {
+            alert('Institución registrada correctamente.');
+            window.location.href = '../../dashboard/index.html';
+        }
+    }
+  </script>
 
   <footer>
     <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>

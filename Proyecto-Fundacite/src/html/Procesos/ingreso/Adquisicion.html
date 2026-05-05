@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOSE es un bacabaca de Equipos | Fundacite Yaracuy</title>
+    <title>Adquisición de Equipos | Fundacite Yaracuy</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -16,53 +16,409 @@
     </header>
 
     <main>
-
-
         <section class="clase-card">
-            <div class="clase-titulo">
-                <h3>Adquisición</h3>
+            <div class="clase-titulo" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Lista de Adquisiciones</h3>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adquisicionModal" onclick="populateInstituciones()"
+                    style="border-radius: 50%; width: 40px; height: 40px; padding: 0; font-size: 20px; line-height: 1;">
+                    +
+                </button>
             </div>
 
-            <table class="clase-tabla">
-                <tr>
-                    <td>
-                        <label for="adq-fecha">Fecha de Ingreso <span class="req">*</span></label>
-                        <input type="date" id="adq-fecha" name="adq-fecha">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="adq-origen">Origen <span class="req">*</span></label>
-                        <select name="adq-origen"><br>
-
-                            <option value="">Seleccionar...</option>
-                            <option value="Compra">Compra</option>
-                            <option value="Donación">Donación</option>
-                            <option value="Asignación">Asignación</option><br>
-                        </select>
-                    </td>
-                </tr>
-            </table>
+            <div class="table-responsive">
+                <table class="clase-tabla" id="tabla-adquisiciones">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb;">
+                            <th style="padding: 10px; text-align: left;">Tipo</th>
+                            <th style="padding: 10px; text-align: left;">Identificación / Nombre</th>
+                            <th style="padding: 10px; text-align: left;">Fecha</th>
+                            <th style="padding: 10px; text-align: left;">Origen</th>
+                            <th style="padding: 10px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-cuerpo">
+                        <tr id="empty-row">
+                            <td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">
+                                No hay adquisiciones registradas. Haga clic en "+" para agregar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <div class="form-actions">
-            <form method="get" action="Tipodeperiferico.html">
-                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-            </form>
-            <form method="get" action="EquipoInformatico.html">
-                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
-            </form>
+        <!-- Modal de Bootstrap -->
+        <div class="modal fade" id="adquisicionModal" tabindex="-1" aria-labelledby="adquisicionModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="border-radius: 12px; border: none;">
+                    <div class="modal-header" style="background: #1e5694; color: white;">
+                        <h5 class="modal-title" id="adquisicionModalLabel"><i class="ph ph-plus-circle me-2"></i>Nueva Adquisición</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="form-modal-adq">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="adq-fecha">Fecha de Ingreso <span class="req">*</span></label>
+                                    <input type="date" id="adq-fecha" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="adq-origen">Origen <span class="req">*</span></label>
+                                    <select id="adq-origen" class="form-control" required>
+                                        <option value="">Seleccionar...</option>
+                                        <option value="Compra">Compra</option>
+                                        <option value="Donación">Donación</option>
+                                        <option value="Asignación">Asignación</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="adq-institucion">Institución de procedencia <span class="req">*</span></label>
+                                <select id="adq-institucion" class="form-control" required>
+                                    <option value="">Seleccionar institución...</option>
+                                    <!-- Se carga por JS -->
+                                </select>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="adq-tipo">Tipo de Bien <span class="req">*</span></label>
+                                <select id="adq-tipo" class="form-control" required onchange="toggleSections()" style="border: 2px solid #1e5694; font-weight: bold;">
+                                    <option value="">Seleccionar tipo...</option>
+                                    <option value="Periférico">Periférico</option>
+                                    <option value="Componente">Componente</option>
+                                    <option value="Equipo Informático">Equipo Informático (Laptop/PC)</option>
+                                </select>
+                            </div>
+
+                            <div id="sec-periferico" class="dynamic-sec" style="display: none; border: 1px solid #e2e6eb; border-radius: 8px; padding: 20px; background: #f8fafc;">
+                                <h6 class="text-primary mb-3 fw-bold">Especificaciones del Periférico</h6>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="per-tipo">Tipo de Flujo <span class="req">*</span></label>
+                                        <select id="per-tipo" class="form-control">
+                                            <option value="Entrada">Entrada</option>
+                                            <option value="Salida">Salida</option>
+                                            <option value="Mixto">Mixto</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="per-clase">Clase <span class="req">*</span></label>
+                                        <select id="per-clase" class="form-control">
+                                            <option value="Monitor">Monitor</option>
+                                            <option value="Teclado">Teclado</option>
+                                            <option value="Mouse">Mouse</option>
+                                            <option value="Impresora">Impresora</option>
+                                            <option value="Escáner">Escáner</option>
+                                            <option value="Cornetas">Cornetas</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="per-marca">Marca <span class="req">*</span></label>
+                                        <input type="text" id="per-marca" class="form-control" placeholder="Ej: HP, Síragon">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="per-modelo">Modelo <span class="req">*</span></label>
+                                        <input type="text" id="per-modelo" class="form-control">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="per-serial">Serial <span class="req">*</span></label>
+                                    <input type="text" id="per-serial" class="form-control">
+                                </div>
+                            </div>
+
+                            <div id="sec-componente" class="dynamic-sec" style="display: none; border: 1px solid #e2e6eb; border-radius: 8px; padding: 20px; background: #f8fafc;">
+                                <h6 class="text-primary mb-3 fw-bold">Especificaciones del Componente</h6>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="comp-clase">Clase <span class="req">*</span></label>
+                                        <select id="comp-clase" class="form-control">
+                                            <option value="Memoria RAM">Memoria RAM</option>
+                                            <option value="Disco Duro">Disco Duro / SSD</option>
+                                            <option value="Procesador">Procesador</option>
+                                            <option value="Fuente de Poder">Fuente de Poder</option>
+                                            <option value="Tarjeta Madre">Tarjeta Madre</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="comp-capacidad">Capacidad <span class="req">*</span></label>
+                                        <input type="text" id="comp-capacidad" class="form-control" placeholder="Ej: 8GB, 1TB">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="comp-marca">Marca <span class="req">*</span></label>
+                                        <input type="text" id="comp-marca" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="comp-modelo">Modelo <span class="req">*</span></label>
+                                        <input type="text" id="comp-modelo" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="comp-serial">Número de Serie <span class="req">*</span></label>
+                                        <input type="text" id="comp-serial" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="comp-estado">Estado físico <span class="req">*</span></label>
+                                        <input type="text" id="comp-estado" class="form-control" placeholder="Nuevo, usado...">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="comp-estatus">Estatus <span class="req">*</span></label>
+                                    <input type="text" id="comp-estatus" class="form-control" placeholder="Instalado, disponible...">
+                                </div>
+                            </div>
+
+                            <div id="sec-equipo" class="dynamic-sec" style="display: none; border: 1px solid #e2e6eb; border-radius: 8px; padding: 20px; background: #f8fafc;">
+                                <h6 class="text-primary mb-3 fw-bold">Especificaciones del Equipo Informático</h6>
+                                <div class="mb-3">
+                                    <label>Clasificación <span class="req">*</span></label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="eq-clase" id="eq-pc" value="PC" checked>
+                                            <label class="form-check-label" for="eq-pc">PC de Escritorio</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="eq-clase" id="eq-laptop" value="Laptop">
+                                            <label class="form-check-label" for="eq-laptop">Laptop</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="equipo-marca">Marca <span class="req">*</span></label>
+                                        <input type="text" id="equipo-marca" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="equipo-modelo">Modelo <span class="req">*</span></label>
+                                        <input type="text" id="equipo-modelo" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="equipo-codigo">Código Institucional <span class="req">*</span></label>
+                                        <input type="text" id="equipo-codigo" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="equipo-serial">Serial <span class="req">*</span></label>
+                                        <input type="text" id="equipo-serial" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="equipo-estado">Estado físico <span class="req">*</span></label>
+                                        <input type="text" id="equipo-estado" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="equipo-color">Color <span class="req">*</span></label>
+                                        <input type="text" id="equipo-color" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="mb-0">
+                                    <label for="equipo-descripcion">Descripción <span class="req">*</span></label>
+                                    <textarea id="equipo-descripcion" class="form-control" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="agregarALista()">Añadir a la lista</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <br><br><br>
-        <center>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
-            </form>
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">ATRÁS</button>
+            <button type="button" class="btn btn-primary" onclick="guardarTodo()">GUARDAR Y FINALIZAR</button>
+        </div>
+
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary" onclick="window.location.href='../../dashboard/index.html'">SALIR</button>
         </center>
-
-
     </main>
+
+    <script>
+        let adquisiciones = [];
+
+        function toggleSections() {
+            const tipo = document.getElementById('adq-tipo').value;
+            document.querySelectorAll('.dynamic-sec').forEach(sec => sec.style.display = 'none');
+            
+            if (tipo === 'Periférico') document.getElementById('sec-periferico').style.display = 'block';
+            else if (tipo === 'Componente') document.getElementById('sec-componente').style.display = 'block';
+            else if (tipo === 'Equipo Informático') document.getElementById('sec-equipo').style.display = 'block';
+        }
+
+        function populateInstituciones() {
+            const select = document.getElementById('adq-institucion');
+            if (!select) return;
+
+            let instituciones = JSON.parse(localStorage.getItem('instituciones') || '[]');
+            
+            // Usar un Map para asegurar que los nombres sean únicos
+            const uniqueInstituciones = new Map();
+            instituciones.forEach(inst => {
+                if (inst.nombre && inst.nombre.trim() !== '') {
+                    uniqueInstituciones.set(inst.nombre.trim(), inst);
+                }
+            });
+
+            select.innerHTML = '<option value="">Seleccionar institución...</option>';
+            
+            uniqueInstituciones.forEach((inst, nombre) => {
+                const opt = document.createElement('option');
+                opt.value = nombre;
+                opt.textContent = nombre;
+                select.appendChild(opt);
+            });
+        }
+
+        function agregarALista() {
+            const fecha = document.getElementById('adq-fecha').value;
+            const origen = document.getElementById('adq-origen').value;
+            const institucion = document.getElementById('adq-institucion').value;
+            const tipo = document.getElementById('adq-tipo').value;
+
+            if (!fecha || !origen || !institucion || !tipo) {
+                if(window.showStyledAlert) showStyledAlert('Por favor complete los campos obligatorios, incluyendo la institución.', 'Error de Validación', 'ph-warning', '#dc2626');
+                else alert('Por favor complete los campos obligatorios');
+                return;
+            }
+
+            let item = { fecha, origen, institucion, tipo, data: {} };
+
+            if (tipo === 'Periférico') {
+                item.data = {
+                    flujo: document.getElementById('per-tipo').value,
+                    clase: document.getElementById('per-clase').value,
+                    marca: document.getElementById('per-marca').value,
+                    modelo: document.getElementById('per-modelo').value,
+                    serial: document.getElementById('per-serial').value
+                };
+                item.identificador = `${item.data.clase} - ${item.data.marca} ${item.data.modelo}`;
+            } else if (tipo === 'Componente') {
+                item.data = {
+                    clase: document.getElementById('comp-clase').value,
+                    capacidad: document.getElementById('comp-capacidad').value,
+                    marca: document.getElementById('comp-marca').value,
+                    modelo: document.getElementById('comp-modelo').value,
+                    serial: document.getElementById('comp-serial').value,
+                    estado: document.getElementById('comp-estado').value,
+                    estatus: document.getElementById('comp-estatus').value
+                };
+                item.identificador = `${item.data.clase} - ${item.data.capacidad}`;
+            } else if (tipo === 'Equipo Informático') {
+                item.data = {
+                    clase: document.querySelector('input[name="eq-clase"]:checked').value,
+                    marca: document.getElementById('equipo-marca').value,
+                    modelo: document.getElementById('equipo-modelo').value,
+                    codigo: document.getElementById('equipo-codigo').value,
+                    serial: document.getElementById('equipo-serial').value,
+                    estado: document.getElementById('equipo-estado').value,
+                    color: document.getElementById('equipo-color').value,
+                    descripcion: document.getElementById('equipo-descripcion').value
+                };
+                item.identificador = `${item.data.clase} ${item.data.marca} ${item.data.modelo}`;
+            }
+
+            adquisiciones.push(item);
+            renderTabla();
+            
+            const modalEl = document.getElementById('adquisicionModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            document.getElementById('form-modal-adq').reset();
+            document.querySelectorAll('.dynamic-sec').forEach(sec => sec.style.display = 'none');
+        }
+
+        function renderTabla() {
+            const cuerpo = document.getElementById('lista-cuerpo');
+            if (adquisiciones.length === 0) {
+                cuerpo.innerHTML = '<tr id="empty-row"><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay adquisiciones registradas. Haga clic en "+" para agregar.</td></tr>';
+                return;
+            }
+
+            cuerpo.innerHTML = '';
+            adquisiciones.forEach((item, index) => {
+                const row = `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px;">${item.tipo}</td>
+                        <td style="padding: 10px;">${item.identificador}</td>
+                        <td style="padding: 10px;">${item.fecha}</td>
+                        <td style="padding: 10px;">${item.origen}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button class="btn btn-sm btn-info text-white" onclick="verDetalles(${index})">Detalles</button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">X</button>
+                        </td>
+                    </tr>
+                `;
+                cuerpo.innerHTML += row;
+            });
+        }
+
+        function eliminarItem(index) {
+            adquisiciones.splice(index, 1);
+            renderTabla();
+        }
+
+        function verDetalles(index) {
+            const item = adquisiciones[index];
+            if(window.showStyledDetails) window.showStyledDetails(item);
+            else alert('Detalles: ' + item.identificador);
+        }
+
+        function guardarTodo() {
+            if (adquisiciones.length === 0) {
+                if(window.showStyledAlert) showStyledAlert('No hay adquisiciones para guardar.', 'Atención', 'ph-warning', '#e98a1e');
+                return;
+            }
+            
+            localStorage.setItem('current_session_items', JSON.stringify(adquisiciones));
+
+            if (window.showStyledQuestion) {
+                window.showStyledQuestion(
+                    '¿Deseas crear un documento comprobante para este registro?', 
+                    '¡Guardado correctamente!',
+                    function() { // YES
+                        if(window.loadContentGlobal) window.loadContentGlobal('../Procesos/ingreso/Documento.html', 'Documento', 'Ingreso');
+                        else window.location.href = 'Documento.html';
+                    },
+                    function() { // NO
+                        const currentActivity = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+                        localStorage.setItem('recent_activity', JSON.stringify([...currentActivity, ...adquisiciones]));
+                        localStorage.removeItem('current_session_items');
+                        if(window.goHome) window.goHome();
+                        else window.location.href = '../../dashboard/index.html';
+                    }
+                );
+            } else {
+                alert('¡Guardado correctamente!');
+                window.location.href = '../../dashboard/index.html';
+            }
+        }
+        // La carga se realiza al pulsar el botón "+"
+    </script>
+
+    <style>
+        .modal-body label { margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #4b5563; }
+        .form-control { display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px; margin-bottom: 15px; }
+        .btn-sm { padding: 4px 8px; font-size: 12px; }
+        .text-white { color: white !important; }
+        .gap-3 { gap: 1rem; }
+        .dynamic-sec h6 { font-size: 14px; border-bottom: 2px solid #1e5694; display: inline-block; padding-bottom: 3px; }
+    </style>
+
     <footer>
         <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
     </footer>

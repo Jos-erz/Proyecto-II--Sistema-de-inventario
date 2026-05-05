@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes Recibidas | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Bandeja de Solicitudes</span>
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin:0; color: #1e5694; font-weight: 800;">Bandeja de Entrada (<span id="total-count">0</span>)</h2>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-sm btn-outline-danger" onclick="window.clearAllRequests()" style="font-size: 10px;">LIMPIAR TODO</button>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.loadRequests()">REFRESCAR</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Mantenimiento -->
+            <div class="col-md-4">
+                <section class="clase-card">
+                    <div class="clase-titulo" style="background: #e0e7ff; color: #1e5694; padding: 10px 15px;">
+                        <h4 style="margin:0;"><i class="ph ph-wrench"></i> Mantenimiento</h4>
+                    </div>
+                    <table class="clase-tabla">
+                        <tbody id="table-mant"></tbody>
+                    </table>
+                </section>
+            </div>
+
+            <!-- Asignación -->
+            <div class="col-md-4">
+                <section class="clase-card">
+                    <div class="clase-titulo" style="background: #dcfce7; color: #10b981; padding: 10px 15px;">
+                        <h4 style="margin:0;"><i class="ph ph-user-plus"></i> Asignación</h4>
+                    </div>
+                    <table class="clase-tabla">
+                        <tbody id="table-eq"></tbody>
+                    </table>
+                </section>
+            </div>
+
+            <!-- Traslados -->
+            <div class="col-md-4">
+                <section class="clase-card">
+                    <div class="clase-titulo" style="background: #fef9c3; color: #f59e0b; padding: 10px 15px;">
+                        <h4 style="margin:0;"><i class="ph ph-arrows-left-right"></i> Traslados</h4>
+                    </div>
+                    <table class="clase-tabla">
+                        <tbody id="table-tras"></tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-primary px-5" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">VOLVER AL INICIO</button>
+        </center>
+
+        <!-- ELIMINADA VISTA DE ACTA INTERNA, AHORA ES PÁGINA EXTERNA -->
+
+        <!-- MODALES -->
+        <!-- MANTENIMIENTO -->
+        <div class="modal fade" id="modalMant" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white"><h5>Detalles de Mantenimiento</h5></div>
+                    <div class="modal-body">
+                        <div style="background:#f8fafc; padding:15px; border-radius:10px; margin-bottom:20px;">
+                            <small>Solicitante:</small> <strong id="m-sol"></strong><br>
+                            <small>Fecha:</small> <strong id="m-date"></strong><br>
+                            <hr>
+                            <small>Falla Reportada:</small><br>
+                            <p id="m-reason" class="italic mb-0"></p>
+                        </div>
+                        <h4 id="m-eq" class="text-center text-primary"></h4>
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-outline-success flex-fill py-3" id="b-op" onclick="window.setSt('Operativo')">OPERATIVO</button>
+                            <button class="btn btn-outline-warning flex-fill py-3" id="b-ma" onclick="window.setSt('En Mantenimiento')">EN MANT.</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-primary" id="b-conf" disabled onclick="window.confirmarM()">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ASIGNACIÓN -->
+        <div class="modal fade" id="modalAsig" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white"><h5>Asignar Equipo</h5></div>
+                    <div class="modal-body">
+                        <p>Funcionario: <strong id="a-name"></strong></p>
+                        <h6>Seleccione Equipo:</h6>
+                        <div class="table-responsive" style="max-height: 250px; border:1px solid #eee;">
+                            <table class="table table-sm table-hover mb-0"><tbody id="a-list"></tbody></table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button class="btn btn-success text-white" id="b-as-conf" disabled onclick="window.confirmarA()">Generar Acta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function() {
+            let tempId = null;
+            let tempSt = null;
+            let tempEq = null;
+            let selEq = null;
+
+            window.loadRequests = function() {
+                try {
+                    const raw = localStorage.getItem('incoming_requests');
+                    const inc = JSON.parse(raw || '[]');
+                    if (!Array.isArray(inc)) {
+                        localStorage.setItem('incoming_requests', '[]');
+                        return;
+                    }
+
+                    const badge = document.getElementById('total-count');
+                    if (badge) badge.textContent = inc.length;
+
+                    const tM = document.getElementById('table-mant');
+                    const tE = document.getElementById('table-eq');
+                    const tT = document.getElementById('table-tras');
+                    if (!tM) return;
+
+                    tM.innerHTML = ''; tE.innerHTML = ''; tT.innerHTML = '';
+
+                    if (inc.length === 0) {
+                        const empty = '<tr><td style="text-align:center; padding:20px; color:#999;">Vacío</td></tr>';
+                        tM.innerHTML = empty; tE.innerHTML = empty; tT.innerHTML = empty;
+                        return;
+                    }
+
+                    inc.forEach(r => {
+                        const row = `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding:12px;"><strong>${r.identificador}</strong><br><small>${r.fecha}</small></td>
+                                <td style="padding:12px; text-align:right; white-space:nowrap;">
+                                    <button onclick="window.del('${r.id}')" style="background:#ff4d4d; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer;">X</button>
+                                    <button onclick="window.app('${r.id}')" style="background:#28a745; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer;">✓</button>
+                                </td>
+                            </tr>
+                        `;
+                        if (r.tipo === 'mantenimiento') tM.innerHTML += row;
+                        else if (r.tipo === 'equipo') tE.innerHTML += row;
+                        else if (r.tipo === 'traslado') tT.innerHTML += row;
+                    });
+                } catch (e) { console.error("Error loading requests", e); }
+            };
+
+            window.del = function(id) {
+                let inc = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+                inc = inc.filter(x => String(x.id) !== String(id));
+                localStorage.setItem('incoming_requests', JSON.stringify(inc));
+                window.loadRequests();
+            };
+
+            window.clearAllRequests = function() {
+                if(confirm("¿Seguro que desea borrar TODAS las solicitudes?")) {
+                    localStorage.setItem('incoming_requests', '[]');
+                    window.loadRequests();
+                }
+            };
+
+            window.app = function(id) {
+                const inc = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+                const r = inc.find(x => String(x.id) === String(id));
+                if (!r) return;
+                tempId = id;
+
+                if (r.tipo === 'mantenimiento') {
+                    tempEq = r.identificador;
+                    document.getElementById('m-sol').textContent = r.identificador;
+                    document.getElementById('m-date').textContent = r.fecha;
+                    document.getElementById('m-reason').textContent = r.data.motivo;
+                    document.getElementById('m-eq').textContent = r.identificador;
+                    tempSt = null;
+                    document.getElementById('b-op').className = 'btn btn-outline-success flex-fill py-3';
+                    document.getElementById('b-ma').className = 'btn btn-outline-warning flex-fill py-3';
+                    document.getElementById('b-conf').disabled = true;
+                    new bootstrap.Modal(document.getElementById('modalMant')).show();
+                } else if (r.tipo === 'equipo') {
+                    document.getElementById('a-name').textContent = r.identificador;
+                    window.loadAvail();
+                    new bootstrap.Modal(document.getElementById('modalAsig')).show();
+                } else if (r.tipo === 'traslado') {
+                    if (window.loadContentGlobal) {
+                        window.loadContentGlobal('../Procesos/movilizacion/Movimiento.html', 'Movimiento', 'Movilizacion');
+                    } else {
+                        window.location.href = '../movilizacion/Movimiento.html';
+                    }
+                    window.del(id);
+                }
+            };
+
+            window.setSt = function(s) {
+                tempSt = s;
+                document.getElementById('b-conf').disabled = false;
+                document.getElementById('b-op').className = s === 'Operativo' ? 'btn btn-success text-white flex-fill py-3' : 'btn btn-outline-success flex-fill py-3';
+                document.getElementById('b-ma').className = s === 'En Mantenimiento' ? 'btn btn-warning text-white flex-fill py-3' : 'btn btn-outline-warning flex-fill py-3';
+            };
+
+            window.confirmarM = function() {
+                const inv = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+                const it = inv.find(i => i.identificador === tempEq);
+                if (it) it.estatus = tempSt;
+                localStorage.setItem('recent_activity', JSON.stringify(inv));
+                const inM = JSON.parse(localStorage.getItem('in_maintenance_ids') || '[]');
+                if (tempSt === 'En Mantenimiento') { if (!inM.includes(tempEq)) inM.push(tempEq); }
+                else { const i = inM.indexOf(tempEq); if (i > -1) inM.splice(i, 1); }
+                localStorage.setItem('in_maintenance_ids', JSON.stringify(inM));
+                bootstrap.Modal.getInstance(document.getElementById('modalMant')).hide();
+                window.del(tempId);
+            };
+
+            window.loadAvail = function() {
+                const t = document.getElementById('a-list'); t.innerHTML = '';
+                const inv = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+                const as = JSON.parse(localStorage.getItem('assigned_ids') || '[]');
+                const inM = JSON.parse(localStorage.getItem('in_maintenance_ids') || '[]');
+                
+                // SOLO EQUIPOS INFORMÁTICOS
+                const av = inv.filter(i => i.tipo === 'Equipo Informático' && !as.includes(i.identificador) && !inM.includes(i.identificador));
+                
+                if (av.length === 0) t.innerHTML = '<tr><td class="text-center p-3">No hay equipos informáticos libres</td></tr>';
+                else {
+                    av.forEach(i => {
+                        const row = document.createElement('tr');
+                        row.style.cursor = 'pointer';
+                        row.innerHTML = `<td><strong>${i.identificador}</strong><br><small>${i.data.clase || ''} - ${i.data.marca || ''} ${i.data.modelo || ''}</small></td><td class="text-end"><input type="radio" name="ra"></td>`;
+                        row.onclick = () => { row.querySelector('input').checked = true; selEq = i; document.getElementById('b-as-conf').disabled = false; };
+                        t.appendChild(row);
+                    });
+                }
+            };
+
+            window.confirmarA = function() {
+                const as = JSON.parse(localStorage.getItem('assigned_ids') || '[]');
+                as.push(selEq.identificador);
+                localStorage.setItem('assigned_ids', JSON.stringify(as));
+                
+                const inc = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+                const r = inc.find(x => String(x.id) === String(tempId));
+                
+                // Guardar datos para el Acta
+                const actaData = {
+                    id: tempId,
+                    eqId: selEq.identificador,
+                    eqTipo: selEq.tipo,
+                    eqMarca: selEq.data.marca || '-',
+                    eqModelo: selEq.data.modelo || '-',
+                    eqCodigo: selEq.data.codigo || 'S/N',
+                    solName: r ? r.identificador : 'Funcionario',
+                    solDepto: r ? r.data.departamento : 'N/A'
+                };
+                localStorage.setItem('current_acta_data', JSON.stringify(actaData));
+                
+                // Limpieza total de modales antes de redirigir (evita el "bloqueo negro")
+                const mEl = document.getElementById('modalAsig');
+                const mInst = bootstrap.Modal.getInstance(mEl);
+                if(mInst) mInst.hide();
+                
+                document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+                
+                // Redirigir a la página del Acta usando el motor SPA
+                if(window.loadContentGlobal) {
+                    window.loadContentGlobal('../Procesos/solicitudes/ActaAsignacion.html', 'Acta de Asignación', 'Solicitudes');
+                } else {
+                    window.location.href = 'ActaAsignacion.html';
+                }
+            };
+
+            // SINGLE INTERVAL for all instances
+            if (window.reqInterval) clearInterval(window.reqInterval);
+            window.reqInterval = setInterval(() => {
+                if (document.getElementById('total-count')) window.loadRequests();
+                else clearInterval(window.reqInterval);
+            }, 3000);
+
+            setTimeout(window.loadRequests, 300);
+        })();
+    </script>
+
+    <style>
+        .clase-card { margin-bottom: 20px; border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .italic { font-style: italic; }
+        .flex-fill { flex: 1; }
+    </style>
+</body>
+
+</html>

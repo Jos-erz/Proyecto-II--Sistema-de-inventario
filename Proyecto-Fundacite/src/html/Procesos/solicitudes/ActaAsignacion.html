@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acta de Asignación | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body style="background: #f4f7fa; padding: 20px;">
+
+    <header class="no-print">
+        <span>Fundacite Yaracuy — Acta de Asignación</span>
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <div style="background: white; max-width: 800px; margin: 20px auto; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #ddd;">
+            
+            <!-- MEMBRETE -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e5694; padding-bottom: 15px; margin-bottom: 25px;">
+                <div>
+                    <img src="../ingreso/Logofundacite.webp" alt="logo" style="height: 50px; margin-bottom: 5px;">
+                    <h5 style="margin:0; color: #1e5694; font-weight: 800;">FUNDACITE YARACUY</h5>
+                    <small class="text-muted">Soporte Técnico e Inventario</small>
+                </div>
+                <div style="text-align: right;">
+                    <div style="background: #f1f5f9; padding: 8px 15px; border-radius: 5px;">
+                        <small class="text-muted d-block" style="font-size: 10px;">CONTROL Nº</small>
+                        <strong id="acta-id" style="color: #1e5694;"></strong>
+                    </div>
+                    <p style="margin-top: 5px; font-size: 12px;">Fecha: <strong id="acta-fecha"></strong></p>
+                </div>
+            </div>
+
+            <!-- TÍTULO -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h3 style="margin:0; font-weight: 800; text-transform: uppercase;">Acta de Asignación de Bien Tecnológico</h3>
+            </div>
+
+            <!-- CONTENIDO -->
+            <div style="font-size: 14px; line-height: 1.6; color: #333; text-align: justify;">
+                <p>Por medio de la presente acta, se deja constancia de la entrega formal del bien tecnológico descrito a continuación:</p>
+
+                <div style="background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 8px 0; font-weight: bold; width: 40%;">IDENTIFICADOR:</td>
+                            <td id="data-id" style="padding: 8px 0; color: #1e5694; font-weight: 800;"></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 8px 0; font-weight: bold;">TIPO DE EQUIPO:</td>
+                            <td id="data-tipo" style="padding: 8px 0;"></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid #e2e8f0;">
+                            <td style="padding: 8px 0; font-weight: bold;">MARCA / MODELO:</td>
+                            <td id="data-marca" style="padding: 8px 0;"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">CÓDIGO INVENTARIO:</td>
+                            <td id="data-codigo" style="padding: 8px 0;"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <p><strong>RECEPTOR DEL BIEN:</strong></p>
+                <p style="margin-left: 15px;">
+                    Funcionario: <strong id="data-solicitante"></strong><br>
+                    Departamento: <span id="data-depto"></span>
+                </p>
+
+                <p style="margin-top: 20px;">
+                    El receptor declara recibir el equipo en condiciones operativas y asume la responsabilidad de su resguardo y uso institucional.
+                </p>
+            </div>
+
+            <!-- FIRMAS -->
+            <div style="display: flex; justify-content: space-around; margin-top: 60px; text-align: center;">
+                <div style="width: 200px; border-top: 1px solid #333; padding-top: 5px;"><small>Entregado por</small></div>
+                <div style="width: 200px; border-top: 1px solid #333; padding-top: 5px;"><small>Recibido por</small></div>
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="no-print" style="margin-top: 40px; display: flex; justify-content: center; gap: 15px;">
+                <button class="btn btn-secondary px-5" onclick="if(window.loadContentGlobal) window.loadContentGlobal('../Procesos/solicitudes/SolicitudesRecibidas.html', 'Solicitudes Recibidas', 'Solicitudes'); else window.location.href='SolicitudesRecibidas.html'">VOLVER A BANDEJA</button>
+            </div>
+        </div>
+
+        <script>
+            (function() {
+                const data = JSON.parse(localStorage.getItem('current_acta_data') || '{}');
+                if(!data.eqId) return;
+
+                document.getElementById('acta-id').textContent = 'ASIG-' + data.id.substring(0,6);
+                document.getElementById('acta-fecha').textContent = new Date().toLocaleDateString();
+                document.getElementById('data-id').textContent = data.eqId;
+                document.getElementById('data-tipo').textContent = data.eqTipo;
+                document.getElementById('data-marca').textContent = data.eqMarca + ' / ' + data.eqModelo;
+                document.getElementById('data-codigo').textContent = data.eqCodigo;
+                document.getElementById('data-solicitante').textContent = data.solName;
+                document.getElementById('data-depto').textContent = data.solDepto;
+            })();
+        </script>
+    </main>
+
+    <style>
+        @media print { .no-print { display: none; } body { background: white; padding: 0; } main { margin: 0; padding: 0; } }
+    </style>
+
+</body>
+</html>

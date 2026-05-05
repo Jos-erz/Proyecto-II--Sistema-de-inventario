@@ -35,79 +35,29 @@
                           <th>Tipo</th>
                           <th>Equipo / Marca</th>
                           <th>Fecha de Ingreso</th>
+                          <th>Estatus</th>
                           <th>Acción</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        <tr class="unread">
-                          <td>
-                            <div class="avtar avtar-s bg-light-primary"><i class="ph ph-desktop f-20"></i></div>
-                          </td>
-                          <td>
-                            <h6 class="mb-1">PC de Escritorio - VIT E2230</h6>
-                            <p class="m-0 text-muted">S/N: VIT-98237498</p>
-                          </td>
-                          <td>
-                            <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>03 MAY 10:30
-                            </h6>
-                          </td>
-                          <td>
-                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="VIT E2230"
-                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                          </td>
-                        </tr>
-                        <tr class="unread">
-                          <td>
-                            <div class="avtar avtar-s bg-light-info"><i class="ph ph-laptop f-20"></i></div>
-                          </td>
-                          <td>
-                            <h6 class="mb-1">Laptop - Síragon NB-3100</h6>
-                            <p class="m-0 text-muted">S/N: SIR-NB31-293</p>
-                          </td>
-                          <td>
-                            <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>02 MAY 14:15
-                            </h6>
-                          </td>
-                          <td>
-                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="Síragon NB-3100"
-                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                          </td>
-                        </tr>
-                        <tr class="unread">
-                          <td>
-                            <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
-                          </td>
-                          <td>
-                            <h6 class="mb-1">Laptop - Canaima Educativo (Docente)</h6>
-                            <p class="m-0 text-muted">S/N: CAN-DOC-5591</p>
-                          </td>
-                          <td>
-                            <h6 class="text-muted"><i class="ti ti-circle-filled text-danger f-10 m-r-15"></i>28 ABR 09:00
-                            </h6>
-                          </td>
-                          <td>
-                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="Canaima Docente"
-                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                          </td>
-                        </tr>
-                        <tr class="unread">
-                          <td>
-                            <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
-                          </td>
-                          <td>
-                            <h6 class="mb-1">Laptop - Canaima Escolar</h6>
-                            <p class="m-0 text-muted">S/N: CAN-47892-56</p>
-                          </td>
-                          <td>
-                            <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>25 ABR 16:45
-                            </h6>
-                          </td>
-                          <td>
-                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="HP LaserJet Pro"
-                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                          </td>
-                        </tr>
-                      </tbody>
+                        <tbody id="recent-equipment-table">
+                          <tr class="unread">
+                            <td>
+                              <div class="avtar avtar-s bg-light-primary"><i class="ph ph-desktop f-20"></i></div>
+                            </td>
+                            <td>
+                              <h6 class="mb-1">PC de Escritorio - VIT E2230</h6>
+                              <p class="m-0 text-muted">S/N: VIT-98237498</p>
+                            </td>
+                            <td>
+                              <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>03 MAY 10:30
+                              </h6>
+                            </td>
+                            <td>
+                              <button class="btn btn-sm btn-primary view-details-btn" data-eq="VIT E2230"
+                                data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                            </td>
+                          </tr>
+                        </tbody>
                     </table>
                   </div>
                 </div>
@@ -221,6 +171,74 @@
       </div>
     </div>
   </div>
+  <!-- Modal Alerta Estilizada -->
+  <div class="modal fade" id="styledAlertModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div id="alert-modal-header" class="modal-header" style="background: #1e5694; color: white; border-bottom: none;">
+          <h5 class="modal-title" id="alert-modal-title">Mensaje del Sistema</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <i id="alert-modal-icon" class="ph ph-info f-40 text-primary mb-3"></i>
+          <h5 id="alert-modal-msg-title" class="mb-2"></h5>
+          <p id="alert-modal-message" class="text-muted mb-0"></p>
+        </div>
+        <div class="modal-footer justify-content-center border-top-0">
+          <button type="button" class="btn btn-primary px-5" data-bs-dismiss="modal" style="border-radius: 20px;">Entendido</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Detalle de Registros (SPA) -->
+  <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <div id="details-modal-header" class="modal-header" style="background: #1e5694; color: white;">
+          <h5 class="modal-title"><i class="ph ph-magnifying-glass me-2"></i>Detalles del Registro</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div id="details-modal-banner" style="background: #f8fafc; padding: 20px; border-bottom: 1px solid #edf2f7; text-align: center;">
+            <div id="details-type-icon" class="avtar avtar-l mb-2" style="width: 60px; height: 60px; font-size: 30px; margin: 0 auto;">
+              <i class="ph ph-desktop"></i>
+            </div>
+            <h4 id="details-modal-name" class="mb-1">Nombre del Equipo</h4>
+            <span id="details-modal-type-badge" class="badge bg-light-primary text-primary">Tipo de Bien</span>
+          </div>
+          <div class="p-4">
+            <ul id="details-list" class="list-group list-group-flush">
+              <!-- Se cargará dinámicamente -->
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal de Pregunta Estilizada -->
+  <div class="modal fade" id="styledQuestionModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+        <div class="modal-header" style="background: #1e5694; color: white;">
+          <h5 class="modal-title"><i class="ph ph-question me-2"></i>Confirmación</h5>
+        </div>
+        <div class="modal-body text-center p-4">
+          <i class="ph ph-file-plus f-50 text-primary mb-3"></i>
+          <h5 id="question-modal-title" class="mb-2">¿Guardado correctamente!</h5>
+          <p id="question-modal-message" class="text-muted"></p>
+        </div>
+        <div class="modal-footer justify-content-center border-top-0 pb-4">
+          <button type="button" id="question-no-btn" class="btn btn-secondary px-4 me-2" style="border-radius: 20px;">No, volver al inicio</button>
+          <button type="button" id="question-yes-btn" class="btn btn-primary px-4" style="border-radius: 20px;">Sí, crear documento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   @@include('../layouts/footer-block.html')
 
   <!-- [Page Specific JS] start -->

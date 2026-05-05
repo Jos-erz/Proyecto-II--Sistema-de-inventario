@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Solicitudes | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Sistema de Solicitudes</span>
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Nueva Solicitud Institucional</h3>
+            </div>
+            <p class="text-muted mb-4">Seleccione el tipo de solicitud que desea realizar para desplegar los campos correspondientes.</p>
+
+            <div class="mb-4">
+                <label for="sol-tipo-principal" style="font-weight: bold; color: #1e5694;">¿Qué tipo de solicitud desea realizar? <span class="req">*</span></label>
+                <select id="sol-tipo-principal" class="form-control" onchange="toggleSolicitudSec()" style="border: 2px solid #1e5694; font-size: 16px; padding: 12px;">
+                    <option value="">Seleccione una opción...</option>
+                    <option value="mantenimiento">Solicitud de Mantenimiento (Reparación/Preventivo)</option>
+                    <option value="equipo">Solicitud de Nuevo Equipo / Asignación</option>
+                    <option value="traslado">Solicitud de Traslado / Movilización de Bienes</option>
+                </select>
+            </div>
+
+            <!-- SECCIÓN MANTENIMIENTO -->
+            <div id="sec-sol-mantenimiento" class="sol-dynamic-sec" style="display: none; border: 1px solid #e2e6eb; border-radius: 12px; padding: 25px; background: #f8fafc;">
+                <h5 class="text-primary mb-4 fw-bold"><i class="ph ph-wrench me-2"></i>Detalles de Mantenimiento</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="mant-equipo">Equipo afectado <span class="req">*</span></label>
+                        <select id="mant-equipo" class="form-control inst-populator">
+                            <option value="">Seleccionar equipo...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="mant-fecha">Fecha de solicitud <span class="req">*</span></label>
+                        <input type="date" id="mant-fecha" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-0">
+                    <label for="mant-motivo">Descripción de la falla o motivo del mantenimiento <span class="req">*</span></label>
+                    <textarea id="mant-motivo" class="form-control" rows="4" placeholder="Describa brevemente el problema..."></textarea>
+                </div>
+            </div>
+
+            <!-- SECCIÓN SOLICITUD DE EQUIPO -->
+            <div id="sec-sol-equipo" class="sol-dynamic-sec" style="display: none; border: 1px solid #e2e6eb; border-radius: 12px; padding: 25px; background: #f8fafc;">
+                <h5 class="text-primary mb-4 fw-bold"><i class="ph ph-user-plus me-2"></i>Datos del Solicitante y Necesidad</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="req-empleado">Nombre del Solicitante <span class="req">*</span></label>
+                        <input type="text" id="req-empleado" class="form-control" placeholder="Nombre completo">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="req-cargo">Cargo <span class="req">*</span></label>
+                        <input type="text" id="req-cargo" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="req-depto">Departamento <span class="req">*</span></label>
+                        <input type="text" id="req-depto" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="req-fecha">Fecha <span class="req">*</span></label>
+                        <input type="date" id="req-fecha" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-0">
+                    <label for="req-justificacion">Justificación de la necesidad <span class="req">*</span></label>
+                    <textarea id="req-justificacion" class="form-control" rows="4" placeholder="¿Por qué se requiere este equipo?"></textarea>
+                </div>
+            </div>
+
+            <!-- SECCIÓN TRASLADO -->
+            <div id="sec-sol-traslado" class="sol-dynamic-sec" style="display: none; border: 1px solid #e2e6eb; border-radius: 12px; padding: 25px; background: #f8fafc;">
+                <h5 class="text-primary mb-4 fw-bold"><i class="ph ph-arrows-left-right me-2"></i>Planificación de Movimiento</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="tras-equipo">Equipo a movilizar <span class="req">*</span></label>
+                        <select id="tras-equipo" class="form-control inst-populator">
+                            <option value="">Seleccionar equipo...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tras-fecha">Fecha programada <span class="req">*</span></label>
+                        <input type="date" id="tras-fecha" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="tras-origen">Ubicación Actual (Origen) <span class="req">*</span></label>
+                        <input type="text" id="tras-origen" class="form-control" placeholder="Sede / Oficina / Piso">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tras-destino">Ubicación Nueva (Destino) <span class="req">*</span></label>
+                        <input type="text" id="tras-destino" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-0">
+                    <label for="tras-motivo">Motivo del traslado <span class="req">*</span></label>
+                    <textarea id="tras-motivo" class="form-control" rows="3" placeholder="Ej: Cambio de oficina, reparación externa..."></textarea>
+                </div>
+            </div>
+        </section>
+
+        <div class="form-actions" id="sol-actions" style="display: none;">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">ATRÁS</button>
+            <button type="button" class="btn btn-primary px-5" onclick="procesarSolicitud()">ENVIAR SOLICITUD</button>
+        </div>
+
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">CANCELAR Y SALIR</button>
+        </center>
+    </main>
+
+    <script>
+        function toggleSolicitudSec() {
+            const tipo = document.getElementById('sol-tipo-principal').value;
+            document.querySelectorAll('.sol-dynamic-sec').forEach(sec => sec.style.display = 'none');
+            document.getElementById('sol-actions').style.display = tipo ? 'flex' : 'none';
+
+            if (tipo === 'mantenimiento') {
+                document.getElementById('sec-sol-mantenimiento').style.display = 'block';
+                populateEquipos('mant-equipo');
+            } else if (tipo === 'equipo') {
+                document.getElementById('sec-sol-equipo').style.display = 'block';
+            } else if (tipo === 'traslado') {
+                document.getElementById('sec-sol-traslado').style.display = 'block';
+                populateEquipos('tras-equipo');
+            }
+        }
+
+        function populateEquipos(selectId) {
+            const select = document.getElementById(selectId);
+            const savedData = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            
+            select.innerHTML = '<option value="">Seleccionar equipo...</option>';
+            savedData.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.identificador;
+                opt.textContent = `${item.tipo}: ${item.identificador}`;
+                select.appendChild(opt);
+            });
+        }
+
+        function procesarSolicitud() {
+            const tipo = document.getElementById('sol-tipo-principal').value;
+            if (!tipo) {
+                if(window.showStyledAlert) showStyledAlert('Debe seleccionar un tipo de solicitud.', 'Atención', 'ph-warning', '#dc2626');
+                return;
+            }
+
+            let isValid = true;
+            let message = "";
+            let requestData = { 
+                id: String(Date.now()),
+                tipo: tipo, 
+                fecha: '', 
+                identificador: '', 
+                data: {} 
+            };
+
+            if (tipo === 'mantenimiento') {
+                const eq = document.getElementById('mant-equipo').value;
+                const f = document.getElementById('mant-fecha').value;
+                const m = document.getElementById('mant-motivo').value;
+                if (!eq || !f || !m) isValid = false;
+                requestData.fecha = f;
+                requestData.identificador = eq;
+                requestData.data = { motivo: m };
+                message = "Su solicitud de mantenimiento ha sido enviada al departamento técnico.";
+            } else if (tipo === 'equipo') {
+                const emp = document.getElementById('req-empleado').value;
+                const f = document.getElementById('req-fecha').value;
+                const cargo = document.getElementById('req-cargo').value;
+                const depto = document.getElementById('req-depto').value;
+                const j = document.getElementById('req-justificacion').value;
+                
+                if (!emp || !f || !j || !cargo || !depto) isValid = false;
+                
+                requestData.fecha = f;
+                requestData.identificador = emp;
+                requestData.data = { cargo: cargo, depto: depto, justificacion: j };
+                message = "Su requerimiento de equipo ha sido registrado para evaluación presupuestaria.";
+            } else if (tipo === 'traslado') {
+                const eq = document.getElementById('tras-equipo').value;
+                const f = document.getElementById('tras-fecha').value;
+                const d = document.getElementById('tras-destino').value;
+                const o = document.getElementById('tras-origen').value;
+                const m = document.getElementById('tras-motivo').value;
+                
+                if (!eq || !f || !d || !o || !m) isValid = false;
+                
+                requestData.fecha = f;
+                requestData.identificador = eq;
+                requestData.data = { origen: o, destino: d, motivo: m };
+                message = "La orden de traslado ha sido generada y notificada al personal de logística.";
+            }
+
+            if (!isValid) {
+                if(window.showStyledAlert) showStyledAlert('Por favor complete todos los campos obligatorios antes de enviar.', 'Error de Validación', 'ph-warning', '#dc2626');
+                else alert('Por favor complete todos los campos.');
+                return;
+            }
+
+            // Guardar en localStorage
+            const incoming = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+            incoming.push(requestData);
+            localStorage.setItem('incoming_requests', JSON.stringify(incoming));
+
+            if(window.showStyledAlert) {
+                showStyledAlert(message, 'Solicitud Enviada', 'ph-check-circle', '#10b981');
+                setTimeout(() => {
+                    if(window.goHome) window.goHome();
+                    else window.location.href = '../../dashboard/index.html';
+                }, 2500);
+            } else {
+                alert(message);
+                window.location.href = '../../dashboard/index.html';
+            }
+        }
+    </script>
+
+    <style>
+        .form-control { display: block; width: 100%; padding: 10px; border: 1.5px solid #d1d5db; border-radius: 8px; margin-bottom: 15px; transition: border-color 0.2s; }
+        .form-control:focus { border-color: #1e5694; outline: none; box-shadow: 0 0 0 3px rgba(30, 86, 148, 0.1); }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #374151; }
+        .text-primary { color: #1e5694 !important; }
+        .fw-bold { font-weight: 700 !important; }
+    </style>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+
+</body>
+
+</html>

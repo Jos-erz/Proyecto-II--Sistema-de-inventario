@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <title>Generar Documento | Fundacite Yaracuy</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -16,12 +16,31 @@
     </header>
 
     <main>
-
-
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Resumen de Adquisiciones a Documentar</h3>
+            </div>
+            <p class="text-muted small mb-3">A continuación se listan los bienes que serán vinculados a este documento comprobante.</p>
+            
+            <div class="table-responsive">
+                <table class="clase-tabla" style="font-size: 13px;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb; background: #f8fafc;">
+                            <th style="padding: 10px;">Tipo</th>
+                            <th style="padding: 10px;">Identificación</th>
+                            <th style="padding: 10px;">Origen</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resumen-documento">
+                        <!-- Se carga por JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
         <section class="clase-card">
             <div class="clase-titulo">
-                <h3>Documento</h3>
+                <h3>Datos del Documento</h3>
             </div>
 
             <table class="clase-tabla">
@@ -33,43 +52,88 @@
                 </tr>
                 <tr>
                     <td>
-                        <label for="doc-archivo">Archivo digital <span class="req">*</span></label>
-                        <input type="text" id="doc-archivo" name="doc-archivo"
-                            placeholder="Dirección de almacenamiento o nombre del archivo" maxlength="100">
+                        <label for="doc-numero">Número de Documento <span class="req">*</span></label>
+                        <input type="text" id="doc-numero" name="doc-numero" placeholder="Ej: PRO-2026-001" maxlength="15">
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="doc-numero">Número de Documento <span class="req">*</span></label>
-                        <input type="text" id="doc-numero" name="doc-numero" placeholder="Correlativo de registro"
-                            maxlength="15">
+                        <label for="doc-archivo">Referencia de Archivo Digital <span class="req">*</span></label>
+                        <input type="text" id="doc-archivo" name="doc-archivo"
+                            placeholder="Nombre del archivo escaneado o link" maxlength="100">
                     </td>
                 </tr>
             </table>
         </section>
 
-        <form method="get" action="Periferico.html">
-            <div class="form-actions">
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="window.history.back()">ATRÁS</button>
+            <button type="button" class="btn btn-primary" onclick="finalizarDocumento()">FINALIZAR Y REGISTRAR</button>
+        </div>
 
-                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-
-        </form>
-        <form method="get" action="../../dashboard/index.html">
-
-            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
-            </div>
-
-
-        </form>
-        <br><br><br>
-        <center>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
-            </form>
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary" onclick="window.location.href='../../dashboard/index.html'">CANCELAR</button>
         </center>
 
-
     </main>
+
+    <script>
+        (function() {
+            const currentSessionData = JSON.parse(localStorage.getItem('current_session_items') || '[]');
+            const tbody = document.getElementById('resumen-documento');
+            
+            if (currentSessionData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px;">No hay registros pendientes para documentar.</td></tr>';
+                return;
+            }
+
+            currentSessionData.forEach(item => {
+                const row = `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px;">${item.tipo}</td>
+                        <td style="padding: 10px;">${item.identificador}</td>
+                        <td style="padding: 10px;">${item.origen}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        })();
+
+        function finalizarDocumento() {
+            const numero = document.getElementById('doc-numero').value;
+            const fecha = document.getElementById('doc-fecha').value;
+            
+            if (!numero || !fecha) {
+                if(window.showStyledAlert) showStyledAlert('Debe completar el número y fecha del documento.', 'Atención', 'ph-warning', '#dc2626');
+                else alert('Debe completar el número y fecha del documento.');
+                return;
+            }
+
+            const currentSessionData = JSON.parse(localStorage.getItem('current_session_items') || '[]');
+            const recentActivity = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            
+            // Move items to global recent activity
+            localStorage.setItem('recent_activity', JSON.stringify([...recentActivity, ...currentSessionData]));
+            
+            // Clear current session
+            localStorage.removeItem('current_session_items');
+
+            if(window.showStyledAlert) {
+                showStyledAlert('¡El documento ' + numero + ' ha sido vinculado exitosamente y los equipos están registrados!', 'Registro Completado', 'ph-check-circle', '#10b981');
+                setTimeout(() => {
+                    if(window.goHome) window.goHome();
+                    else window.location.href = '../../dashboard/index.html';
+                }, 2000);
+            } else {
+                alert('¡Documento registrado!');
+                window.location.href = '../../dashboard/index.html';
+            }
+        }
+    </script>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
 
 </body>
 
