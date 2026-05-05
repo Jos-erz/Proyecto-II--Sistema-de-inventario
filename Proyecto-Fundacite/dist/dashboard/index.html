@@ -94,7 +94,7 @@
     <div class="navbar-content">
       <ul class="pc-navbar">
         <li class="pc-item pc-caption">
-          <label data-i18n="Navigation">Navegación</label>
+          <label style="color: #fff !important; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Fundacite</label>
         </li>
         <li class="pc-item">
           <a href="../dashboard/index.html" class="pc-link">
@@ -222,6 +222,34 @@
   </div>
 
 </nav>
+<style>
+  .pc-sidebar .pc-navbar .pc-link, 
+  .pc-sidebar .pc-navbar .pc-mtext, 
+  .pc-sidebar .pc-navbar .pc-micon i, 
+  .pc-sidebar .pc-navbar .pc-arrow i {
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+  
+  .pc-sidebar .pc-navbar .pc-link:hover,
+  .pc-sidebar .pc-navbar .pc-link:hover .pc-mtext, 
+  .pc-sidebar .pc-navbar .pc-link:hover .pc-micon i {
+    color: #fff !important;
+    background: transparent !important;
+  }
+  
+  .pc-sidebar .pc-navbar .pc-item.active > .pc-link,
+  .pc-sidebar .pc-navbar .pc-item.active > .pc-link .pc-mtext,
+  .pc-sidebar .pc-navbar .pc-item.active > .pc-link .pc-micon i {
+    color: #fff !important;
+    background: transparent !important;
+    font-weight: 600;
+  }
+
+  .pc-sidebar .pc-navbar .pc-item.pc-trigger > .pc-link .pc-arrow i {
+    transform: rotate(90deg);
+    color: #fff !important;
+  }
+</style>
 <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
 <header class="pc-header">
   <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
@@ -431,122 +459,122 @@
   <!-- [ Main Content ] start -->
   <div class="pc-container">
     <div class="pc-content">
-      <!-- [ breadcrumb ] start -->
-      <div class="page-header">
-        <div class="page-block">
-          <div class="row align-items-center">
-            <div class="col-md-12">
-              <div class="page-header-title">
-                <h5 class="mb-0">Inicio</h5>
+      <div id="breadcrumb-container">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+          <div class="page-block">
+            <div class="row align-items-center">
+              <div class="col-md-12">
+                <div class="page-header-title">
+                  <h5 class="mb-0">Inicio</h5>
+                </div>
               </div>
-            </div>
-            <div class="col-md-12">
-              <ul class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="../dashboard/index.html">Menu Principal</a></li>
-                <li class="breadcrumb-item"><a href="javascript: void(0)">Panel</a></li>
-                <li class="breadcrumb-item" aria-current="page">Inicio</li>
-              </ul>
+              <div class="col-md-12">
+                <ul class="breadcrumb mb-0">
+                  <li class="breadcrumb-item"><a href="../dashboard/index.html">Menu Principal</a></li>
+                  <li class="breadcrumb-item"><a href="javascript: void(0)">Panel</a></li>
+                  <li class="breadcrumb-item" aria-current="page">Inicio</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
+        <!-- [ breadcrumb ] end -->
       </div>
-      <!-- [ breadcrumb ] end -->
       <!-- [ Main Content ] start -->
-      <div class="row">
-
-
-
-
-
-
+      <div class="row" id="main-content-row">
         <!-- [ Recent Users ] start -->
-        <div class="col-xl-8 col-md-6">
-          <div class="card Recent-Users table-card">
-            <div class="card-header">
-              <h5>Ultimos Equipos Agregados</h5>
-            </div>
-            <div class="card-body px-0 py-3">
-              <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                  <thead>
-                    <tr>
-                      <th>Tipo</th>
-                      <th>Equipo / Marca</th>
-                      <th>Fecha de Ingreso</th>
-                      <th>Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="unread">
-                      <td>
-                        <div class="avtar avtar-s bg-light-primary"><i class="ph ph-desktop f-20"></i></div>
-                      </td>
-                      <td>
-                        <h6 class="mb-1">PC de Escritorio - VIT E2230</h6>
-                        <p class="m-0 text-muted">S/N: VIT-98237498</p>
-                      </td>
-                      <td>
-                        <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>03 MAY 10:30
-                        </h6>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="VIT E2230"
-                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                      </td>
-                    </tr>
-                    <tr class="unread">
-                      <td>
-                        <div class="avtar avtar-s bg-light-info"><i class="ph ph-laptop f-20"></i></div>
-                      </td>
-                      <td>
-                        <h6 class="mb-1">Laptop - Síragon NB-3100</h6>
-                        <p class="m-0 text-muted">S/N: SIR-NB31-293</p>
-                      </td>
-                      <td>
-                        <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>02 MAY 14:15
-                        </h6>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="Síragon NB-3100"
-                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                      </td>
-                    </tr>
-                    <tr class="unread">
-                      <td>
-                        <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
-                      </td>
-                      <td>
-                        <h6 class="mb-1">Laptop - Canaima Educativo (Docente)</h6>
-                        <p class="m-0 text-muted">S/N: CAN-DOC-5591</p>
-                      </td>
-                      <td>
-                        <h6 class="text-muted"><i class="ti ti-circle-filled text-danger f-10 m-r-15"></i>28 ABR 09:00
-                        </h6>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="Canaima Docente"
-                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                      </td>
-                    </tr>
-                    <tr class="unread">
-                      <td>
-                        <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
-                      </td>
-                      <td>
-                        <h6 class="mb-1">Laptop - Canaima Escolar</h6>
-                        <p class="m-0 text-muted">S/N: CAN-47892-56</p>
-                      </td>
-                      <td>
-                        <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>25 ABR 16:45
-                        </h6>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-primary view-details-btn" data-eq="HP LaserJet Pro"
-                          data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+        <div class="col-xl-12 col-md-12" id="main-content-area">
+          <div class="row" id="dashboard-home-view">
+            <div class="col-xl-8 col-md-6">
+              <div class="card Recent-Users table-card">
+                <div class="card-header">
+                  <h5>Ultimos Equipos Agregados</h5>
+                </div>
+                <div class="card-body px-0 py-3">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>Tipo</th>
+                          <th>Equipo / Marca</th>
+                          <th>Fecha de Ingreso</th>
+                          <th>Acción</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="unread">
+                          <td>
+                            <div class="avtar avtar-s bg-light-primary"><i class="ph ph-desktop f-20"></i></div>
+                          </td>
+                          <td>
+                            <h6 class="mb-1">PC de Escritorio - VIT E2230</h6>
+                            <p class="m-0 text-muted">S/N: VIT-98237498</p>
+                          </td>
+                          <td>
+                            <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>03 MAY 10:30
+                            </h6>
+                          </td>
+                          <td>
+                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="VIT E2230"
+                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                          </td>
+                        </tr>
+                        <tr class="unread">
+                          <td>
+                            <div class="avtar avtar-s bg-light-info"><i class="ph ph-laptop f-20"></i></div>
+                          </td>
+                          <td>
+                            <h6 class="mb-1">Laptop - Síragon NB-3100</h6>
+                            <p class="m-0 text-muted">S/N: SIR-NB31-293</p>
+                          </td>
+                          <td>
+                            <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>02 MAY 14:15
+                            </h6>
+                          </td>
+                          <td>
+                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="Síragon NB-3100"
+                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                          </td>
+                        </tr>
+                        <tr class="unread">
+                          <td>
+                            <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
+                          </td>
+                          <td>
+                            <h6 class="mb-1">Laptop - Canaima Educativo (Docente)</h6>
+                            <p class="m-0 text-muted">S/N: CAN-DOC-5591</p>
+                          </td>
+                          <td>
+                            <h6 class="text-muted"><i class="ti ti-circle-filled text-danger f-10 m-r-15"></i>28 ABR 09:00
+                            </h6>
+                          </td>
+                          <td>
+                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="Canaima Docente"
+                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                          </td>
+                        </tr>
+                        <tr class="unread">
+                          <td>
+                            <div class="avtar avtar-s bg-light-danger"><i class="ph ph-laptop f-20"></i></div>
+                          </td>
+                          <td>
+                            <h6 class="mb-1">Laptop - Canaima Escolar</h6>
+                            <p class="m-0 text-muted">S/N: CAN-47892-56</p>
+                          </td>
+                          <td>
+                            <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>25 ABR 16:45
+                            </h6>
+                          </td>
+                          <td>
+                            <button class="btn btn-sm btn-primary view-details-btn" data-eq="HP LaserJet Pro"
+                              data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -727,6 +755,7 @@
   </script>
           
 
+  <script src="../assets/js/spa.js"></script>
 </body>
 <!-- [Body] end -->
 

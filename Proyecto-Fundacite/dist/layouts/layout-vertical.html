@@ -17,7 +17,7 @@
     <div class="navbar-content">
       <ul class="pc-navbar">
         <li class="pc-item pc-caption">
-          <label data-i18n="Navigation">Navegación</label>
+          <label style="color: #fff !important; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">Fundacite</label>
         </li>
         <li class="pc-item">
           <a href="../dashboard/index.html" class="pc-link">
@@ -145,6 +145,34 @@
   </div>
 
 </nav>
+<style>
+  .pc-sidebar .pc-navbar .pc-link, 
+  .pc-sidebar .pc-navbar .pc-mtext, 
+  .pc-sidebar .pc-navbar .pc-micon i, 
+  .pc-sidebar .pc-navbar .pc-arrow i {
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+  
+  .pc-sidebar .pc-navbar .pc-link:hover,
+  .pc-sidebar .pc-navbar .pc-link:hover .pc-mtext, 
+  .pc-sidebar .pc-navbar .pc-link:hover .pc-micon i {
+    color: #fff !important;
+    background: transparent !important;
+  }
+  
+  .pc-sidebar .pc-navbar .pc-item.active > .pc-link,
+  .pc-sidebar .pc-navbar .pc-item.active > .pc-link .pc-mtext,
+  .pc-sidebar .pc-navbar .pc-item.active > .pc-link .pc-micon i {
+    color: #fff !important;
+    background: transparent !important;
+    font-weight: 600;
+  }
+
+  .pc-sidebar .pc-navbar .pc-item.pc-trigger > .pc-link .pc-arrow i {
+    transform: rotate(90deg);
+    color: #fff !important;
+  }
+</style>
 <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
 <header class="pc-header">
   <div class="header-wrapper"> <!-- [Mobile Media Block] start -->
