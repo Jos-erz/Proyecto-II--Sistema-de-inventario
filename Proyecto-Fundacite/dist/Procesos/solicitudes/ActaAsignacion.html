@@ -17,97 +17,226 @@
     </header>
 
     <main>
-        <div style="background: white; max-width: 800px; margin: 20px auto; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #ddd;">
-            
+        <div style="background: white; max-width: 860px; margin: 20px auto; padding: 40px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
+
             <!-- MEMBRETE -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #1e5694; padding-bottom: 15px; margin-bottom: 25px;">
                 <div>
                     <img src="../ingreso/Logofundacite.webp" alt="logo" style="height: 50px; margin-bottom: 5px;">
                     <h5 style="margin:0; color: #1e5694; font-weight: 800;">FUNDACITE YARACUY</h5>
-                    <small class="text-muted">Soporte Técnico e Inventario</small>
+                    <small style="color:#64748b;">Soporte Técnico e Inventario</small>
                 </div>
                 <div style="text-align: right;">
                     <div style="background: #f1f5f9; padding: 8px 15px; border-radius: 5px;">
-                        <small class="text-muted d-block" style="font-size: 10px;">CONTROL Nº</small>
-                        <strong id="acta-id" style="color: #1e5694;"></strong>
+                        <small style="color:#64748b; display:block; font-size:10px; text-transform:uppercase;">Control Nº</small>
+                        <strong id="acta-id" style="color: #1e5694; font-size: 15px;"></strong>
                     </div>
-                    <p style="margin-top: 5px; font-size: 12px;">Fecha: <strong id="acta-fecha"></strong></p>
+                    <p style="margin-top: 6px; font-size: 12px; color:#64748b;">Fecha: <strong id="acta-fecha"></strong></p>
                 </div>
             </div>
 
             <!-- TÍTULO -->
             <div style="text-align: center; margin-bottom: 30px;">
-                <h3 style="margin:0; font-weight: 800; text-transform: uppercase;">Acta de Asignación de Bien Tecnológico</h3>
+                <h3 style="margin:0; font-weight: 800; text-transform: uppercase; color: #1e3a5f; letter-spacing: 1px;">
+                    Acta de Asignación de Bien Tecnológico
+                </h3>
+                <p style="color:#64748b; font-size:13px; margin-top:6px;">Complete los campos antes de confirmar la asignación</p>
             </div>
 
-            <!-- CONTENIDO -->
-            <div style="font-size: 14px; line-height: 1.6; color: #333; text-align: justify;">
-                <p>Por medio de la presente acta, se deja constancia de la entrega formal del bien tecnológico descrito a continuación:</p>
-
-                <div style="background: #f8fafc; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; margin: 20px 0;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 8px 0; font-weight: bold; width: 40%;">IDENTIFICADOR:</td>
-                            <td id="data-id" style="padding: 8px 0; color: #1e5694; font-weight: 800;"></td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 8px 0; font-weight: bold;">TIPO DE EQUIPO:</td>
-                            <td id="data-tipo" style="padding: 8px 0;"></td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid #e2e8f0;">
-                            <td style="padding: 8px 0; font-weight: bold;">MARCA / MODELO:</td>
-                            <td id="data-marca" style="padding: 8px 0;"></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 8px 0; font-weight: bold;">CÓDIGO INVENTARIO:</td>
-                            <td id="data-codigo" style="padding: 8px 0;"></td>
-                        </tr>
-                    </table>
+            <!-- SECCIÓN: DATOS DEL BIEN -->
+            <div style="margin-bottom: 28px;">
+                <h6 style="color:#1e5694; font-weight:700; border-bottom: 2px solid #e2e8f0; padding-bottom:8px; margin-bottom:16px; text-transform:uppercase; font-size:12px; letter-spacing:.5px;">
+                    <i class="ph ph-desktop"></i> Datos del Bien
+                </h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="f-identificador">Identificador <span class="req">*</span></label>
+                        <input type="text" id="f-identificador" class="form-control" placeholder="Ej: PC Dell OptiPlex 3080">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="f-tipo">Tipo de Equipo <span class="req">*</span></label>
+                        <select id="f-tipo" class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <option>Equipo Informático</option>
+                            <option>Periférico</option>
+                            <option>Componente</option>
+                        </select>
+                    </div>
                 </div>
-
-                <p><strong>RECEPTOR DEL BIEN:</strong></p>
-                <p style="margin-left: 15px;">
-                    Funcionario: <strong id="data-solicitante"></strong><br>
-                    Departamento: <span id="data-depto"></span>
-                </p>
-
-                <p style="margin-top: 20px;">
-                    El receptor declara recibir el equipo en condiciones operativas y asume la responsabilidad de su resguardo y uso institucional.
-                </p>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="f-marca">Marca <span class="req">*</span></label>
+                        <input type="text" id="f-marca" class="form-control" placeholder="Ej: Dell">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="f-modelo">Modelo <span class="req">*</span></label>
+                        <input type="text" id="f-modelo" class="form-control" placeholder="Ej: OptiPlex 3080">
+                    </div>
+                </div>
+                <div class="row mb-0">
+                    <div class="col-md-6">
+                        <label for="f-codigo">Código de Inventario</label>
+                        <input type="text" id="f-codigo" class="form-control" placeholder="Código institucional (opcional)">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="f-serial">Número de Serie</label>
+                        <input type="text" id="f-serial" class="form-control" placeholder="Serial del equipo">
+                    </div>
+                </div>
             </div>
 
-            <!-- FIRMAS -->
-            <div style="display: flex; justify-content: space-around; margin-top: 60px; text-align: center;">
+            <!-- SECCIÓN: RECEPTOR -->
+            <div style="margin-bottom: 28px;">
+                <h6 style="color:#1e5694; font-weight:700; border-bottom: 2px solid #e2e8f0; padding-bottom:8px; margin-bottom:16px; text-transform:uppercase; font-size:12px; letter-spacing:.5px;">
+                    <i class="ph ph-user"></i> Receptor del Bien
+                </h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="f-funcionario">Nombre del Funcionario <span class="req">*</span></label>
+                        <input type="text" id="f-funcionario" class="form-control" placeholder="Nombre completo">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="f-cargo">Cargo <span class="req">*</span></label>
+                        <input type="text" id="f-cargo" class="form-control" placeholder="Cargo del funcionario">
+                    </div>
+                </div>
+                <div class="row mb-0">
+                    <div class="col-md-6">
+                        <label for="f-depto">Departamento <span class="req">*</span></label>
+                        <input type="text" id="f-depto" class="form-control" placeholder="Departamento al que pertenece">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="f-cedula">Cédula de Identidad <span class="req">*</span></label>
+                        <input type="text" id="f-cedula" class="form-control" placeholder="Ej: 12345678" maxlength="8">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN: OBSERVACIONES -->
+            <div style="margin-bottom: 30px;">
+                <h6 style="color:#1e5694; font-weight:700; border-bottom: 2px solid #e2e8f0; padding-bottom:8px; margin-bottom:16px; text-transform:uppercase; font-size:12px; letter-spacing:.5px;">
+                    <i class="ph ph-note"></i> Observaciones
+                </h6>
+                <textarea id="f-obs" class="form-control" rows="3" placeholder="Condición del equipo al momento de la entrega, observaciones adicionales..."></textarea>
+            </div>
+
+            <!-- CLÁUSULA -->
+            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; font-size:13px; color:#475569; text-align:justify; margin-bottom:30px;">
+                <i class="ph ph-info" style="color:#1e5694;"></i>
+                El receptor declara recibir el equipo en condiciones operativas y asume la responsabilidad de su resguardo y uso institucional. No realizará modificaciones de hardware ni software sin previa autorización.
+            </div>
+
+            <!-- FIRMAS (solo para impresión) -->
+            <div class="firmas-section" style="display: flex; justify-content: space-around; margin-top: 50px; text-align: center;">
                 <div style="width: 200px; border-top: 1px solid #333; padding-top: 5px;"><small>Entregado por</small></div>
-                <div style="width: 200px; border-top: 1px solid #333; padding-top: 5px;"><small>Recibido por</small></div>
+                <div style="width: 200px; border-top: 1px solid #333; padding-top: 5px;"><small>Recibido por — C.I.: ____________</small></div>
             </div>
 
             <!-- ACCIONES -->
             <div class="no-print" style="margin-top: 40px; display: flex; justify-content: center; gap: 15px;">
-                <button class="btn btn-secondary px-5" onclick="if(window.loadContentGlobal) window.loadContentGlobal('../Procesos/solicitudes/SolicitudesRecibidas.html', 'Solicitudes Recibidas', 'Solicitudes'); else window.location.href='SolicitudesRecibidas.html'">VOLVER A BANDEJA</button>
+                <button class="btn btn-secondary" onclick="volver()">CANCELAR</button>
+                <button class="btn btn-primary px-5" onclick="confirmarActa()">
+                    <i class="ph ph-check-circle"></i> CONFIRMAR Y FINALIZAR
+                </button>
             </div>
         </div>
 
         <script>
             (function() {
+                // Pre-rellenar desde datos de la solicitud si existen
                 const data = JSON.parse(localStorage.getItem('current_acta_data') || '{}');
-                if(!data.eqId) return;
 
-                document.getElementById('acta-id').textContent = 'ASIG-' + data.id.substring(0,6);
-                document.getElementById('acta-fecha').textContent = new Date().toLocaleDateString();
-                document.getElementById('data-id').textContent = data.eqId;
-                document.getElementById('data-tipo').textContent = data.eqTipo;
-                document.getElementById('data-marca').textContent = data.eqMarca + ' / ' + data.eqModelo;
-                document.getElementById('data-codigo').textContent = data.eqCodigo;
-                document.getElementById('data-solicitante').textContent = data.solName;
-                document.getElementById('data-depto').textContent = data.solDepto;
+                document.getElementById('acta-id').textContent = data.id
+                    ? 'ASIG-' + String(data.id).substring(0, 6).toUpperCase()
+                    : 'ASIG-' + String(Date.now()).substring(7);
+                document.getElementById('acta-fecha').textContent = new Date().toLocaleDateString('es-VE');
+
+                // Pre-rellenar si vienen datos del flujo de asignación
+                if (data.eqId)         document.getElementById('f-identificador').value = data.eqId;
+                if (data.eqTipo)       document.getElementById('f-tipo').value = data.eqTipo;
+                if (data.eqMarca)      document.getElementById('f-marca').value = data.eqMarca;
+                if (data.eqModelo)     document.getElementById('f-modelo').value = data.eqModelo;
+                if (data.eqCodigo)     document.getElementById('f-codigo').value = data.eqCodigo;
+                if (data.solName)      document.getElementById('f-funcionario').value = data.solName;
+                if (data.solDepto)     document.getElementById('f-depto').value = data.solDepto;
+                if (data.solCargo)     document.getElementById('f-cargo').value = data.solCargo;
+
+                window.confirmarActa = function() {
+                    const id    = document.getElementById('f-identificador').value.trim();
+                    const tipo  = document.getElementById('f-tipo').value;
+                    const marca = document.getElementById('f-marca').value.trim();
+                    const mod   = document.getElementById('f-modelo').value.trim();
+                    const func  = document.getElementById('f-funcionario').value.trim();
+                    const cargo = document.getElementById('f-cargo').value.trim();
+                    const depto = document.getElementById('f-depto').value.trim();
+                    const ci    = document.getElementById('f-cedula').value.trim();
+
+                    if (!id || !tipo || !marca || !mod || !func || !cargo || !depto || !ci) {
+                        if (window.showStyledAlert) showStyledAlert('Por favor complete todos los campos obligatorios.', 'Campos incompletos', 'ph-warning', '#dc2626');
+                        else alert('Complete todos los campos obligatorios.');
+                        return;
+                    }
+
+                    // Limpiar la solicitud de la bandeja si aún existe
+                    if (data.solicitudId) {
+                        let inc = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+                        inc = inc.filter(x => String(x.id) !== String(data.solicitudId));
+                        localStorage.setItem('incoming_requests', JSON.stringify(inc));
+                    }
+
+                    // Registrar en historial de actas
+                    const actas = JSON.parse(localStorage.getItem('actas_asignacion') || '[]');
+                    actas.push({
+                        id: document.getElementById('acta-id').textContent,
+                        fecha: document.getElementById('acta-fecha').textContent,
+                        equipo: { identificador: id, tipo, marca, modelo: mod, codigo: document.getElementById('f-codigo').value, serial: '' },
+                        receptor: { nombre: func, cargo, departamento: depto, cedula: ci },
+                        observaciones: document.getElementById('f-obs').value
+                    });
+                    localStorage.setItem('actas_asignacion', JSON.stringify(actas));
+                    localStorage.removeItem('current_acta_data');
+
+                    if (window.showStyledAlert) {
+                        showStyledAlert('¡Acta registrada correctamente!', 'Asignación completada', 'ph-check-circle', '#16a34a');
+                        setTimeout(() => {
+                            if (window.loadContentGlobal) window.loadContentGlobal('../Procesos/solicitudes/SolicitudesRecibidas.html', 'Solicitudes Recibidas', 'Solicitudes');
+                            else window.location.href = 'SolicitudesRecibidas.html';
+                        }, 1800);
+                    } else {
+                        alert('¡Acta registrada!');
+                        if (window.loadContentGlobal) window.loadContentGlobal('../Procesos/solicitudes/SolicitudesRecibidas.html', 'Solicitudes Recibidas', 'Solicitudes');
+                        else window.location.href = 'SolicitudesRecibidas.html';
+                    }
+                };
+
+                window.volver = function() {
+                    localStorage.removeItem('current_acta_data');
+                    if (window.loadContentGlobal) window.loadContentGlobal('../Procesos/solicitudes/SolicitudesRecibidas.html', 'Solicitudes Recibidas', 'Solicitudes');
+                    else window.location.href = 'SolicitudesRecibidas.html';
+                };
             })();
         </script>
     </main>
 
     <style>
-        @media print { .no-print { display: none; } body { background: white; padding: 0; } main { margin: 0; padding: 0; } }
+        .form-control { display: block; width: 100%; padding: 9px 12px; border: 1.5px solid #d1d5db; border-radius: 7px; margin-bottom: 4px; font-size: 14px; transition: border-color .2s; }
+        .form-control:focus { border-color: #1e5694; outline: none; box-shadow: 0 0 0 3px rgba(30,86,148,.1); }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #374151; }
+        .req { color: #dc2626; }
+        .row { display: flex; flex-wrap: wrap; gap: 0 16px; }
+        .col-md-6 { flex: 1 1 calc(50% - 8px); min-width: 200px; margin-bottom: 16px; }
+        .col-md-12 { flex: 1 1 100%; margin-bottom: 16px; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            main { margin: 0; padding: 0; }
+            .form-control { border: none !important; box-shadow: none !important; padding: 2px 0 !important; background: transparent !important; }
+            label { font-size: 11px; color: #888; }
+        }
     </style>
 
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
 </body>
 </html>

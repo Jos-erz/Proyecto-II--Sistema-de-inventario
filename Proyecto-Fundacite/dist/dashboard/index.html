@@ -132,6 +132,33 @@
           </ul>
         </li>
 
+        <!-- PLANTEL -->
+        <li class="pc-item pc-hasmenu">
+          <a href="#!" class="pc-link">
+            <span class="pc-micon"> <i class="ph ph-users-three"></i> </span>
+            <span class="pc-mtext" data-i18n="Menu levels">Plantel</span>
+            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+          </a>
+          <ul class="pc-submenu">
+            <li class="pc-item"><a class="pc-link" href="../Procesos/plantel/Empleados.html">Empleados</a></li>
+            <li class="pc-item"><a class="pc-link" href="../Procesos/plantel/Cargos.html">Cargos</a></li>
+            <li class="pc-item"><a class="pc-link" href="../Procesos/plantel/Departamentos.html">Departamentos</a></li>
+          </ul>
+        </li>
+
+        <!-- MANTENIMIENTO -->
+        <li class="pc-item pc-hasmenu">
+          <a href="#!" class="pc-link">
+            <span class="pc-micon"> <i class="ph ph-wrench"></i> </span>
+            <span class="pc-mtext" data-i18n="Menu levels">Mantenimiento</span>
+            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+          </a>
+          <ul class="pc-submenu">
+            <li class="pc-item"><a class="pc-link" href="../Procesos/Mantenimiento/Actividad.html">Actividad</a></li>
+            <li class="pc-item"><a class="pc-link" href="../Procesos/Mantenimiento/Diagnostico.html">Diagnostico</a></li>
+          </ul>
+        </li>
+
         <!-- ASIGNACIÓN -->
         <li class="pc-item pc-hasmenu">
           <a href="#!" class="pc-link">
@@ -159,19 +186,6 @@
           </ul>
         </li>
 
-        <!-- MANTENIMIENTO -->
-        <li class="pc-item pc-hasmenu">
-          <a href="#!" class="pc-link">
-            <span class="pc-micon"> <i class="ph ph-wrench"></i> </span>
-            <span class="pc-mtext" data-i18n="Menu levels">Mantenimiento de equipos</span>
-            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
-          </a>
-          <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" href="../Procesos/Mantenimiento/Solicituddemantenimiento.html">Solicitud de mantenimiento</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/Mantenimiento/Actividad.html">Actividad</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/Mantenimiento/Diagnostico.html">Diagnostico</a></li>
-          </ul>
-        </li>
 
         <!-- DESINCORPORACIÓN -->
         <li class="pc-item pc-hasmenu">
@@ -490,23 +504,32 @@
                         </tr>
                       </thead>
                         <tbody id="recent-equipment-table">
-                          <tr class="unread">
-                            <td>
-                              <div class="avtar avtar-s bg-light-primary"><i class="ph ph-desktop f-20"></i></div>
-                            </td>
-                            <td>
-                              <h6 class="mb-1">PC de Escritorio - VIT E2230</h6>
-                              <p class="m-0 text-muted">S/N: VIT-98237498</p>
-                            </td>
-                            <td>
-                              <h6 class="text-muted"><i class="ti ti-circle-filled text-success f-10 m-r-15"></i>03 MAY 10:30
-                              </h6>
-                            </td>
-                            <td>
-                              <button class="btn btn-sm btn-primary view-details-btn" data-eq="VIT E2230"
-                                data-bs-toggle="modal" data-bs-target="#equipmentModal">Ver Detalles</button>
-                            </td>
-                          </tr>
+                          <!-- La tabla se llena dinámicamente con JS. Si no hay datos, se muestra mensaje de vacío. -->
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-12 col-md-12 mt-4">
+              <div class="card Recent-Users table-card">
+                <div class="card-header">
+                  <h5>Ultimos Empleados Agregados</h5>
+                </div>
+                <div class="card-body px-0 py-3">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>Empleado</th>
+                          <th>Cédula</th>
+                          <th>Cargo / Departamento</th>
+                          <th>Contacto</th>
+                          <th>Acción</th>
+                        </tr>
+                      </thead>
+                        <tbody id="recent-employee-table">
+                          <!-- La tabla se llena dinámicamente con JS. -->
                         </tbody>
                     </table>
                   </div>
@@ -669,6 +692,157 @@
       </div>
     </div>
   </div>
+  <!-- Modal Edición de Equipo -->
+  <div class="modal fade" id="editEquipmentModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <div class="modal-header" style="background: #f59e0b; color: white;">
+          <h5 class="modal-title"><i class="ph ph-pencil me-2"></i>Modificar Equipo</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">Identificador</label>
+            <input type="text" class="form-control" id="edit-eq-id" />
+            <div class="invalid-feedback">Este espacio es obligatorio</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-muted small fw-bold">Tipo de Bien</label>
+                <input type="text" class="form-control" id="edit-eq-tipo" />
+                <div class="invalid-feedback">Este espacio es obligatorio</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label text-muted small fw-bold">Estatus</label>
+                <select class="form-select" id="edit-eq-estatus">
+                    <option value="Operativo">Operativo</option>
+                    <option value="En Mantenimiento">En Mantenimiento</option>
+                    <option value="Dañado">Dañado</option>
+                </select>
+            </div>
+          </div>
+          <hr class="border-light" />
+          <div id="edit-dynamic-fields">
+              <!-- Se llenará dinámicamente -->
+          </div>
+        </div>
+        <div class="modal-footer bg-light d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-danger px-4" onclick="deleteEquipmentModal()"><i class="ph ph-trash me-2"></i>Borrar</button>
+          <div>
+              <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-warning px-4 text-white" onclick="saveEquipmentEdit()"><i class="ph ph-floppy-disk me-2"></i>Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Borrar Equipo (Especifico) -->
+  <div class="modal fade" id="modalDeleteEquipment" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:15px; border:none; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+        <div class="modal-header" style="background:#dc2626; color:white;">
+          <h5 class="modal-title"><i class="ph ph-warning me-2"></i>Confirmación de Eliminación</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <i class="ph ph-trash f-50 text-danger mb-3" style="font-size: 50px;"></i>
+          <h5 class="mb-2">¿Estás seguro de borrar este equipo?</h5>
+          <p class="text-muted">Si lo borras, desaparecerá completamente del inventario y no podrás recuperarlo. Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer justify-content-center border-top-0 pb-4">
+          <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal" style="border-radius: 20px;">Cancelar</button>
+          <button type="button" class="btn btn-danger px-4" id="btn-confirm-delete-eq" style="border-radius: 20px;">Sí, borrar equipo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edición de Empleado -->
+  <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+        <div class="modal-header" style="background: #0ea5e9; color: white;">
+          <h5 class="modal-title"><i class="ph ph-user-circle-gear me-2"></i>Modificar Empleado</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted small fw-bold">Nombres</label>
+              <input type="text" class="form-control" id="edit-emp-nombre" />
+              <div class="invalid-feedback">Este espacio es obligatorio</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted small fw-bold">Apellidos</label>
+              <input type="text" class="form-control" id="edit-emp-apellido" />
+              <div class="invalid-feedback">Este espacio es obligatorio</div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">Cédula</label>
+            <input type="text" class="form-control" id="edit-emp-cedula" />
+            <div class="invalid-feedback">Este espacio es obligatorio</div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted small fw-bold">Cargo</label>
+              <input type="text" class="form-control" id="edit-emp-cargo" />
+              <div class="invalid-feedback">Este espacio es obligatorio</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted small fw-bold">Departamento</label>
+              <input type="text" class="form-control" id="edit-emp-depto" />
+              <div class="invalid-feedback">Este espacio es obligatorio</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted small fw-bold">Género</label>
+              <select class="form-select" id="edit-emp-genero">
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label text-muted small fw-bold">Teléfono</label>
+              <input type="text" class="form-control" id="edit-emp-tlf" />
+              <div class="invalid-feedback">Este espacio es obligatorio</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer bg-light d-flex justify-content-between">
+          <button type="button" class="btn btn-outline-danger px-4" onclick="deleteEmployeeModal()"><i class="ph ph-trash me-2"></i>Borrar</button>
+          <div>
+              <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-info px-4 text-white" onclick="saveEmployeeEdit()"><i class="ph ph-floppy-disk me-2"></i>Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Borrar Empleado (Especifico) -->
+  <div class="modal fade" id="modalDeleteEmployee" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:15px; border:none; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+        <div class="modal-header" style="background:#dc2626; color:white;">
+          <h5 class="modal-title"><i class="ph ph-warning me-2"></i>Confirmación de Eliminación</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <i class="ph ph-trash f-50 text-danger mb-3" style="font-size: 50px;"></i>
+          <h5 class="mb-2">¿Estás seguro de borrar este empleado?</h5>
+          <p class="text-muted">Si lo borras, desaparecerá completamente del registro y no podrás asignarle equipos. Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer justify-content-center border-top-0 pb-4">
+          <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal" style="border-radius: 20px;">Cancelar</button>
+          <button type="button" class="btn btn-danger px-4" id="btn-confirm-delete-emp" style="border-radius: 20px;">Sí, borrar empleado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal de Pregunta Estilizada -->
   <div class="modal fade" id="styledQuestionModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">

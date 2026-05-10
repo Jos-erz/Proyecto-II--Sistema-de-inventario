@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,110 +7,238 @@
     <link rel="stylesheet" href="../ingreso/styles.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
-
 <body>
-
     <header>
         <span>Fundacite Yaracuy — Bandeja de Solicitudes</span>
         <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
     </header>
 
     <main>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="margin:0; color: #1e5694; font-weight: 800;">Bandeja de Entrada (<span id="total-count">0</span>)</h2>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-sm btn-outline-danger" onclick="window.clearAllRequests()" style="font-size: 10px;">LIMPIAR TODO</button>
-                <button class="btn btn-sm btn-outline-primary" onclick="window.loadRequests()">REFRESCAR</button>
+        <style>
+        .sr-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
+        .sr-title { margin:0; color:#1e3a5f; font-weight:800; font-size:22px; }
+        .sr-badge { display:inline-block; background:#1e5694; color:white; border-radius:20px; padding:2px 12px; font-size:13px; font-weight:700; margin-left:8px; }
+        .sr-cols { display:flex; gap:20px; flex-wrap:wrap; }
+        .sr-col { flex:1 1 260px; min-width:240px; }
+        .sr-card-header { display:flex; align-items:center; gap:10px; padding:14px 18px; border-radius:10px 10px 0 0; }
+        .sr-card-header h4 { margin:0; font-size:15px; font-weight:700; }
+        .sr-card-body { background:white; border:1px solid #e2e8f0; border-top:none; border-radius:0 0 10px 10px; overflow:hidden; box-shadow:0 3px 10px rgba(0,0,0,.05); }
+        .sr-empty { text-align:center; padding:28px 16px; color:#94a3b8; font-size:13px; }
+        .sr-item { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid #f1f5f9; gap:10px; transition:background .15s; }
+        .sr-item:last-child { border-bottom:none; }
+        .sr-item:hover { background:#f8fafc; }
+        .sr-item-info strong { display:block; font-size:13px; color:#1e3a5f; line-height:1.3; }
+        .sr-item-info small { color:#64748b; font-size:11px; }
+        .sr-actions { display:flex; gap:6px; flex-shrink:0; }
+        .btn-icon { border:none; border-radius:50%; width:32px; height:32px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; transition:all .15s; }
+        .btn-icon.accept { background:#dcfce7; color:#16a34a; }
+        .btn-icon.accept:hover { background:#16a34a; color:white; }
+        .btn-icon.reject { background:#fee2e2; color:#dc2626; }
+        .btn-icon.reject:hover { background:#dc2626; color:white; }
+        /* modales */
+        .mod-header { padding:18px 22px; display:flex; align-items:center; gap:12px; }
+        .mod-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px; }
+        .mod-body { padding:20px 22px; }
+        .mod-field { margin-bottom:14px; }
+        .mod-field label { display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#94a3b8; margin-bottom:4px; }
+        .mod-field p { margin:0; font-size:14px; color:#1e3a5f; font-weight:600; }
+        .mod-divider { border:none; border-top:1px solid #f1f5f9; margin:16px 0; }
+        .mod-footer { padding:14px 22px; background:#f8fafc; border-top:1px solid #e2e8f0; display:flex; justify-content:flex-end; gap:10px; }
+        .status-btn { flex:1; padding:12px; border:2px solid; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px; transition:all .2s; background:white; }
+        .status-btn.op { border-color:#16a34a; color:#16a34a; }
+        .status-btn.op.sel, .status-btn.op:hover { background:#16a34a; color:white; }
+        .status-btn.ma { border-color:#f59e0b; color:#f59e0b; }
+        .status-btn.ma.sel, .status-btn.ma:hover { background:#f59e0b; color:white; }
+        .eq-row { display:flex; align-items:center; padding:10px 12px; border-radius:8px; cursor:pointer; margin-bottom:6px; border:2px solid #e2e8f0; transition:all .15s; background:white; gap:12px; }
+        .eq-row:hover { border-color:#1e5694; background:#f0f7ff; }
+        .eq-row.sel { border-color:#1e5694; background:#f0f7ff; }
+        .eq-row .eq-icon { width:36px; height:36px; border-radius:8px; background:#dbeafe; color:#1e5694; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+        .eq-row .eq-info strong { display:block; font-size:13px; color:#1e3a5f; }
+        .eq-row .eq-info small { font-size:11px; color:#64748b; }
+        .eq-row .eq-radio { margin-left:auto; }
+        .top-actions { display:flex; gap:8px; }
+        </style>
+
+        <!-- CABECERA -->
+        <div class="sr-header">
+            <div>
+                <h2 class="sr-title">
+                    <i class="ph ph-tray" style="margin-right:8px;"></i>
+                    Bandeja de Entrada
+                    <span class="sr-badge" id="total-count">0</span>
+                </h2>
+                <p style="margin:4px 0 0; color:#64748b; font-size:13px;">Gestione las solicitudes recibidas del personal institucional</p>
+            </div>
+            <div class="top-actions">
+                <button class="btn btn-sm btn-outline-primary" onclick="window.loadRequests()">
+                    <i class="ph ph-arrows-clockwise"></i> Refrescar
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="window.clearAllRequests()">
+                    <i class="ph ph-trash"></i> Limpiar todo
+                </button>
             </div>
         </div>
 
-        <div class="row">
+        <!-- COLUMNAS -->
+        <div class="sr-cols">
             <!-- Mantenimiento -->
-            <div class="col-md-4">
-                <section class="clase-card">
-                    <div class="clase-titulo" style="background: #e0e7ff; color: #1e5694; padding: 10px 15px;">
-                        <h4 style="margin:0;"><i class="ph ph-wrench"></i> Mantenimiento</h4>
+            <div class="sr-col">
+                <div class="sr-card-header" style="background:#dbeafe;">
+                    <div style="width:34px;height:34px;border-radius:8px;background:#1e5694;color:white;display:flex;align-items:center;justify-content:center;font-size:18px;">
+                        <i class="ph ph-wrench"></i>
                     </div>
-                    <table class="clase-tabla">
-                        <tbody id="table-mant"></tbody>
-                    </table>
-                </section>
+                    <h4 style="color:#1e3a5f;">Mantenimiento</h4>
+                    <span class="sr-badge" id="cnt-mant" style="background:#1e5694;margin-left:auto;">0</span>
+                </div>
+                <div class="sr-card-body">
+                    <div id="table-mant"><div class="sr-empty"><i class="ph ph-check-circle" style="font-size:28px;display:block;margin-bottom:6px;"></i>Sin solicitudes</div></div>
+                </div>
             </div>
 
             <!-- Asignación -->
-            <div class="col-md-4">
-                <section class="clase-card">
-                    <div class="clase-titulo" style="background: #dcfce7; color: #10b981; padding: 10px 15px;">
-                        <h4 style="margin:0;"><i class="ph ph-user-plus"></i> Asignación</h4>
+            <div class="sr-col">
+                <div class="sr-card-header" style="background:#dcfce7;">
+                    <div style="width:34px;height:34px;border-radius:8px;background:#16a34a;color:white;display:flex;align-items:center;justify-content:center;font-size:18px;">
+                        <i class="ph ph-desktop"></i>
                     </div>
-                    <table class="clase-tabla">
-                        <tbody id="table-eq"></tbody>
-                    </table>
-                </section>
+                    <h4 style="color:#14532d;">Asignación</h4>
+                    <span class="sr-badge" id="cnt-eq" style="background:#16a34a;margin-left:auto;">0</span>
+                </div>
+                <div class="sr-card-body">
+                    <div id="table-eq"><div class="sr-empty"><i class="ph ph-check-circle" style="font-size:28px;display:block;margin-bottom:6px;"></i>Sin solicitudes</div></div>
+                </div>
             </div>
 
             <!-- Traslados -->
-            <div class="col-md-4">
-                <section class="clase-card">
-                    <div class="clase-titulo" style="background: #fef9c3; color: #f59e0b; padding: 10px 15px;">
-                        <h4 style="margin:0;"><i class="ph ph-arrows-left-right"></i> Traslados</h4>
+            <div class="sr-col">
+                <div class="sr-card-header" style="background:#fef9c3;">
+                    <div style="width:34px;height:34px;border-radius:8px;background:#ca8a04;color:white;display:flex;align-items:center;justify-content:center;font-size:18px;">
+                        <i class="ph ph-arrows-left-right"></i>
                     </div>
-                    <table class="clase-tabla">
-                        <tbody id="table-tras"></tbody>
-                    </table>
-                </section>
+                    <h4 style="color:#713f12;">Traslados</h4>
+                    <span class="sr-badge" id="cnt-tras" style="background:#ca8a04;margin-left:auto;">0</span>
+                </div>
+                <div class="sr-card-body">
+                    <div id="table-tras"><div class="sr-empty"><i class="ph ph-check-circle" style="font-size:28px;display:block;margin-bottom:6px;"></i>Sin solicitudes</div></div>
+                </div>
             </div>
         </div>
 
-        <center style="margin-top: 2rem;">
+        <center style="margin-top:2rem;">
             <button type="button" class="btn btn-primary px-5" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">VOLVER AL INICIO</button>
         </center>
 
-        <!-- ELIMINADA VISTA DE ACTA INTERNA, AHORA ES PÁGINA EXTERNA -->
-
-        <!-- MODALES -->
-        <!-- MANTENIMIENTO -->
+        <!-- MODAL MANTENIMIENTO -->
         <div class="modal fade" id="modalMant" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white"><h5>Detalles de Mantenimiento</h5></div>
-                    <div class="modal-body">
-                        <div style="background:#f8fafc; padding:15px; border-radius:10px; margin-bottom:20px;">
-                            <small>Solicitante:</small> <strong id="m-sol"></strong><br>
-                            <small>Fecha:</small> <strong id="m-date"></strong><br>
-                            <hr>
-                            <small>Falla Reportada:</small><br>
-                            <p id="m-reason" class="italic mb-0"></p>
+                <div class="modal-content" style="border:none; border-radius:14px; overflow:hidden;">
+                    <div class="mod-header" style="background:#dbeafe; border-bottom:1px solid #bfdbfe;">
+                        <div class="mod-icon" style="background:#1e5694; color:white;"><i class="ph ph-wrench"></i></div>
+                        <div>
+                            <h5 style="margin:0; color:#1e3a5f; font-weight:700;">Solicitud de Mantenimiento</h5>
+                            <small style="color:#64748b;">Revise y asigne el estado del equipo</small>
                         </div>
-                        <h4 id="m-eq" class="text-center text-primary"></h4>
-                        <div class="d-flex gap-2 mt-3">
-                            <button class="btn btn-outline-success flex-fill py-3" id="b-op" onclick="window.setSt('Operativo')">OPERATIVO</button>
-                            <button class="btn btn-outline-warning flex-fill py-3" id="b-ma" onclick="window.setSt('En Mantenimiento')">EN MANT.</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" style="margin-left:auto;"></button>
+                    </div>
+                    <div class="mod-body">
+                        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                            <div class="mod-field" style="flex:1 1 120px;">
+                                <label>Equipo Afectado</label>
+                                <p id="m-eq"></p>
+                            </div>
+                            <div class="mod-field" style="flex:1 1 120px;">
+                                <label>Fecha de Solicitud</label>
+                                <p id="m-date"></p>
+                            </div>
+                        </div>
+                        <hr class="mod-divider">
+                        <div class="mod-field">
+                            <label><i class="ph ph-note"></i> Falla / Motivo Reportado</label>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px;">
+                                <p id="m-reason" style="margin:0; font-size:13px; color:#475569; font-weight:400; font-style:italic;"></p>
+                            </div>
+                        </div>
+                        <hr class="mod-divider">
+                        <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#94a3b8; margin-bottom:10px;">Nuevo estado del equipo</label>
+                        <div style="display:flex; gap:10px;">
+                            <button class="status-btn op" id="b-op" onclick="window.setSt('Operativo')">
+                                <i class="ph ph-check-circle" style="font-size:18px; display:block; margin-bottom:4px;"></i>
+                                OPERATIVO
+                            </button>
+                            <button class="status-btn ma" id="b-ma" onclick="window.setSt('En Mantenimiento')">
+                                <i class="ph ph-wrench" style="font-size:18px; display:block; margin-bottom:4px;"></i>
+                                EN MANTENIMIENTO
+                            </button>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="mod-footer">
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button class="btn btn-primary" id="b-conf" disabled onclick="window.confirmarM()">Confirmar</button>
+                        <button class="btn btn-primary px-4" id="b-conf" disabled onclick="window.confirmarM()">
+                            <i class="ph ph-check"></i> Confirmar
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ASIGNACIÓN -->
+        <!-- MODAL ASIGNACIÓN -->
         <div class="modal fade" id="modalAsig" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-success text-white"><h5>Asignar Equipo</h5></div>
-                    <div class="modal-body">
-                        <p>Funcionario: <strong id="a-name"></strong></p>
-                        <h6>Seleccione Equipo:</h6>
-                        <div class="table-responsive" style="max-height: 250px; border:1px solid #eee;">
-                            <table class="table table-sm table-hover mb-0"><tbody id="a-list"></tbody></table>
+                <div class="modal-content" style="border:none; border-radius:14px; overflow:hidden;">
+                    <div class="mod-header" style="background:#dcfce7; border-bottom:1px solid #bbf7d0;">
+                        <div class="mod-icon" style="background:#16a34a; color:white;"><i class="ph ph-desktop"></i></div>
+                        <div>
+                            <h5 style="margin:0; color:#14532d; font-weight:700;">Asignar Equipo</h5>
+                            <small style="color:#64748b;">Seleccione el equipo a entregar al funcionario</small>
                         </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" style="margin-left:auto;"></button>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button class="btn btn-success text-white" id="b-as-conf" disabled onclick="window.confirmarA()">Generar Acta</button>
+                    <div class="mod-body">
+                        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px; margin-bottom:16px; display:flex; gap:14px; align-items:center;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i class="ph ph-user" style="font-size:20px; color:#16a34a;"></i>
+                            </div>
+                            <div>
+                                <small style="color:#64748b; font-size:11px; text-transform:uppercase; letter-spacing:.5px;">Funcionario Solicitante</small>
+                                <strong style="display:block; color:#14532d; font-size:15px;" id="a-name"></strong>
+                                <small style="color:#64748b;" id="a-depto"></small>
+                            </div>
+                        </div>
+                        <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#94a3b8; margin-bottom:10px;">
+                            <i class="ph ph-list-checks"></i> Equipos Informáticos Disponibles
+                        </label>
+                        <div id="a-list" style="max-height:280px; overflow-y:auto; padding-right:4px;"></div>
+                        <p id="a-none" style="display:none; text-align:center; color:#94a3b8; padding:20px; font-size:13px;">
+                            <i class="ph ph-warning" style="font-size:24px; display:block;"></i>
+                            No hay equipos informáticos disponibles en el inventario
+                        </p>
+                    </div>
+                    <div class="mod-footer">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success text-white px-4" id="b-as-conf" disabled onclick="window.confirmarA()">
+                            <i class="ph ph-file-text"></i> Generar Acta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL LIMPIAR TODO -->
+        <div class="modal fade" id="modalClearAll" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius:15px; border:none; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+                    <div class="modal-header" style="background:#dc2626; color:white;">
+                        <h5 class="modal-title"><i class="ph ph-warning me-2"></i>Confirmación de Eliminación</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center p-4">
+                        <i class="ph ph-trash f-50 text-danger mb-3" style="font-size: 50px;"></i>
+                        <h5 class="mb-2">¿Estás seguro de querer limpiar todo?</h5>
+                        <p class="text-muted">Se eliminarán permanentemente todas las solicitudes de la bandeja. Esta acción no se puede deshacer.</p>
+                    </div>
+                    <div class="modal-footer justify-content-center border-top-0 pb-4">
+                        <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal" style="border-radius: 20px;">Cancelar</button>
+                        <button type="button" class="btn btn-danger px-4" id="btn-confirm-clear" style="border-radius: 20px;">Sí, limpiar todo</button>
                     </div>
                 </div>
             </div>
@@ -120,88 +247,113 @@
 
     <script>
         (function() {
-            let tempId = null;
-            let tempSt = null;
-            let tempEq = null;
-            let selEq = null;
+            let tempId = null, tempSt = null, tempEq = null, selEq = null;
+
+            function getInc() {
+                try { return JSON.parse(localStorage.getItem('incoming_requests') || '[]'); }
+                catch(e) { return []; }
+            }
+            function saveInc(arr) { localStorage.setItem('incoming_requests', JSON.stringify(arr)); }
+
+            function makeItem(r) {
+                const div = document.createElement('div');
+                div.className = 'sr-item';
+                const label = r.tipo === 'equipo'
+                    ? (r.identificador || 'Funcionario')
+                    : (r.identificador || '—');
+                div.innerHTML = `
+                    <div class="sr-item-info">
+                        <strong>${label}</strong>
+                        <small><i class="ph ph-calendar"></i> ${r.fecha || 'Sin fecha'}</small>
+                    </div>
+                    <div class="sr-actions">
+                        <button class="btn-icon reject" title="Rechazar" onclick="window.del('${r.id}')">
+                            <i class="ph ph-x"></i>
+                        </button>
+                        <button class="btn-icon accept" title="Aceptar" onclick="window.app('${r.id}')">
+                            <i class="ph ph-check"></i>
+                        </button>
+                    </div>`;
+                return div;
+            }
 
             window.loadRequests = function() {
-                try {
-                    const raw = localStorage.getItem('incoming_requests');
-                    const inc = JSON.parse(raw || '[]');
-                    if (!Array.isArray(inc)) {
-                        localStorage.setItem('incoming_requests', '[]');
-                        return;
-                    }
+                const inc = getInc();
+                const badge = document.getElementById('total-count');
+                if (badge) badge.textContent = inc.length;
 
-                    const badge = document.getElementById('total-count');
-                    if (badge) badge.textContent = inc.length;
+                const tM = document.getElementById('table-mant');
+                const tE = document.getElementById('table-eq');
+                const tT = document.getElementById('table-tras');
+                if (!tM) return;
 
-                    const tM = document.getElementById('table-mant');
-                    const tE = document.getElementById('table-eq');
-                    const tT = document.getElementById('table-tras');
-                    if (!tM) return;
+                const empty = '<div class="sr-empty"><i class="ph ph-check-circle" style="font-size:28px;display:block;margin-bottom:6px;color:#22c55e;"></i>Sin solicitudes</div>';
 
-                    tM.innerHTML = ''; tE.innerHTML = ''; tT.innerHTML = '';
+                let cM=0, cE=0, cT=0;
+                tM.innerHTML=''; tE.innerHTML=''; tT.innerHTML='';
 
-                    if (inc.length === 0) {
-                        const empty = '<tr><td style="text-align:center; padding:20px; color:#999;">Vacío</td></tr>';
-                        tM.innerHTML = empty; tE.innerHTML = empty; tT.innerHTML = empty;
-                        return;
-                    }
+                inc.forEach(r => {
+                    const el = makeItem(r);
+                    if (r.tipo==='mantenimiento') { tM.appendChild(el); cM++; }
+                    else if (r.tipo==='equipo') { tE.appendChild(el); cE++; }
+                    else if (r.tipo==='traslado') { tT.appendChild(el); cT++; }
+                });
 
-                    inc.forEach(r => {
-                        const row = `
-                            <tr style="border-bottom: 1px solid #eee;">
-                                <td style="padding:12px;"><strong>${r.identificador}</strong><br><small>${r.fecha}</small></td>
-                                <td style="padding:12px; text-align:right; white-space:nowrap;">
-                                    <button onclick="window.del('${r.id}')" style="background:#ff4d4d; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer;">X</button>
-                                    <button onclick="window.app('${r.id}')" style="background:#28a745; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer;">✓</button>
-                                </td>
-                            </tr>
-                        `;
-                        if (r.tipo === 'mantenimiento') tM.innerHTML += row;
-                        else if (r.tipo === 'equipo') tE.innerHTML += row;
-                        else if (r.tipo === 'traslado') tT.innerHTML += row;
-                    });
-                } catch (e) { console.error("Error loading requests", e); }
+                if (cM===0) tM.innerHTML = empty;
+                if (cE===0) tE.innerHTML = empty;
+                if (cT===0) tT.innerHTML = empty;
+
+                document.getElementById('cnt-mant').textContent = cM;
+                document.getElementById('cnt-eq').textContent = cE;
+                document.getElementById('cnt-tras').textContent = cT;
             };
 
             window.del = function(id) {
-                let inc = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
-                inc = inc.filter(x => String(x.id) !== String(id));
-                localStorage.setItem('incoming_requests', JSON.stringify(inc));
+                let inc = getInc().filter(x => String(x.id) !== String(id));
+                saveInc(inc);
                 window.loadRequests();
             };
 
             window.clearAllRequests = function() {
-                if(confirm("¿Seguro que desea borrar TODAS las solicitudes?")) {
-                    localStorage.setItem('incoming_requests', '[]');
+                const inc = getInc();
+                if (inc.length === 0) return; // No abrir modal si ya está vacío
+                
+                const clearModalEl = document.getElementById('modalClearAll');
+                const clearModal = bootstrap.Modal.getOrCreateInstance(clearModalEl);
+                clearModal.show();
+                
+                document.getElementById('btn-confirm-clear').onclick = function() {
+                    saveInc([]); 
                     window.loadRequests();
-                }
+                    clearModal.hide();
+                };
             };
 
             window.app = function(id) {
-                const inc = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+                const inc = getInc();
                 const r = inc.find(x => String(x.id) === String(id));
                 if (!r) return;
                 tempId = id;
 
                 if (r.tipo === 'mantenimiento') {
                     tempEq = r.identificador;
-                    document.getElementById('m-sol').textContent = r.identificador;
-                    document.getElementById('m-date').textContent = r.fecha;
-                    document.getElementById('m-reason').textContent = r.data.motivo;
                     document.getElementById('m-eq').textContent = r.identificador;
+                    document.getElementById('m-date').textContent = r.fecha;
+                    document.getElementById('m-reason').textContent = r.data?.motivo || '—';
                     tempSt = null;
-                    document.getElementById('b-op').className = 'btn btn-outline-success flex-fill py-3';
-                    document.getElementById('b-ma').className = 'btn btn-outline-warning flex-fill py-3';
+                    document.getElementById('b-op').classList.remove('sel');
+                    document.getElementById('b-ma').classList.remove('sel');
                     document.getElementById('b-conf').disabled = true;
-                    new bootstrap.Modal(document.getElementById('modalMant')).show();
+                    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalMant')).show();
+
                 } else if (r.tipo === 'equipo') {
                     document.getElementById('a-name').textContent = r.identificador;
+                    document.getElementById('a-depto').textContent = r.data?.departamento || r.data?.cargo || '';
+                    selEq = null;
+                    document.getElementById('b-as-conf').disabled = true;
                     window.loadAvail();
-                    new bootstrap.Modal(document.getElementById('modalAsig')).show();
+                    bootstrap.Modal.getOrCreateInstance(document.getElementById('modalAsig')).show();
+
                 } else if (r.tipo === 'traslado') {
                     if (window.loadContentGlobal) {
                         window.loadContentGlobal('../Procesos/movilizacion/Movimiento.html', 'Movimiento', 'Movilizacion');
@@ -215,8 +367,10 @@
             window.setSt = function(s) {
                 tempSt = s;
                 document.getElementById('b-conf').disabled = false;
-                document.getElementById('b-op').className = s === 'Operativo' ? 'btn btn-success text-white flex-fill py-3' : 'btn btn-outline-success flex-fill py-3';
-                document.getElementById('b-ma').className = s === 'En Mantenimiento' ? 'btn btn-warning text-white flex-fill py-3' : 'btn btn-outline-warning flex-fill py-3';
+                const op = document.getElementById('b-op');
+                const ma = document.getElementById('b-ma');
+                op.classList.toggle('sel', s === 'Operativo');
+                ma.classList.toggle('sel', s === 'En Mantenimiento');
             };
 
             window.confirmarM = function() {
@@ -224,75 +378,88 @@
                 const it = inv.find(i => i.identificador === tempEq);
                 if (it) it.estatus = tempSt;
                 localStorage.setItem('recent_activity', JSON.stringify(inv));
+
                 const inM = JSON.parse(localStorage.getItem('in_maintenance_ids') || '[]');
                 if (tempSt === 'En Mantenimiento') { if (!inM.includes(tempEq)) inM.push(tempEq); }
-                else { const i = inM.indexOf(tempEq); if (i > -1) inM.splice(i, 1); }
+                else { const idx = inM.indexOf(tempEq); if (idx > -1) inM.splice(idx, 1); }
                 localStorage.setItem('in_maintenance_ids', JSON.stringify(inM));
+
                 bootstrap.Modal.getInstance(document.getElementById('modalMant')).hide();
                 window.del(tempId);
             };
 
             window.loadAvail = function() {
-                const t = document.getElementById('a-list'); t.innerHTML = '';
+                const list = document.getElementById('a-list');
+                const none = document.getElementById('a-none');
+                list.innerHTML = '';
                 const inv = JSON.parse(localStorage.getItem('recent_activity') || '[]');
-                const as = JSON.parse(localStorage.getItem('assigned_ids') || '[]');
+                const as  = JSON.parse(localStorage.getItem('assigned_ids') || '[]');
                 const inM = JSON.parse(localStorage.getItem('in_maintenance_ids') || '[]');
-                
-                // SOLO EQUIPOS INFORMÁTICOS
-                const av = inv.filter(i => i.tipo === 'Equipo Informático' && !as.includes(i.identificador) && !inM.includes(i.identificador));
-                
-                if (av.length === 0) t.innerHTML = '<tr><td class="text-center p-3">No hay equipos informáticos libres</td></tr>';
-                else {
-                    av.forEach(i => {
-                        const row = document.createElement('tr');
-                        row.style.cursor = 'pointer';
-                        row.innerHTML = `<td><strong>${i.identificador}</strong><br><small>${i.data.clase || ''} - ${i.data.marca || ''} ${i.data.modelo || ''}</small></td><td class="text-end"><input type="radio" name="ra"></td>`;
-                        row.onclick = () => { row.querySelector('input').checked = true; selEq = i; document.getElementById('b-as-conf').disabled = false; };
-                        t.appendChild(row);
-                    });
+                const av  = inv.filter(i => i.tipo === 'Equipo Informático' && !as.includes(i.identificador) && !inM.includes(i.identificador));
+
+                if (av.length === 0) {
+                    none.style.display = 'block';
+                    return;
                 }
+                none.style.display = 'none';
+                av.forEach(i => {
+                    const row = document.createElement('div');
+                    row.className = 'eq-row';
+                    row.innerHTML = `
+                        <div class="eq-icon"><i class="ph ph-desktop"></i></div>
+                        <div class="eq-info">
+                            <strong>${i.identificador}</strong>
+                            <small>${i.data?.clase || ''} · ${i.data?.marca || ''} ${i.data?.modelo || ''}</small>
+                        </div>
+                        <input type="radio" name="eq-sel" class="eq-radio">`;
+                    row.onclick = () => {
+                        document.querySelectorAll('.eq-row').forEach(r => r.classList.remove('sel'));
+                        row.classList.add('sel');
+                        row.querySelector('input').checked = true;
+                        selEq = i;
+                        document.getElementById('b-as-conf').disabled = false;
+                    };
+                    list.appendChild(row);
+                });
             };
 
             window.confirmarA = function() {
+                if (!selEq) return;
                 const as = JSON.parse(localStorage.getItem('assigned_ids') || '[]');
                 as.push(selEq.identificador);
                 localStorage.setItem('assigned_ids', JSON.stringify(as));
-                
-                const inc = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+
+                const inc = getInc();
                 const r = inc.find(x => String(x.id) === String(tempId));
-                
-                // Guardar datos para el Acta
-                const actaData = {
+
+                localStorage.setItem('current_acta_data', JSON.stringify({
                     id: tempId,
+                    solicitudId: tempId,
                     eqId: selEq.identificador,
                     eqTipo: selEq.tipo,
-                    eqMarca: selEq.data.marca || '-',
-                    eqModelo: selEq.data.modelo || '-',
-                    eqCodigo: selEq.data.codigo || 'S/N',
+                    eqMarca: selEq.data?.marca || '-',
+                    eqModelo: selEq.data?.modelo || '-',
+                    eqCodigo: selEq.data?.codigo || 'S/N',
                     solName: r ? r.identificador : 'Funcionario',
-                    solDepto: r ? r.data.departamento : 'N/A'
-                };
-                localStorage.setItem('current_acta_data', JSON.stringify(actaData));
-                
-                // Limpieza total de modales antes de redirigir (evita el "bloqueo negro")
+                    solDepto: r ? (r.data?.departamento || '') : '',
+                    solCargo: r ? (r.data?.cargo || '') : ''
+                }));
+
                 const mEl = document.getElementById('modalAsig');
                 const mInst = bootstrap.Modal.getInstance(mEl);
-                if(mInst) mInst.hide();
-                
+                if (mInst) mInst.hide();
                 document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
                 document.body.classList.remove('modal-open');
                 document.body.style.overflow = '';
                 document.body.style.paddingRight = '';
-                
-                // Redirigir a la página del Acta usando el motor SPA
-                if(window.loadContentGlobal) {
+
+                if (window.loadContentGlobal) {
                     window.loadContentGlobal('../Procesos/solicitudes/ActaAsignacion.html', 'Acta de Asignación', 'Solicitudes');
                 } else {
                     window.location.href = 'ActaAsignacion.html';
                 }
             };
 
-            // SINGLE INTERVAL for all instances
             if (window.reqInterval) clearInterval(window.reqInterval);
             window.reqInterval = setInterval(() => {
                 if (document.getElementById('total-count')) window.loadRequests();
@@ -303,11 +470,8 @@
         })();
     </script>
 
-    <style>
-        .clase-card { margin-bottom: 20px; border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .italic { font-style: italic; }
-        .flex-fill { flex: 1; }
-    </style>
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
 </body>
-
 </html>

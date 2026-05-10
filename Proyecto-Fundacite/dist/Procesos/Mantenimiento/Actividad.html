@@ -16,66 +16,188 @@
     </header>
 
     <main>
-
-
         <section class="clase-card">
             <div class="clase-titulo">
-                <h3>Actividad</h3>
+                <h3>Equipos en Mantenimiento</h3>
             </div>
 
-            <table class="clase-tabla">
-                <tr>
-                    <td>
-                        <label for="Nro_report">Numero de reporte <span class="req">*</span></label>
-                        <input type="text" id="Nro_report" name="Nro_report" placeholder="Nro de reporte"
-                            maxlength="15">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="estado_operativo">Estado opertivo <span class="req">*</span></label>
-                        <input type="text" id="estado_operativo" name="estado_operativo"
-                            placeholder="Operativo, fuera de sevicio" maxlength="15">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="fecha_cierre">Fecha de cierre <span class="req">*</span></label>
-                        <input type="date" id="fecha_cierre" name="fecha_cierre">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="estatus_operativo">Estatus <span class="req">*</span></label>
-                        <select name="estatus_operativo">
-                            <option value="">Seleccionar...</option>
-                            <option value="Operativo">Operativo</option>
-                            <option value="Fuera de servicio">Fuera de servicio</option>
-
-                        </select>
-                    </td>
-                </tr>
-            </table>
+            <div class="table-responsive">
+                <table class="clase-tabla">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb;">
+                            <th style="padding: 10px; text-align: left;">#</th>
+                            <th style="padding: 10px; text-align: left;">Equipo / Identificador</th>
+                            <th style="padding: 10px; text-align: left;">Tipo</th>
+                            <th style="padding: 10px; text-align: center;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-mantenimiento-body">
+                        <!-- Llenado por JS -->
+                        <tr><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <div class="form-actions">
-            <form method="get" action="Solicituddemantenimiento.html">
-                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-            </form>
-            <form method="get" action="Diagnostico.html">
-                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
-            </form>
+        <!-- Modal Actividad -->
+        <div class="modal fade" id="actividadModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border-radius: 12px; border: none;">
+                    <div class="modal-header" style="background: #1e5694; color: white;">
+                        <h5 class="modal-title"><i class="ph ph-wrench me-2"></i>Registrar Actividad</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="form-actividad">
+                            <input type="hidden" id="act-eq-index">
+                            <div class="mb-3">
+                                <label for="act-nro" style="font-weight: bold; font-size: 13px; color: #4b5563;">Número de reporte <span class="req">*</span></label>
+                                <input type="text" id="act-nro" class="form-control" placeholder="Nro de reporte" maxlength="15" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
+                            </div>
+                            <div class="mb-3">
+                                <label for="act-fecha" style="font-weight: bold; font-size: 13px; color: #4b5563;">Fecha de cierre <span class="req">*</span></label>
+                                <input type="date" id="act-fecha" class="form-control" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
+                            </div>
+                            <div class="mb-3">
+                                <label for="act-gravedad" style="font-weight: bold; font-size: 13px; color: #4b5563;">Gravedad de la Falla <span class="req">*</span></label>
+                                <select id="act-gravedad" class="form-select" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Leve">Leve (Reparado - Pasa a Operativo)</option>
+                                    <option value="Grave">Grave (No reparable - Pasa a Diagnóstico)</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="guardarActividad()">Guardar Actividad</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <br><br><br>
         <center>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
-            </form>
+            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
         </center>
 
-
     </main>
+
+    <script>
+        // Función para renderizar la tabla de equipos en mantenimiento
+        window.renderMantenimiento = function() {
+            try {
+                console.log("Iniciando renderMantenimiento...");
+                const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+                const cuerpo = document.getElementById('lista-mantenimiento-body');
+                
+                if (!cuerpo) {
+                    console.warn("No se encontró el cuerpo de la tabla 'lista-mantenimiento-body'");
+                    return;
+                }
+                
+                let html = '';
+                let count = 0;
+                
+                if (Array.isArray(equipos)) {
+                    equipos.forEach((eq, index) => {
+                        // Verificación flexible del estatus
+                        const estatus = eq.estatus ? String(eq.estatus).toLowerCase() : '';
+                        if (estatus === 'en mantenimiento') {
+                            count++;
+                            html += `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 10px; color: #9ba5b2;">${count}</td>
+                                    <td style="padding: 10px; font-weight: bold;">
+                                        ${eq.identificador} <br>
+                                        <small style="color: #64748b; font-weight: normal;">${eq.marca || 'Sin marca'} - ${eq.modelo || 'Sin modelo'}</small>
+                                    </td>
+                                    <td style="padding: 10px;"><span style="background:#dbeafe; color:#1e5694; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:bold;">${eq.tipo || 'Equipo'}</span></td>
+                                    <td style="padding: 10px; text-align: center;">
+                                        <button class="btn btn-sm btn-primary" onclick="window.abrirActividad(${index})">Registrar Actividad</button>
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                    });
+                }
+
+                if (count === 0) {
+                    html = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay equipos en mantenimiento actualmente.</td></tr>';
+                }
+                
+                cuerpo.innerHTML = html;
+                console.log("renderMantenimiento finalizado con éxito. Equipos encontrados:", count);
+            } catch (error) {
+                console.error('Error renderMantenimiento:', error);
+                const cuerpo = document.getElementById('lista-mantenimiento-body');
+                if (cuerpo) cuerpo.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Error cargando equipos: ' + error.message + '</td></tr>';
+            }
+        };
+
+        // Abrir el modal
+        window.abrirActividad = function(index) {
+            document.getElementById('act-eq-index').value = index;
+            document.getElementById('form-actividad').reset();
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('actividadModal'));
+            modal.show();
+        };
+
+        // Guardar la actividad
+        window.guardarActividad = function() {
+            const nro = document.getElementById('act-nro').value.trim();
+            const fecha = document.getElementById('act-fecha').value;
+            const gravedad = document.getElementById('act-gravedad').value;
+            const index = document.getElementById('act-eq-index').value;
+
+            if (!nro || !fecha || !gravedad) {
+                if (window.showStyledAlert) showStyledAlert('Todos los campos son obligatorios.', 'Error', 'ph-warning', '#dc2626');
+                else alert('Campos incompletos.');
+                return;
+            }
+
+            const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            if (!equipos[index]) return;
+
+            let nuevoEstatus = '';
+            let msjExito = '';
+
+            if (gravedad === 'Leve') {
+                nuevoEstatus = 'Operativo';
+                msjExito = 'Actividad registrada. El equipo vuelve a estar Operativo.';
+            } else if (gravedad === 'Grave') {
+                nuevoEstatus = 'Requiere Diagnóstico';
+                msjExito = 'Falla grave registrada. El equipo pasa a Diagnóstico.';
+            }
+
+            equipos[index].estatus = nuevoEstatus;
+            
+            if(!equipos[index].historialMantenimiento) equipos[index].historialMantenimiento = [];
+            equipos[index].historialMantenimiento.push({ nro, fecha, gravedad });
+
+            localStorage.setItem('recent_activity', JSON.stringify(equipos));
+
+            const mEl = document.getElementById('actividadModal');
+            const mInst = bootstrap.Modal.getInstance(mEl);
+            if (mInst) mInst.hide();
+            
+            window.renderMantenimiento();
+
+            if (window.showStyledAlert) showStyledAlert(msjExito, 'Éxito', 'ph-check-circle', '#16a34a');
+            else alert(msjExito);
+        };
+
+        // Ejecutar con un pequeño delay para asegurar que el DOM esté listo tras la inyección del SPA
+        setTimeout(function() {
+            if (typeof window.renderMantenimiento === 'function') {
+                window.renderMantenimiento();
+            }
+        }, 300);
+    </script>
+
+    <style>
+        .req { color: #dc2626; }
+    </style>
     <footer>
         <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
     </footer>

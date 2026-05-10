@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Departamentos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <header>
+        <span>Fundacite Yaracuy — Gestión de Departamentos</span>
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <section class="clase-card">
+            <div class="clase-titulo" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Lista de Departamentos</h3>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deptoModal"
+                    style="border-radius: 50%; width: 40px; height: 40px; padding: 0; font-size: 20px; line-height: 1;">
+                    +
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="clase-tabla">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb;">
+                            <th style="padding: 10px; text-align: left;">#</th>
+                            <th style="padding: 10px; text-align: left;">Código</th>
+                            <th style="padding: 10px; text-align: left;">Nombre del Departamento</th>
+                            <th style="padding: 10px; text-align: left;">Descripción</th>
+                            <th style="padding: 10px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-deptos-body">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">
+                                No hay departamentos registrados. Haga clic en "+" para agregar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deptoModal" tabindex="-1" aria-labelledby="deptoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="border-radius: 12px; border: none;">
+                    <div class="modal-header" style="background: #1e5694; color: white;">
+                        <h5 class="modal-title" id="deptoModalLabel"><i class="ph ph-buildings me-2"></i>Nuevo Departamento</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="form-depto">
+                            <div class="mb-3">
+                                <label for="depto-codigo">Código <span class="req">*</span></label>
+                                <input type="text" id="depto-codigo" class="form-control" placeholder="Ej: DTIC, RRHH, ADM" maxlength="10" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="depto-nombre">Nombre del Departamento <span class="req">*</span></label>
+                                <input type="text" id="depto-nombre" class="form-control" placeholder="Ej: Tecnología de Información" maxlength="60" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="depto-desc">Descripción <span style="color:#9ba5b2;">(opcional)</span></label>
+                                <textarea id="depto-desc" class="form-control" rows="3" placeholder="Funciones o responsabilidades del departamento..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="agregarDepto()">Crear Departamento</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">ATRÁS</button>
+            <button type="button" class="btn btn-primary" onclick="guardarDeptos()">GUARDAR Y FINALIZAR</button>
+        </div>
+
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
+        </center>
+    </main>
+
+    <script>
+        let deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+        renderTabla();
+
+        function agregarDepto() {
+            const codigo = document.getElementById('depto-codigo').value.trim().toUpperCase();
+            const nombre = document.getElementById('depto-nombre').value.trim();
+            const desc   = document.getElementById('depto-desc').value.trim();
+
+            if (!codigo || !nombre) {
+                if (window.showStyledAlert) showStyledAlert('El código y el nombre son obligatorios.', 'Error', 'ph-warning', '#dc2626');
+                else alert('Campos obligatorios incompletos.');
+                return;
+            }
+            if (deptos.find(d => d.codigo === codigo)) {
+                if (window.showStyledAlert) showStyledAlert('Ya existe un departamento con ese código.', 'Duplicado', 'ph-warning', '#dc2626');
+                else alert('Código duplicado.');
+                return;
+            }
+
+            deptos.push({ id: String(Date.now()), codigo, nombre, descripcion: desc });
+            localStorage.setItem('departamentos', JSON.stringify(deptos));
+            renderTabla();
+
+            bootstrap.Modal.getInstance(document.getElementById('deptoModal')).hide();
+            document.getElementById('form-depto').reset();
+        }
+
+        function renderTabla() {
+            const cuerpo = document.getElementById('lista-deptos-body');
+            if (deptos.length === 0) {
+                cuerpo.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay departamentos registrados. Haga clic en "+" para agregar.</td></tr>';
+                return;
+            }
+            cuerpo.innerHTML = '';
+            deptos.forEach((d, i) => {
+                cuerpo.innerHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px; color: #9ba5b2;">${i + 1}</td>
+                        <td style="padding: 10px;"><span style="background:#dbeafe; color:#1e5694; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:bold;">${d.codigo}</span></td>
+                        <td style="padding: 10px; font-weight: bold;">${d.nombre}</td>
+                        <td style="padding: 10px; color: #64748b;">${d.descripcion || '—'}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button class="btn btn-sm btn-danger" onclick="eliminarDepto(${i})">X</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function eliminarDepto(index) {
+            deptos.splice(index, 1);
+            localStorage.setItem('departamentos', JSON.stringify(deptos));
+            renderTabla();
+        }
+
+        function guardarDeptos() {
+            localStorage.setItem('departamentos', JSON.stringify(deptos));
+            if (window.showStyledAlert) showStyledAlert('¡Departamentos guardados correctamente!', 'Éxito', 'ph-check-circle', '#16a34a');
+            else alert('¡Guardado!');
+        }
+    </script>
+
+    <style>
+        .modal-body label { margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #4b5563; }
+        .form-control { display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px; margin-bottom: 5px; }
+        .btn-sm { padding: 4px 8px; font-size: 12px; }
+        .req { color: #dc2626; }
+    </style>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+</body>
+
+</html>

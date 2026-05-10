@@ -249,12 +249,22 @@
     </main>
 
     <script>
-        let adquisiciones = [];
+        // ─── HELPERS: borrador en localStorage en lugar de variable global ───────
+        const ADQ_DRAFT_KEY = 'adquisicion_draft';
+
+        function getAdq() {
+            try { return JSON.parse(localStorage.getItem(ADQ_DRAFT_KEY) || '[]'); }
+            catch(e) { return []; }
+        }
+        function saveAdq(arr) { localStorage.setItem(ADQ_DRAFT_KEY, JSON.stringify(arr)); }
+        function clearAdq() { localStorage.removeItem(ADQ_DRAFT_KEY); }
+
+        // Al entrar a la página, restaurar borrador si existe y renderizar
+        renderTabla();
 
         function toggleSections() {
             const tipo = document.getElementById('adq-tipo').value;
             document.querySelectorAll('.dynamic-sec').forEach(sec => sec.style.display = 'none');
-            
             if (tipo === 'Periférico') document.getElementById('sec-periferico').style.display = 'block';
             else if (tipo === 'Componente') document.getElementById('sec-componente').style.display = 'block';
             else if (tipo === 'Equipo Informático') document.getElementById('sec-equipo').style.display = 'block';
@@ -263,23 +273,15 @@
         function populateInstituciones() {
             const select = document.getElementById('adq-institucion');
             if (!select) return;
-
-            let instituciones = JSON.parse(localStorage.getItem('instituciones') || '[]');
-            
-            // Usar un Map para asegurar que los nombres sean únicos
-            const uniqueInstituciones = new Map();
+            const instituciones = JSON.parse(localStorage.getItem('instituciones') || '[]');
+            const unique = new Map();
             instituciones.forEach(inst => {
-                if (inst.nombre && inst.nombre.trim() !== '') {
-                    uniqueInstituciones.set(inst.nombre.trim(), inst);
-                }
+                if (inst.nombre && inst.nombre.trim()) unique.set(inst.nombre.trim(), inst);
             });
-
             select.innerHTML = '<option value="">Seleccionar institución...</option>';
-            
-            uniqueInstituciones.forEach((inst, nombre) => {
+            unique.forEach((inst, nombre) => {
                 const opt = document.createElement('option');
-                opt.value = nombre;
-                opt.textContent = nombre;
+                opt.value = nombre; opt.textContent = nombre;
                 select.appendChild(opt);
             });
         }
@@ -296,35 +298,43 @@
                 return;
             }
 
-            let item = { fecha, origen, institucion, tipo, data: {} };
+            let item = { id: String(Date.now()) + Math.random().toString(36).slice(2,6), fecha, origen, institucion, tipo, data: {} };
 
             if (tipo === 'Periférico') {
+                const serial = document.getElementById('per-serial').value.trim();
+                if (!serial) { alert('El serial del periférico es obligatorio.'); return; }
                 item.data = {
                     flujo: document.getElementById('per-tipo').value,
                     clase: document.getElementById('per-clase').value,
                     marca: document.getElementById('per-marca').value,
                     modelo: document.getElementById('per-modelo').value,
-                    serial: document.getElementById('per-serial').value
+                    serial
                 };
                 item.identificador = `${item.data.clase} - ${item.data.marca} ${item.data.modelo}`;
             } else if (tipo === 'Componente') {
+                const serial = document.getElementById('comp-serial').value.trim();
+                const capacidad = document.getElementById('comp-capacidad').value.trim();
+                if (!serial || !capacidad) { alert('La capacidad y el serial son obligatorios.'); return; }
                 item.data = {
                     clase: document.getElementById('comp-clase').value,
-                    capacidad: document.getElementById('comp-capacidad').value,
+                    capacidad,
                     marca: document.getElementById('comp-marca').value,
                     modelo: document.getElementById('comp-modelo').value,
-                    serial: document.getElementById('comp-serial').value,
+                    serial,
                     estado: document.getElementById('comp-estado').value,
                     estatus: document.getElementById('comp-estatus').value
                 };
                 item.identificador = `${item.data.clase} - ${item.data.capacidad}`;
             } else if (tipo === 'Equipo Informático') {
+                const marca = document.getElementById('equipo-marca').value.trim();
+                const modelo = document.getElementById('equipo-modelo').value.trim();
+                const serial = document.getElementById('equipo-serial').value.trim();
+                if (!marca || !modelo || !serial) { alert('Marca, modelo y serial son obligatorios.'); return; }
                 item.data = {
                     clase: document.querySelector('input[name="eq-clase"]:checked').value,
-                    marca: document.getElementById('equipo-marca').value,
-                    modelo: document.getElementById('equipo-modelo').value,
+                    marca, modelo,
                     codigo: document.getElementById('equipo-codigo').value,
-                    serial: document.getElementById('equipo-serial').value,
+                    serial,
                     estado: document.getElementById('equipo-estado').value,
                     color: document.getElementById('equipo-color').value,
                     descripcion: document.getElementById('equipo-descripcion').value
@@ -332,26 +342,40 @@
                 item.identificador = `${item.data.clase} ${item.data.marca} ${item.data.modelo}`;
             }
 
-            adquisiciones.push(item);
+            // Verificar duplicado por serial en el borrador actual
+            const adq = getAdq();
+            if (item.data.serial) {
+                const dup = adq.find(a => a.data && a.data.serial === item.data.serial);
+                if (dup) {
+                    if(window.showStyledAlert) showStyledAlert('Ya existe un elemento con ese número de serie en la lista.', 'Serial duplicado', 'ph-warning', '#dc2626');
+                    else alert('Serial duplicado.');
+                    return;
+                }
+            }
+
+            adq.push(item);
+            saveAdq(adq);
             renderTabla();
-            
+
+            // Limpiar modal correctamente
             const modalEl = document.getElementById('adquisicionModal');
             const modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
+            if (modal) modal.hide();
             document.getElementById('form-modal-adq').reset();
             document.querySelectorAll('.dynamic-sec').forEach(sec => sec.style.display = 'none');
         }
 
         function renderTabla() {
+            const adq = getAdq();
             const cuerpo = document.getElementById('lista-cuerpo');
-            if (adquisiciones.length === 0) {
+            if (!cuerpo) return;
+            if (adq.length === 0) {
                 cuerpo.innerHTML = '<tr id="empty-row"><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay adquisiciones registradas. Haga clic en "+" para agregar.</td></tr>';
                 return;
             }
-
             cuerpo.innerHTML = '';
-            adquisiciones.forEach((item, index) => {
-                const row = `
+            adq.forEach((item, index) => {
+                cuerpo.innerHTML += `
                     <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 10px;">${item.tipo}</td>
                         <td style="padding: 10px;">${item.identificador}</td>
@@ -361,54 +385,70 @@
                             <button class="btn btn-sm btn-info text-white" onclick="verDetalles(${index})">Detalles</button>
                             <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">X</button>
                         </td>
-                    </tr>
-                `;
-                cuerpo.innerHTML += row;
+                    </tr>`;
             });
         }
 
         function eliminarItem(index) {
-            adquisiciones.splice(index, 1);
+            const adq = getAdq();
+            adq.splice(index, 1);
+            saveAdq(adq);
             renderTabla();
         }
 
         function verDetalles(index) {
-            const item = adquisiciones[index];
-            if(window.showStyledDetails) window.showStyledDetails(item);
+            const adq = getAdq();
+            const item = adq[index];
+            if (window.showStyledDetails) window.showStyledDetails(item);
             else alert('Detalles: ' + item.identificador);
         }
 
+        // Bloqueo para evitar doble envío
+        let _guardando = false;
+
         function guardarTodo() {
-            if (adquisiciones.length === 0) {
+            if (_guardando) return;
+            const adq = getAdq();
+            if (adq.length === 0) {
                 if(window.showStyledAlert) showStyledAlert('No hay adquisiciones para guardar.', 'Atención', 'ph-warning', '#e98a1e');
                 return;
             }
-            
-            localStorage.setItem('current_session_items', JSON.stringify(adquisiciones));
+
+            _guardando = true;
+            localStorage.setItem('current_session_items', JSON.stringify(adq));
 
             if (window.showStyledQuestion) {
                 window.showStyledQuestion(
-                    '¿Deseas crear un documento comprobante para este registro?', 
+                    '¿Deseas crear un documento comprobante para este registro?',
                     '¡Guardado correctamente!',
-                    function() { // YES
+                    function() { // SÍ → ir a Documento
+                        clearAdq();
                         if(window.loadContentGlobal) window.loadContentGlobal('../Procesos/ingreso/Documento.html', 'Documento', 'Ingreso');
                         else window.location.href = 'Documento.html';
                     },
-                    function() { // NO
+                    function() { // NO → guardar directo y volver al inicio
                         const currentActivity = JSON.parse(localStorage.getItem('recent_activity') || '[]');
-                        localStorage.setItem('recent_activity', JSON.stringify([...currentActivity, ...adquisiciones]));
+                        // Evitar duplicar si ya existen mismos IDs
+                        const existingIds = new Set(currentActivity.map(x => x.id));
+                        const nuevos = adq.filter(x => !existingIds.has(x.id));
+                        localStorage.setItem('recent_activity', JSON.stringify([...currentActivity, ...nuevos]));
                         localStorage.removeItem('current_session_items');
+                        clearAdq();
+                        _guardando = false;
                         if(window.goHome) window.goHome();
                         else window.location.href = '../../dashboard/index.html';
                     }
                 );
             } else {
                 alert('¡Guardado correctamente!');
+                clearAdq();
                 window.location.href = '../../dashboard/index.html';
             }
         }
-        // La carga se realiza al pulsar el botón "+"
     </script>
+
+
+
 
     <style>
         .modal-body label { margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #4b5563; }

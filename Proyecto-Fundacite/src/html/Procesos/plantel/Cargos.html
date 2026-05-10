@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cargos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <header>
+        <span>Fundacite Yaracuy — Gestión de Cargos</span>
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <section class="clase-card">
+            <div class="clase-titulo" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3>Lista de Cargos</h3>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cargoModal"
+                    style="border-radius: 50%; width: 40px; height: 40px; padding: 0; font-size: 20px; line-height: 1;">
+                    +
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="clase-tabla" id="tabla-cargos">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb;">
+                            <th style="padding: 10px; text-align: left;">#</th>
+                            <th style="padding: 10px; text-align: left;">Nombre del Cargo</th>
+                            <th style="padding: 10px; text-align: left;">Descripción</th>
+                            <th style="padding: 10px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-cargos-body">
+                        <tr id="empty-row">
+                            <td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">
+                                No hay cargos creados. Haga clic en "+" para agregar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div class="modal fade" id="cargoModal" tabindex="-1" aria-labelledby="cargoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="border-radius: 12px; border: none;">
+                    <div class="modal-header" style="background: #1e5694; color: white;">
+                        <h5 class="modal-title" id="cargoModalLabel"><i class="ph ph-briefcase me-2"></i>Nuevo Cargo</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="form-cargo">
+                            <div class="mb-3">
+                                <label for="cargo-nombre">Nombre del Cargo <span class="req">*</span></label>
+                                <input type="text" id="cargo-nombre" class="form-control" placeholder="Ej: Técnico de Soporte, Analista de Sistemas" maxlength="60" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cargo-desc">Descripción <span style="color:#9ba5b2;">(opcional)</span></label>
+                                <textarea id="cargo-desc" class="form-control" rows="3" placeholder="Breve descripción de las funciones del cargo..."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="agregarCargo()">Crear Cargo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">ATRÁS</button>
+            <button type="button" class="btn btn-primary" onclick="guardarCargos()">GUARDAR Y FINALIZAR</button>
+        </div>
+
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
+        </center>
+    </main>
+
+    <script>
+        let cargos = JSON.parse(localStorage.getItem('cargos') || '[]');
+        renderTabla();
+
+        function agregarCargo() {
+            const nombre = document.getElementById('cargo-nombre').value.trim();
+            const desc   = document.getElementById('cargo-desc').value.trim();
+
+            if (!nombre) {
+                if (window.showStyledAlert) showStyledAlert('El nombre del cargo es obligatorio.', 'Error', 'ph-warning', '#dc2626');
+                else alert('El nombre del cargo es obligatorio.');
+                return;
+            }
+
+            if (cargos.find(c => c.nombre.toLowerCase() === nombre.toLowerCase())) {
+                if (window.showStyledAlert) showStyledAlert('Ya existe un cargo con ese nombre.', 'Duplicado', 'ph-warning', '#dc2626');
+                else alert('Ya existe ese cargo.');
+                return;
+            }
+
+            cargos.push({ id: String(Date.now()), nombre, descripcion: desc });
+            localStorage.setItem('cargos', JSON.stringify(cargos));
+            renderTabla();
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('cargoModal'));
+            modal.hide();
+            document.getElementById('form-cargo').reset();
+        }
+
+        function renderTabla() {
+            const cuerpo = document.getElementById('lista-cargos-body');
+            if (cargos.length === 0) {
+                cuerpo.innerHTML = '<tr id="empty-row"><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay cargos creados. Haga clic en "+" para agregar.</td></tr>';
+                return;
+            }
+            cuerpo.innerHTML = '';
+            cargos.forEach((c, i) => {
+                cuerpo.innerHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px; color: #9ba5b2;">${i + 1}</td>
+                        <td style="padding: 10px; font-weight: bold;">${c.nombre}</td>
+                        <td style="padding: 10px; color: #64748b;">${c.descripcion || '—'}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button class="btn btn-sm btn-danger" onclick="eliminarCargo(${i})">X</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function eliminarCargo(index) {
+            cargos.splice(index, 1);
+            localStorage.setItem('cargos', JSON.stringify(cargos));
+            renderTabla();
+        }
+
+        function guardarCargos() {
+            localStorage.setItem('cargos', JSON.stringify(cargos));
+            if (window.showStyledAlert) showStyledAlert('¡Cargos guardados correctamente!', 'Éxito', 'ph-check-circle', '#16a34a');
+            else alert('¡Guardado correctamente!');
+        }
+    </script>
+
+    <style>
+        .modal-body label { margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #4b5563; }
+        .form-control { display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px; margin-bottom: 5px; }
+        .btn-sm { padding: 4px 8px; font-size: 12px; }
+        .req { color: #dc2626; }
+    </style>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+</body>
+
+</html>
