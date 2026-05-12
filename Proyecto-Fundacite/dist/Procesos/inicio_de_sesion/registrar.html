@@ -17,7 +17,7 @@
                 <h3>Crear Cuenta</h3>
             </div>
 
-            <form method="post" action="Login.html">
+            <form id="registerForm" novalidate>
                 <table class="clase-tabla">
                     <tr>
                         <td>
@@ -63,6 +63,30 @@
             </form>
         </section>
     </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var usuario = document.getElementById('usuario').value.trim();
+            var contrasena = document.getElementById('contrasena').value.trim();
+
+            if (!usuario || !contrasena) {
+                alert('Por favor, complete todos los campos obligatorios.');
+                return;
+            }
+
+            // Guardar la cuenta en localStorage
+            var cuenta = {
+                usuario: usuario,
+                contrasena: contrasena
+            };
+            localStorage.setItem('cuentaUsuario', JSON.stringify(cuenta));
+
+            alert('¡Registro exitoso! Ahora puedes iniciar sesión con tu nuevo usuario.');
+            window.location.href = 'Login.html';
+        });
+    </script>
 </body>
 
 </html>

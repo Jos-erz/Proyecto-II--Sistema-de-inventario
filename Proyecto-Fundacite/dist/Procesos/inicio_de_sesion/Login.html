@@ -49,17 +49,32 @@
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
-            var usuario = document.getElementById('usuario').value.trim();
-            var contrasena = document.getElementById('contrasena').value.trim();
+            var usuarioIngresado = document.getElementById('usuario').value.trim();
+            var claveIngresada = document.getElementById('contrasena').value.trim();
 
-            if (!usuario || !contrasena) {
+            if (!usuarioIngresado || !claveIngresada) {
                 alert('Por favor, complete todos los campos.');
                 return;
             }
 
-            // Guardar usuario y redirigir a la página principal (dashboard)
-            localStorage.setItem('loggedUser', usuario);
-            window.location.href = '../../dashboard/index.html';
+            // Recuperar la cuenta guardada en el registro
+            var cuentaGuardada = JSON.parse(localStorage.getItem('cuentaUsuario'));
+
+            // Si no hay cuenta registrada
+            if (!cuentaGuardada) {
+                alert('No se encontró ninguna cuenta. Por favor, regístrate primero.');
+                window.location.href = 'registrar.html';
+                return;
+            }
+
+            // Validar credenciales
+            if (usuarioIngresado === cuentaGuardada.usuario && claveIngresada === cuentaGuardada.contrasena) {
+                // Guardar usuario activo y redirigir
+                localStorage.setItem('loggedUser', usuarioIngresado);
+                window.location.href = '../../dashboard/index.html';
+            } else {
+                alert('Usuario o contraseña incorrectos. Por favor, verifique sus datos.');
+            }
         });
     </script>
 </body>
