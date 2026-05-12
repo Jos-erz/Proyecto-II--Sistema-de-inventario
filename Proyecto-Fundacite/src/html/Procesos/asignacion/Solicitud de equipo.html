@@ -35,8 +35,7 @@
                 <tr>
                     <td>
                         <label for="comp-fecha">Fecha de solicitud <span class="req">*</span></label>
-                        <input type="text" id="comp-fecha" name="comp-fecha" placeholder="Formato: dd/mm/aaaa"
-                            maxlength="10">
+                        <input type="date" id="comp-fecha" name="comp-fecha">
                     </td>
                 </tr>
                 <tr>
@@ -61,21 +60,23 @@
             </table>
         </section>
 
-        <form method="get" action="Departamento.html">
-            <div class="form-actions">
+        <div class="form-actions">
+            <form method="get" action="Departamento.html" id="form-atras">
                 <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-        </form>
-        <form method="get" action="../../dashboard/index.html">
-            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
-            </div>
-        </form>
+            </form>
+            <form method="get" action="../../dashboard/index.html" id="form-siguiente">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
 
         <br><br><br>
         <center>
-            <form method="get" action="../../dashboard/index.html">
+            <form method="get" action="../../dashboard/index.html" id="form-salir">
                 <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
             </form>
         </center>
+
+        <script src="../../../assets/js/validacionesformulario.js"></script>
     </main>
     <footer>
         <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>

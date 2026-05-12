@@ -154,6 +154,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
           mainContentArea.innerHTML = '';
           mainContentArea.appendChild(newContent);
+
+          // Execute scripts in the new content
+          newContent.querySelectorAll('script').forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+          });
+
           updateBreadcrumb(text, parentText);
           handleFormButtons(baseUrl);
           window.scrollTo(0, 0);
@@ -173,6 +182,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const action = this.getAttribute('action');
         if (action && !action.startsWith('http')) {
           e.preventDefault();
+          
+          // Validation hook
+          if (typeof window.validateCurrentForm === 'function') {
+            if (!window.validateCurrentForm(this)) {
+              console.log('SPA: Form validation failed');
+              return;
+            }
+          }
+
           const button = e.submitter;
           const buttonText = button ? button.value || button.name : 'Continuar';
 

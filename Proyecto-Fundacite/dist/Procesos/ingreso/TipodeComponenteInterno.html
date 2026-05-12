@@ -55,27 +55,23 @@
             </table>
         </section>
 
-        <form method="get" action="Modelo.html">
-            <div class="form-actions">
-
+        <div class="form-actions">
+            <form method="get" action="Modelo.html" id="form-atras">
                 <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="Tipodeperiferico.html" id="form-siguiente">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
 
-        </form>
-        <form method="get" action="Tipodeperiferico.html">
-
-            <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
-            </div>
-
-
-        </form>
         <br><br><br>
         <center>
-            <form method="get" action="../../dashboard/index.html">
+            <form method="get" action="../../dashboard/index.html" id="form-salir">
                 <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
             </form>
         </center>
 
-
+        <script src="../../../assets/js/validacionesformulario.js"></script>
     </main>
 
 </body>

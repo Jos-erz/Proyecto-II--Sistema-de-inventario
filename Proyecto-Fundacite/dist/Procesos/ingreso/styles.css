@@ -294,3 +294,21 @@ footer {
   max-width: 400px;
   margin: 0;
 }
+
+/* === VALIDATION STYLES === */
+.input-error {
+  border-color: #dc2626 !important;
+  background-color: #fff5f5 !important;
+}
+
+.error-message {
+  display: block;
+  font-size: 0.75rem;
+  color: #dc2626;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.input-success {
+  border-color: #10b981 !important;
+}

@@ -27,6 +27,7 @@
           <td>
             <label for="inst-rif">RIF (Registro de Información Fiscal) <span class="req">*</span></label>
             <input type="text" id="inst-rif" name="inst-rif" placeholder="J-00000000-0" maxlength="12" required>
+            <div id="error-inst-rif" class="error-message" style="display: none;"></div>
           </td>
         </tr>
         <tr>
@@ -34,6 +35,7 @@
             <label for="inst-nombre">Nombre <span class="req">*</span></label>
             <input type="text" id="inst-nombre" name="inst-nombre" placeholder="Denominación legal de la institución"
               maxlength="50">
+            <div id="error-inst-nombre" class="error-message" style="display: none;"></div>
           </td>
         </tr>
         <tr>
@@ -41,27 +43,29 @@
             <label for="inst-direccion">Dirección <span class="req">*</span></label>
             <textarea id="inst-direccion" name="inst-direccion" rows="2" placeholder="Ubicación física completa"
               maxlength="200"></textarea>
+            <div id="error-inst-direccion" class="error-message" style="display: none;"></div>
           </td>
         </tr>
       </table>
     </section>
 
     <div class="form-actions">
-      <form method="get" action="../../dashboard/index.html">
+      <form method="get" action="../../dashboard/index.html" id="form-atras">
         <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
       </form>
-      <form method="get" action="MARCA.html">
+      <form method="get" action="MARCA.html" id="form-siguiente">
         <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
       </form>
     </div>
 
     <br><br><br>
     <center>
-      <form method="get" action="../../dashboard/index.html">
+      <form method="get" action="../../dashboard/index.html" id="form-salir">
         <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
       </form>
     </center>
 
+    <script src="../../../assets/js/validacionesformulario.js"></script>
   </main>
 
   <footer>
