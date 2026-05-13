@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignacion de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Asignacion de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+
+
+
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Asignacion de equipos informaticos</h3>
+            </div>
+
+            <table class="clase-tabla">
+
+                <tr>
+                    <td>
+                        <label for="estatus_final">Equipo Informatico <span class="req">*</span></label>
+                        <select name="estatus_final">
+                            <option value="">Seleccionar equipo...</option>
+                            <option value="En proceso"></option>
+                            <option value="Completado"></option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <label for="estatus_final">Estado fisico <span class="req">*</span></label>
+                        <select name="estatus_final">
+                            <option value="">Seleccionar...</option>
+                            <option value="En proceso">Operativo</option>
+                            <option value="Completado">Obsoleto</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="comp-nombre">Nombre del Departamento <span class="req">*</span></label>
+                        <input type="text" id="comp-nombre" name="comp-nombre" placeholder="Nombre de la oficina"
+                            maxlength="40">
+                    </td>
+                </tr>
+
+            </table>
+        </section>
+
+        <div class="form-actions">
+            <form method="get" action="../../dashboard/index.html" id="form-atras">
+                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
+            </form>
+            <form method="get" action="../../dashboard/index.html" id="form-siguiente">
+                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
+            </form>
+        </div>
+
+        <br><br><br>
+        <center>
+            <form method="get" action="../../dashboard/index.html" id="form-salir">
+                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
+            </form>
+        </center>
+
+        <script src="../../../assets/js/validacionesformulario.js"></script>
+    </main>
+</body>
+
+</html>
