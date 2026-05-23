@@ -17,7 +17,8 @@
                 <h3>Crear Cuenta</h3>
             </div>
 
-            <form method="post" action="Login.html">
+            <!-- Formulario de registro corregido para evitar peticiones POST a archivos estáticos -->
+            <form id="registerForm">
                 <table class="clase-tabla">
                     <tr>
                         <td>
@@ -63,6 +64,17 @@
             </form>
         </section>
     </div>
+
+    <!-- Script para interceptar el envío del formulario y evitar el error de Cannot POST -->
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            // Evita que el navegador realice una petición POST al archivo estático Login.html
+            e.preventDefault();
+
+            // Redirige limpiamente a la pantalla de inicio de sesión (Login.html)
+            window.location.href = 'Login.html';
+        });
+    </script>
 </body>
 
 </html>
