@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Usuario | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <header>
+        <span>Fundacite Yaracuy — Administración del Sistema</span>
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <div style="display: flex; justify-content: center; margin-top: 40px;">
+            <section class="clase-card" style="width: 100%; max-width: 500px;">
+                <div class="clase-titulo">
+                    <h3><i class="ph ph-user-plus me-2"></i> Registrar Nuevo Usuario</h3>
+                </div>
+
+                <form id="adminRegisterForm" novalidate>
+                    <table class="clase-tabla">
+                        <tr>
+                            <td>
+                                <label for="nombres">Nombres <span class="req">*</span></label>
+                                <input type="text" id="nombres" name="nombres" placeholder="Ingrese nombres" class="form-control" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="apellidos">Apellidos <span class="req">*</span></label>
+                                <input type="text" id="apellidos" name="apellidos" placeholder="Ingrese apellidos" class="form-control" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="correo">Correo Electrónico <span class="req">*</span></label>
+                                <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" class="form-control" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="usuario">Usuario <span class="req">*</span></label>
+                                <input type="text" id="usuario" name="usuario" placeholder="Cree un nombre de usuario" class="form-control" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="contrasena">Contraseña <span class="req">*</span></label>
+                                <input type="password" id="contrasena" name="contrasena" placeholder="Cree una contraseña" class="form-control" required>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="form-actions" style="justify-content: center; margin-top: 20px;">
+                        <input type="submit" value="REGISTRAR USUARIO" class="btn btn-primary" style="width: 100%;">
+                    </div>
+                </form>
+            </section>
+        </div>
+        
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">VOLVER AL INICIO</button>
+        </center>
+    </main>
+
+    <style>
+        .form-control { display: block; width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 14px; margin-top: 5px; margin-bottom: 5px;}
+        .form-control:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    </style>
+
+    <script>
+        document.getElementById('adminRegisterForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var nombres = document.getElementById('nombres').value.trim();
+            var apellidos = document.getElementById('apellidos').value.trim();
+            var correo = document.getElementById('correo').value.trim();
+            var usuario = document.getElementById('usuario').value.trim();
+            var contrasena = document.getElementById('contrasena').value.trim();
+
+            if (!nombres || !apellidos || !correo || !usuario || !contrasena) {
+                if (window.showStyledAlert) showStyledAlert('Por favor, complete todos los campos.', 'Error de Validación', 'ph-warning', '#dc2626');
+                else alert('Por favor, complete todos los campos.');
+                return;
+            }
+
+            // Guardar en la base de datos de usuarios administrados
+            const dbUsers = JSON.parse(localStorage.getItem('admin_users') || '[]');
+            
+            // Verificar si el usuario ya existe
+            if (dbUsers.find(u => u.usuario === usuario) || usuario === 'admin') {
+                if (window.showStyledAlert) showStyledAlert('El nombre de usuario ya está en uso. Elija otro.', 'Usuario Existente', 'ph-warning', '#e98a1e');
+                else alert('El nombre de usuario ya está en uso. Elija otro.');
+                return;
+            }
+
+            dbUsers.push({
+                nombres, apellidos, correo, usuario, contrasena
+            });
+
+            localStorage.setItem('admin_users', JSON.stringify(dbUsers));
+
+            if (window.showStyledAlert) {
+                showStyledAlert('El nuevo usuario ha sido registrado exitosamente. Ya puede iniciar sesión.', 'Registro Exitoso', 'ph-check-circle', '#16a34a');
+            } else {
+                alert('Usuario registrado exitosamente.');
+            }
+
+            document.getElementById('adminRegisterForm').reset();
+        });
+    </script>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+</body>
+
+</html>

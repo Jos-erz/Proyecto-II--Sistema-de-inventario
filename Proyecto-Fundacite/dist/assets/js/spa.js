@@ -62,7 +62,12 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
     initDetailsButtons();
     updateDashboardTable();
+    updateMovementsTable();
     if(window.updateEmployeeTable) window.updateEmployeeTable();
+    
+    // Al volver al inicio, siempre mostramos la tabla global
+    const globalMov = document.getElementById('global-movements-container');
+    if (globalMov) globalMov.style.display = 'block';
   };
 
   function updateDashboardTable() {
@@ -125,6 +130,126 @@ document.addEventListener('DOMContentLoaded', function () {
             </tr>
         `;
         recentTable.innerHTML += row;
+    });
+  }
+
+  function updateMovementsTable() {
+    const movTable = document.getElementById('recent-movements-table');
+    if (!movTable) return;
+
+    let movements = [];
+
+    // Departamentos
+    const deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+    deptos.forEach(d => {
+        movements.push({
+            category: 'Departamento',
+            desc: d.nombre,
+            info: d.codigo,
+            ts: parseInt(d.id) || 0,
+            icon: 'ph-buildings',
+            color: 'primary',
+            href: '../Procesos/plantel/Departamentos.html'
+        });
+    });
+
+    // Cargos
+    const cargos = JSON.parse(localStorage.getItem('cargos') || '[]');
+    cargos.forEach(c => {
+        movements.push({
+            category: 'Cargo',
+            desc: c.nombre,
+            info: c.codigo || '-',
+            ts: parseInt(c.id) || 0,
+            icon: 'ph-briefcase',
+            color: 'success',
+            href: '../Procesos/plantel/Cargos.html'
+        });
+    });
+
+    // Instituciones
+    const insts = JSON.parse(localStorage.getItem('instituciones') || '[]');
+    insts.forEach(i => {
+        movements.push({
+            category: 'Institución',
+            desc: i.nombre,
+            info: i.codigo || '-',
+            ts: parseInt(i.id) || 0,
+            icon: 'ph-bank',
+            color: 'info',
+            href: '../Procesos/ingreso/INSTITUCION.html'
+        });
+    });
+
+    // Solicitudes Recibidas (Pendientes)
+    const incReqs = JSON.parse(localStorage.getItem('incoming_requests') || '[]');
+    incReqs.forEach(r => {
+        movements.push({
+            category: 'Solicitud Recibida',
+            desc: r.identificador || 'Funcionario',
+            info: r.fecha || '-',
+            ts: parseInt(r.id) || Date.now(), // Asume id es timestamp, o usa Date.now
+            icon: 'ph-envelope',
+            color: 'warning',
+            href: '../Procesos/solicitudes/SolicitudesRecibidas.html'
+        });
+    });
+
+    // Traslados Aceptados
+    const trans = JSON.parse(localStorage.getItem('accepted_transfers') || '[]');
+    trans.forEach(t => {
+        movements.push({
+            category: 'Traslado Aceptado',
+            desc: t.identificador || 'Desconocido',
+            info: t.fecha || '-',
+            ts: parseInt(t.id) || Date.now(),
+            icon: 'ph-arrows-left-right',
+            color: 'danger',
+            href: '../Procesos/movilizacion/Movimiento.html'
+        });
+    });
+
+    // Ordenar por timestamp descendente
+    movements.sort((a, b) => b.ts - a.ts);
+
+    // Tomar los últimos 5
+    const latestMovements = movements.slice(0, 5);
+
+    if (latestMovements.length === 0) {
+        movTable.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center p-4">
+                    <i class="ph ph-clock-counter-clockwise text-muted mb-2" style="font-size: 32px; display: block;"></i>
+                    <p class="text-muted m-0">No se han registrado movimientos últimamente</p>
+                </td>
+            </tr>`;
+        return;
+    }
+
+    movTable.innerHTML = '';
+    latestMovements.forEach(m => {
+        const row = `
+            <tr class="unread">
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="avtar avtar-s bg-light-${m.color} me-2"><i class="ph ${m.icon} f-20 text-${m.color}"></i></div>
+                        <div>
+                            <h6 class="mb-1">${m.category}</h6>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <h6 class="mb-1">${m.desc}</h6>
+                </td>
+                <td>
+                    <p class="m-0 text-muted">${m.info}</p>
+                </td>
+                <td>
+                    <a href="${m.href}" class="btn btn-sm btn-outline-${m.color} spa-link">Ver Sección</a>
+                </td>
+            </tr>
+        `;
+        movTable.innerHTML += row;
     });
   }
 
@@ -626,6 +751,10 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
       e.stopPropagation();
 
+      // Si el click provino de la tabla de movimientos, mantenemos la tabla global viva en la siguiente página.
+      const fromMovementsTable = !!e.target.closest('#recent-movements-table');
+      window.keepMovementsTable = fromMovementsTable;
+
       const absoluteUrl = new URL(href, window.location.href).pathname;
       
       if (absoluteUrl.includes('dashboard/index.html')) {
@@ -643,6 +772,8 @@ document.addEventListener('DOMContentLoaded', function () {
   }, true);
 
   function loadContent(url, text, parentText) {
+    const globalMov = document.getElementById('global-movements-container');
+    
     mainContentArea.innerHTML = `
             <div class="text-center p-5">
                 <div class="spinner-border text-primary" role="status">
@@ -707,6 +838,13 @@ document.addEventListener('DOMContentLoaded', function () {
           
           if (url.includes('dashboard/index.html')) {
             updateDashboardTable();
+            updateMovementsTable();
+            if (globalMov) globalMov.style.display = 'block';
+          } else {
+            // Si es otra página, solo mostramos la tabla si vinimos desde el botón de la tabla
+            if (globalMov) {
+                globalMov.style.display = window.keepMovementsTable ? 'block' : 'none';
+            }
           }
         } else {
           mainContentArea.innerHTML = '<div class="alert alert-warning m-4">Error: La página cargada no tiene el formato esperado (falta etiqueta &lt;main&gt;).</div>';
@@ -739,4 +877,5 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   
   updateDashboardTable();
+  updateMovementsTable();
 });

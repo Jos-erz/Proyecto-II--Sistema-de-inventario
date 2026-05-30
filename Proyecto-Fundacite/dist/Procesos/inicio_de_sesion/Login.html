@@ -35,11 +35,10 @@
                 </table>
 
                 <div class="form-actions" style="justify-content: center; flex-direction: column; gap: 15px;">
-                    <input type="submit" value="INGRESAR" class="btn btn-primary" style="width: 100%;">
-                    <div style="text-align: center; font-size: 0.85rem;">
-                        ¿No tienes una cuenta? <a href="registrar.html"
-                            style="color: #2a6cb8; text-decoration: none; font-weight: bold;">Regístrate aquí</a>
+                    <div style="text-align: center; font-size: 0.85rem; color: #64748b;">
+                        Usuario: <strong>admin</strong> | Contraseña: <strong>123</strong>)
                     </div>
+                    <input type="submit" value="INGRESAR" class="btn btn-primary" style="width: 100%;">
                 </div>
             </form>
         </section>
@@ -57,9 +56,23 @@
                 return;
             }
 
-            // Guardar usuario y redirigir a la página principal (dashboard)
-            localStorage.setItem('loggedUser', usuario);
-            window.location.href = '../../dashboard/index.html';
+            // Buscar en localStorage o usar el default
+            const dbUsers = JSON.parse(localStorage.getItem('admin_users') || '[]');
+
+            // Usuario default si no hay base de datos configurada o como fallback
+            const defaultUser = { usuario: 'admin', contrasena: '123' };
+
+            // Validar
+            const validUser = dbUsers.find(u => u.usuario === usuario && u.contrasena === contrasena);
+            const isDefault = (usuario === defaultUser.usuario && contrasena === defaultUser.contrasena);
+
+            if (validUser || isDefault) {
+                // Guardar usuario y redirigir a la página principal (dashboard)
+                localStorage.setItem('loggedUser', usuario);
+                window.location.href = '../../dashboard/index.html';
+            } else {
+                alert('Usuario o contraseña incorrectos.');
+            }
         });
     </script>
 </body>

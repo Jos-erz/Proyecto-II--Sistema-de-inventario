@@ -355,8 +355,12 @@
                     bootstrap.Modal.getOrCreateInstance(document.getElementById('modalAsig')).show();
 
                 } else if (r.tipo === 'traslado') {
+                    const accTrans = JSON.parse(localStorage.getItem('accepted_transfers') || '[]');
+                    accTrans.push(r);
+                    localStorage.setItem('accepted_transfers', JSON.stringify(accTrans));
+
                     if (window.loadContentGlobal) {
-                        window.loadContentGlobal('../Procesos/movilizacion/Movimiento.html', 'Movimiento', 'Movilizacion');
+                        window.loadContentGlobal('../Procesos/movilizacion/Movimiento.html', 'Solicitudes de Traslado', 'Traslado');
                     } else {
                         window.location.href = '../movilizacion/Movimiento.html';
                     }
