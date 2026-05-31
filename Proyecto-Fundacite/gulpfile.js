@@ -192,19 +192,9 @@ gulp.task('cleandist', function (callback) {
   del.sync([
     'dist/assets/',
     'dist/dashboard/',
-    'dist/elements/',
     'dist/layouts/',
-    'dist/other/',
-    'dist/pages/',
     'dist/html/',
-    'dist/Procesos/',
-    'dist/admin/',
-    'dist/application/',
-    'dist/chart/',
-    'dist/demo/',
-    'dist/forms/',
-    'dist/table/',
-    'dist/widget/'
+    'dist/Procesos/'
   ]);
   callback();
 });
