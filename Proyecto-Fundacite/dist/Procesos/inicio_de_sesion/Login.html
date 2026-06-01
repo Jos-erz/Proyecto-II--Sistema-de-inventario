@@ -36,9 +36,8 @@
 
                 <div class="form-actions" style="justify-content: center; flex-direction: column; gap: 15px;">
                     <input type="submit" value="INGRESAR" class="btn btn-primary" style="width: 100%;">
-                    <div style="text-align: center; font-size: 0.85rem;">
-                        ¿No tienes una cuenta? <a href="registrar.html"
-                            style="color: #2a6cb8; text-decoration: none; font-weight: bold;">Regístrate aquí</a>
+                    <div style="text-align: center; font-size: 0.7rem; color: rgba(0,0,0,0.3); margin-top: 10px;">
+                        Usuario: admin | Clave: 123
                     </div>
                 </div>
             </form>
@@ -57,9 +56,13 @@
                 return;
             }
 
-            // Guardar usuario y redirigir a la página principal (dashboard)
-            localStorage.setItem('loggedUser', usuario);
-            window.location.href = '../../dashboard/index.html';
+            if (usuario === 'admin' && contrasena === '123') {
+                // Guardar usuario y redirigir a la página principal (dashboard)
+                localStorage.setItem('loggedUser', usuario);
+                window.location.href = '../../dashboard/index.html';
+            } else {
+                alert('Usuario o contraseña incorrectos.');
+            }
         });
     </script>
 </body>
