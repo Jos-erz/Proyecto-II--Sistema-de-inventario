@@ -4,91 +4,529 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movilización de Equipos | Fundacite Yaracuy</title>
+    <title>Traslado de Equipos | Fundacite Yaracuy</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
 <body>
 
     <header>
-        <span>Fundacite Yaracuy — Movilización de Equipos Informáticos</span>
+        <span>Fundacite Yaracuy — Traslado de Equipos Informáticos</span>
         <img src="Logofundacite.webp" alt="logo" class="logo">
     </header>
 
     <main>
+        <style>
+            .tr-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
+            .tr-title { margin:0; color:#1e3a5f; font-weight:800; font-size:22px; }
+            .tr-badge { display:inline-block; background:#ca8a04; color:white; border-radius:20px; padding:2px 12px; font-size:13px; font-weight:700; margin-left:8px; }
 
+            /* Tabla principal - mismo estilo que adquisición */
+            .clase-card { background:#fff; border-radius:8px; padding:1.5rem 2rem; margin-bottom:1rem; box-shadow:0 2px 10px rgba(0,0,0,.07); border-left:4px solid #ca8a04; }
+            .clase-titulo { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:1.2rem; padding-bottom:.75rem; border-bottom:1px solid #e2e6eb; justify-content:space-between; }
+            .clase-titulo h3 { font-size:1.05rem; font-weight:700; color:#111827; margin:0; }
+            .clase-tabla { width:100%; border-collapse:collapse; }
+            .clase-tabla thead tr { border-bottom:2px solid #e2e6eb; }
+            .clase-tabla th { padding:10px; text-align:left; font-size:13px; color:#374151; font-weight:700; }
+            .clase-tabla td { padding:12px 10px; font-size:13px; color:#374151; border-bottom:1px solid #f1f5f9; }
+            .clase-tabla tbody tr:hover { background:#f8fafc; }
+            .clase-tabla tbody tr:last-child td { border-bottom:none; }
+            .table-responsive { overflow-x:auto; }
 
+            /* Botón realizar */
+            .btn-realizar { border:none; background:#ca8a04; color:white; padding:5px 13px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer; transition:background .15s; display:inline-flex; align-items:center; gap:4px; }
+            .btn-realizar:hover { background:#a16207; }
 
-        <section class="clase-card">
-            <div class="clase-titulo">
-                <h3>Documento</h3>
+            /* Estado badges */
+            .badge-pendiente { background:#fef9c3; color:#ca8a04; border-radius:12px; padding:3px 10px; font-size:11px; font-weight:700; }
+            .badge-completado { background:#dcfce7; color:#16a34a; border-radius:12px; padding:3px 10px; font-size:11px; font-weight:700; }
+
+            /* Modal de traslado - paneles */
+            .panel-origen { flex:1 1 280px; padding:22px; background:#fffbeb; border-right:1px solid #fde68a; }
+            .panel-destino { flex:1 1 280px; padding:22px; background:#f0fdf4; }
+            .panel-title { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+            .panel-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; color:white; flex-shrink:0; }
+
+            /* Tarjetas de equipo */
+            .eq-card { display:flex; align-items:center; padding:10px 12px; border-radius:8px; margin-bottom:6px; border:2px solid #e2e8f0; transition:all .15s; background:white; gap:10px; }
+            .eq-card.clickable { cursor:pointer; }
+            .eq-card.clickable:hover { border-color:#ca8a04; background:#fffbeb; }
+            .eq-card.sel { border-color:#ca8a04; background:#fffbeb; }
+            .eq-icon-wrap { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+            .eq-card strong { display:block; font-size:13px; color:#1e3a5f; line-height:1.3; }
+            .eq-card small { font-size:11px; color:#64748b; }
+
+            /* Panel fijo de equipo seleccionado */
+            .sel-wrap { background:white; border:2px dashed #e2e8f0; border-radius:8px; padding:14px; text-align:center; color:#94a3b8; font-size:13px; transition:all .2s; }
+            .sel-wrap.activo { border-color:#ca8a04; background:#fffbeb; border-style:solid; }
+
+            /* Botones */
+            .btn { padding:8px 16px; font-size:.9rem; font-weight:600; border-radius:6px; cursor:pointer; border:none; transition:background-color .2s,color .2s; }
+            .btn-secondary { background-color:#e2e6eb; color:#374151; }
+            .btn-secondary:hover { background-color:#cdd3da; }
+            .btn-primary { background-color:#2a6cb8; color:#fff; }
+            .btn-primary:hover { background-color:#1e5694; }
+            .btn-success { background-color:#16a34a; color:#fff; }
+            .btn-success:hover { background-color:#15803d; }
+            .btn-danger { background:#dc2626; color:white; }
+            .btn-danger:hover { background:#b91c1c; }
+            .btn-sm { padding:4px 10px; font-size:12px; }
+            .top-actions { display:flex; gap:8px; }
+
+            /* Form control en modal */
+            select.sel-depto { width:100%; padding:9px 12px; font-size:.9rem; border:1.5px solid #cdd3da; border-radius:6px; background:#f8f9fb; outline:none; transition:border-color .2s,box-shadow .2s; }
+            select.sel-depto:focus { border-color:#2a6cb8; box-shadow:0 0 0 3px rgba(42,108,184,.1); background:#fff; }
+        </style>
+
+        <!-- CABECERA -->
+        <div class="tr-header">
+            <div>
+                <h2 class="tr-title">
+                    <i class="ph ph-arrows-left-right" style="margin-right:8px;"></i>
+                    Traslado de Equipos
+                    <span class="tr-badge" id="total-count">0</span>
+                </h2>
+                <p style="margin:4px 0 0; color:#64748b; font-size:13px;">Solicitudes de traslado aceptadas — pendientes de ejecución</p>
             </div>
-
-            <table class="clase-tabla">
-                <tr>
-                    <td>
-                        <label for="doc-fecha">Fecha de emisión <span class="req">*</span></label>
-                        <input type="date" id="doc-fecha" name="doc-fecha">
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label for="doc-numero">Número de Documento <span class="req">*</span></label>
-                        <input type="text" id="doc-numero" name="doc-numero" placeholder="Correlativo de registro"
-                            maxlength="15">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="doc-archivo">Motivo<span class="req">*</span></label>
-                        <input type="text" id="doc-archivo" name="doc-archivo"
-                            placeholder="Dirección de almacenamiento o nombre del archivo" maxlength="100">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="estatus_final">Estado fisico <span class="req">*</span></label>
-                        <select name="estatus_final">
-                            <option value="">Seleccionar...</option>
-                            <option value="En proceso">Operativo</option>
-                            <option value="Completado">Obsoleto</option>
-                        </select>
-                    </td>
-                </tr>
-                 <tr>
-                    <td>
-                        <label for="estatus_final">Estado fisico <span class="req">*</span></label>
-                        <select name="estatus_final">
-                            <option value="">Seleccionar equipo...</option>
-                            <option value="En proceso"></option>
-                            <option value="Completado"></option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        </section>
-
-        <div class="form-actions">
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-            </form>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="GUARDAR" value="GUARDAR" class="btn btn-primary">
-            </form>
+            <div class="top-actions">
+                <button class="btn btn-sm btn-secondary" onclick="window.renderTabla()">
+                    <i class="ph ph-arrows-clockwise"></i> Refrescar
+                </button>
+            </div>
         </div>
 
-        <br><br><br>
-        <center>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
-            </form>
+        <!-- TABLA -->
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3><i class="ph ph-list-checks" style="margin-right:6px;color:#ca8a04;"></i>Lista de Traslados Pendientes</h3>
+                <span style="font-size:13px;color:#64748b;font-style:italic;">Haga clic en "Realizar" para ejecutar el traslado</span>
+            </div>
+            <div class="table-responsive">
+                <table class="clase-tabla" id="tabla-traslados">
+                    <thead>
+                        <tr>
+                            <th>Solicitante / Departamento</th>
+                            <th>Motivo</th>
+                            <th>Fecha Aceptación</th>
+                            <th>Estado</th>
+                            <th style="text-align:center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-cuerpo">
+                        <tr id="empty-row">
+                            <td colspan="5" style="text-align:center;padding:30px;color:#9ba5b2;">
+                                <i class="ph ph-arrows-left-right" style="font-size:32px;display:block;margin-bottom:8px;opacity:0.35;"></i>
+                                No hay traslados aceptados pendientes.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <center style="margin-top:2rem;">
+            <button type="button" class="btn btn-secondary"
+                onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">VOLVER AL INICIO</button>
         </center>
+
+        <!-- ===== MODAL REALIZAR TRASLADO ===== -->
+        <div class="modal fade" id="modalTraslado" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content" style="border:none;border-radius:14px;overflow:hidden;">
+
+                    <!-- Header -->
+                    <div class="modal-header" style="background:#ca8a04;color:white;border-bottom:1px solid #a16207;padding:16px 22px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:22px;">
+                                <i class="ph ph-arrows-left-right"></i>
+                            </div>
+                            <div>
+                                <h5 style="margin:0;font-weight:700;color:white;">Realizar Traslado de Equipo</h5>
+                                <small style="opacity:.85;">Seleccione el equipo a trasladar y el departamento destino</small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" style="margin-left:auto;"></button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body p-0">
+                        <div style="display:flex;flex-wrap:wrap;min-height:360px;">
+
+                            <!-- Panel Izquierdo: Dpto. ORIGEN (solicitante) -->
+                            <div class="panel-origen">
+                                <div class="panel-title">
+                                    <div class="panel-icon" style="background:#ca8a04;"><i class="ph ph-building-office"></i></div>
+                                    <div>
+                                        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#92400e;">Departamento Solicitante</div>
+                                        <div style="font-size:11px;color:#78350f;">(no modificable — es quien pide el traslado)</div>
+                                    </div>
+                                </div>
+                                <div style="background:white;border:1.5px solid #fde68a;border-radius:8px;padding:12px 14px;margin-bottom:14px;">
+                                    <div style="font-size:10px;color:#92400e;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">Departamento</div>
+                                    <div id="origen-depto" style="font-weight:700;color:#713f12;font-size:15px;">—</div>
+                                </div>
+                                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:10px;">
+                                    <i class="ph ph-desktop"></i> Equipos de este departamento
+                                </div>
+                                <div id="origen-equipos" style="max-height:260px;overflow-y:auto;"></div>
+                            </div>
+
+                            <!-- Panel Derecho: Dpto. DESTINO -->
+                            <div class="panel-destino">
+                                <div class="panel-title">
+                                    <div class="panel-icon" style="background:#16a34a;"><i class="ph ph-arrow-circle-right"></i></div>
+                                    <div>
+                                        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#166534;">Departamento Destino</div>
+                                        <div style="font-size:11px;color:#15803d;">Donde se recibirá el equipo</div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom:14px;">
+                                    <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#166534;margin-bottom:6px;">Seleccionar Departamento *</label>
+                                    <select id="destino-select" class="sel-depto" onchange="window.cargarEquiposDestino()">
+                                        <option value="">— Seleccionar departamento —</option>
+                                    </select>
+                                </div>
+                                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#166534;margin-bottom:10px;">
+                                    <i class="ph ph-desktop"></i> Equipos actuales del destino
+                                </div>
+                                <div id="destino-equipos" style="max-height:260px;overflow-y:auto;">
+                                    <div style="text-align:center;color:#9ba5b2;padding:20px;font-size:13px;">Seleccione un departamento</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Equipo seleccionado -->
+                        <div style="padding:18px 22px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+                            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;margin-bottom:10px;">
+                                <i class="ph ph-swap"></i> Equipo seleccionado para trasladar
+                            </div>
+                            <div class="sel-wrap" id="sel-equipo-wrap">
+                                Haga clic en un equipo del panel izquierdo para seleccionarlo
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="modal-footer" style="background:#f8fafc;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:10px;padding:14px 22px;">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-success" id="btn-confirmar-traslado" disabled onclick="window.confirmarTraslado()">
+                            <i class="ph ph-check-circle"></i> Confirmar Traslado
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- FIN MODAL -->
+
     </main>
+
+    <script>
+    (function() {
+        const KEY = 'traslados_aceptados';
+        let trasladoActual = null;
+        let equipoSeleccionado = null;
+
+        function getTraslados() {
+            try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e) { return []; }
+        }
+        function saveTraslados(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
+
+        function getInventario() {
+            try { return JSON.parse(localStorage.getItem('recent_activity') || '[]'); } catch(e) { return []; }
+        }
+        function getDeptos() {
+            try { return JSON.parse(localStorage.getItem('departamentos') || '[]'); } catch(e) { return []; }
+        }
+        function getAsignacionesDepto() {
+            try { return JSON.parse(localStorage.getItem('asignaciones_depto') || '[]'); } catch(e) { return []; }
+        }
+
+        // ── Obtener equipos de un departamento ─────────────────────────────
+        function getEquiposPorDepto(depto) {
+            const inv = getInventario();
+            const asigs = getAsignacionesDepto();
+            const idsAsig = asigs.filter(a => a.departamento === depto).map(a => a.equipoId);
+            return inv.filter(i =>
+                i.tipo === 'Equipo Informático' &&
+                (i.data?.departamento === depto || idsAsig.includes(i.identificador))
+            );
+        }
+
+        // ── Renderizar tarjeta de equipo ────────────────────────────────────
+        function makeEqCard(eq, clickable) {
+            const card = document.createElement('div');
+            card.className = 'eq-card' + (clickable ? ' clickable' : '');
+            card.innerHTML = `
+                <div class="eq-icon-wrap" style="background:${clickable ? '#fef9c3' : '#dcfce7'};color:${clickable ? '#ca8a04' : '#16a34a'};">
+                    <i class="ph ph-desktop"></i>
+                </div>
+                <div>
+                    <strong>${eq.identificador}</strong>
+                    <small>${eq.data?.clase || ''} · ${eq.data?.marca || ''} ${eq.data?.modelo || ''}</small>
+                </div>
+                ${clickable ? '<input type="radio" name="eq-orig-sel" style="margin-left:auto;">' : ''}`;
+            return card;
+        }
+
+        // ── Renderizar tabla principal ──────────────────────────────────────
+        window.renderTabla = function() {
+            const traslados = getTraslados();
+            const badge = document.getElementById('total-count');
+            const cuerpo = document.getElementById('lista-cuerpo');
+            if (!cuerpo) return;
+
+            const pendientes = traslados.filter(t => !t.completado).length;
+            if (badge) badge.textContent = pendientes;
+
+            if (traslados.length === 0) {
+                cuerpo.innerHTML = `<tr id="empty-row"><td colspan="5" style="text-align:center;padding:30px;color:#9ba5b2;">
+                    <i class="ph ph-arrows-left-right" style="font-size:32px;display:block;margin-bottom:8px;opacity:0.35;"></i>
+                    No hay traslados aceptados pendientes.
+                </td></tr>`;
+                return;
+            }
+
+            cuerpo.innerHTML = '';
+            traslados.forEach((t, idx) => {
+                const depto = t.data?.departamento || t.identificador || '—';
+                const motivo = t.data?.motivo || '—';
+                const fecha  = t.fechaAceptacion || t.fecha || '—';
+
+                const estadoBadge = t.completado
+                    ? `<span class="badge-completado">Completado</span>`
+                    : `<span class="badge-pendiente">Pendiente</span>`;
+
+                const btnRealizar = t.completado ? '' :
+                    `<button class="btn-realizar" onclick="window.abrirModal(${idx})">
+                        <i class="ph ph-play-circle"></i> Realizar
+                    </button>`;
+
+                cuerpo.innerHTML += `
+                    <tr>
+                        <td>
+                            <strong style="display:block;">${depto}</strong>
+                            <small style="color:#64748b;">${t.identificador !== depto ? t.identificador : ''}</small>
+                        </td>
+                        <td>${motivo}</td>
+                        <td>${fecha}</td>
+                        <td>${estadoBadge}</td>
+                        <td style="text-align:center;">
+                            <div style="display:flex;gap:6px;justify-content:center;align-items:center;">
+                                ${btnRealizar}
+                                <button class="btn btn-sm btn-danger" onclick="window.eliminarTraslado(${idx})">
+                                    <i class="ph ph-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+        };
+
+        window.eliminarTraslado = function(idx) {
+            const arr = getTraslados();
+            arr.splice(idx, 1);
+            saveTraslados(arr);
+            window.renderTabla();
+        };
+
+        // ── Abrir modal ─────────────────────────────────────────────────────
+        window.abrirModal = function(idx) {
+            const traslados = getTraslados();
+            trasladoActual = { ...traslados[idx], _idx: idx };
+            equipoSeleccionado = null;
+
+            const btnConf = document.getElementById('btn-confirmar-traslado');
+            if (btnConf) btnConf.disabled = true;
+
+            // Departamento origen
+            const deptoOrigen = trasladoActual.data?.departamento || trasladoActual.identificador || '—';
+            const origenEl = document.getElementById('origen-depto');
+            if (origenEl) origenEl.textContent = deptoOrigen;
+
+            // Cargar equipos del origen
+            cargarEquiposOrigen(deptoOrigen);
+
+            // Cargar select de departamentos destino
+            const select = document.getElementById('destino-select');
+            if (select) {
+                select.innerHTML = '<option value="">— Seleccionar departamento —</option>';
+                const deptos = getDeptos();
+                const nombres = new Set();
+                deptos.forEach(d => {
+                    const n = d.nombre || d;
+                    if (n && n !== deptoOrigen) { nombres.add(n); }
+                });
+                // También buscar deptos en inventario
+                getInventario().forEach(i => {
+                    const dep = i.data?.departamento;
+                    if (dep && dep !== deptoOrigen) nombres.add(dep);
+                });
+                getAsignacionesDepto().forEach(a => {
+                    if (a.departamento && a.departamento !== deptoOrigen) nombres.add(a.departamento);
+                });
+                nombres.forEach(n => {
+                    const opt = document.createElement('option');
+                    opt.value = n; opt.textContent = n;
+                    select.appendChild(opt);
+                });
+            }
+
+            // Reset paneles
+            const destEq = document.getElementById('destino-equipos');
+            if (destEq) destEq.innerHTML = '<div style="text-align:center;color:#9ba5b2;padding:20px;font-size:13px;">Seleccione un departamento</div>';
+
+            const selWrap = document.getElementById('sel-equipo-wrap');
+            if (selWrap) {
+                selWrap.innerHTML = 'Haga clic en un equipo del panel izquierdo para seleccionarlo';
+                selWrap.classList.remove('activo');
+            }
+
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('modalTraslado')).show();
+        };
+
+        // ── Equipos del origen ──────────────────────────────────────────────
+        function cargarEquiposOrigen(depto) {
+            const cont = document.getElementById('origen-equipos');
+            if (!cont) return;
+            const equipos = getEquiposPorDepto(depto);
+
+            if (equipos.length === 0) {
+                cont.innerHTML = `<div style="text-align:center;color:#9ba5b2;padding:16px;font-size:13px;">
+                    <i class="ph ph-warning" style="display:block;font-size:22px;margin-bottom:6px;"></i>
+                    No hay equipos informáticos registrados para este departamento
+                </div>`;
+                return;
+            }
+
+            cont.innerHTML = '';
+            equipos.forEach(eq => {
+                const card = makeEqCard(eq, true);
+                card.onclick = () => {
+                    cont.querySelectorAll('.eq-card').forEach(c => c.classList.remove('sel'));
+                    card.classList.add('sel');
+                    const radio = card.querySelector('input[type="radio"]');
+                    if (radio) radio.checked = true;
+                    equipoSeleccionado = eq;
+
+                    const wrap = document.getElementById('sel-equipo-wrap');
+                    if (wrap) {
+                        wrap.className = 'sel-wrap activo';
+                        wrap.innerHTML = `
+                            <div style="display:flex;align-items:center;gap:12px;justify-content:center;">
+                                <div class="eq-icon-wrap" style="background:#fef9c3;color:#ca8a04;width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">
+                                    <i class="ph ph-desktop"></i>
+                                </div>
+                                <div style="text-align:left;">
+                                    <strong style="display:block;color:#713f12;font-size:14px;">${eq.identificador}</strong>
+                                    <small style="color:#78350f;">${eq.data?.clase || ''} · ${eq.data?.marca || ''} ${eq.data?.modelo || ''}</small>
+                                </div>
+                            </div>`;
+                    }
+                    verificarListo();
+                };
+                cont.appendChild(card);
+            });
+        }
+
+        // ── Equipos del destino ─────────────────────────────────────────────
+        window.cargarEquiposDestino = function() {
+            const depto = document.getElementById('destino-select')?.value;
+            const cont  = document.getElementById('destino-equipos');
+            if (!cont) return;
+
+            if (!depto) {
+                cont.innerHTML = '<div style="text-align:center;color:#9ba5b2;padding:20px;font-size:13px;">Seleccione un departamento</div>';
+                verificarListo();
+                return;
+            }
+
+            const equipos = getEquiposPorDepto(depto);
+            cont.innerHTML = '';
+
+            if (equipos.length === 0) {
+                cont.innerHTML = `<div style="text-align:center;color:#9ba5b2;padding:16px;font-size:13px;">
+                    <i class="ph ph-info" style="display:block;font-size:22px;margin-bottom:6px;"></i>
+                    Este departamento no tiene equipos registrados
+                </div>`;
+            } else {
+                equipos.forEach(eq => {
+                    const card = makeEqCard(eq, false);
+                    cont.appendChild(card);
+                });
+            }
+            verificarListo();
+        };
+
+        function verificarListo() {
+            const destino = document.getElementById('destino-select')?.value;
+            const btn = document.getElementById('btn-confirmar-traslado');
+            if (btn) btn.disabled = !(equipoSeleccionado && destino);
+        }
+
+        // ── Confirmar traslado ───────────────────────────────────────────────
+        window.confirmarTraslado = function() {
+            if (!equipoSeleccionado || !trasladoActual) return;
+            const depto = document.getElementById('destino-select')?.value;
+            if (!depto) return;
+
+            const deptoOrigen = trasladoActual.data?.departamento || trasladoActual.identificador || '';
+
+            // Actualizar departamento en recent_activity
+            const inv = getInventario();
+            const eqIdx = inv.findIndex(i => i.identificador === equipoSeleccionado.identificador);
+            if (eqIdx > -1) {
+                if (!inv[eqIdx].data) inv[eqIdx].data = {};
+                inv[eqIdx].data.departamento = depto;
+                localStorage.setItem('recent_activity', JSON.stringify(inv));
+            }
+
+            // Actualizar asignaciones_depto
+            const asigs = getAsignacionesDepto();
+            const aIdx = asigs.findIndex(a => a.equipoId === equipoSeleccionado.identificador);
+            if (aIdx > -1) {
+                asigs[aIdx].departamento = depto;
+            } else {
+                asigs.push({ equipoId: equipoSeleccionado.identificador, departamento: depto });
+            }
+            localStorage.setItem('asignaciones_depto', JSON.stringify(asigs));
+
+            // Marcar traslado como completado
+            const traslados = getTraslados();
+            if (traslados[trasladoActual._idx]) {
+                traslados[trasladoActual._idx].completado    = true;
+                traslados[trasladoActual._idx].equipoMovido  = equipoSeleccionado.identificador;
+                traslados[trasladoActual._idx].deptoOrigen   = deptoOrigen;
+                traslados[trasladoActual._idx].deptoDestino  = depto;
+            }
+            saveTraslados(traslados);
+
+            // Cerrar modal
+            const mEl = document.getElementById('modalTraslado');
+            const mInst = bootstrap.Modal.getInstance(mEl);
+            if (mInst) mInst.hide();
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+
+            window.renderTabla();
+
+            const msg = `El equipo "${equipoSeleccionado.identificador}" fue trasladado de "${deptoOrigen}" a "${depto}" exitosamente.`;
+            if (window.showStyledAlert) {
+                window.showStyledAlert(msg, 'Traslado Completado', 'ph-check-circle', '#16a34a');
+            } else {
+                alert(msg);
+            }
+        };
+
+        // Inicializar
+        window.renderTabla();
+    })();
+    </script>
 
     <footer>
         <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
     </footer>
-</body>
 
+</body>
 </html>

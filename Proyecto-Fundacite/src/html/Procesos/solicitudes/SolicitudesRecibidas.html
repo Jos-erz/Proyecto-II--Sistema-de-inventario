@@ -355,11 +355,15 @@
                     bootstrap.Modal.getOrCreateInstance(document.getElementById('modalAsig')).show();
 
                 } else if (r.tipo === 'traslado') {
-                    if (window.loadContentGlobal) {
-                        window.loadContentGlobal('../Procesos/movilizacion/Movimiento.html', 'Movimiento', 'Movilizacion');
-                    } else {
-                        window.location.href = '../movilizacion/Movimiento.html';
-                    }
+                    // Guardar en la lista de traslados aceptados
+                    const aceptados = JSON.parse(localStorage.getItem('traslados_aceptados') || '[]');
+                    aceptados.push({
+                        ...r,
+                        fechaAceptacion: new Date().toLocaleDateString('es-VE'),
+                        completado: false
+                    });
+                    localStorage.setItem('traslados_aceptados', JSON.stringify(aceptados));
+                    // Eliminar de la bandeja sin mostrar ningún modal ni redirigir
                     window.del(id);
                 }
             };
