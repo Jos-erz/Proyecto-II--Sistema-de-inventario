@@ -250,6 +250,15 @@
             const modal = bootstrap.Modal.getInstance(document.getElementById('empleadoModal'));
             modal.hide();
             document.getElementById('form-empleado').reset();
+
+            // Esperamos un momento para que el modal se cierre correctamente antes de mostrar la alerta
+            setTimeout(() => {
+                if (window.showStyledAlert) {
+                    showStyledAlert('Empleado "' + nombre + '" registrado exitosamente.', 'Éxito', 'ph-check-circle', '#16a34a');
+                } else {
+                    alert('Empleado registrado exitosamente.');
+                }
+            }, 400);
         }
 
         function renderTabla() {

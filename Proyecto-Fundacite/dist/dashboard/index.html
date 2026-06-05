@@ -170,20 +170,7 @@
           </ul>
         </li>
 
-        <!-- ASIGNACIÓN -->
-        <li class="pc-item pc-hasmenu">
-          <a href="#!" class="pc-link">
-            <span class="pc-micon"> <i class="ph ph-user-plus"></i> </span>
-            <span class="pc-mtext" data-i18n="Menu levels">Asignacion de equipos</span>
-            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
-          </a>
-          <ul class="pc-submenu">
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Empleado.html">Empleado</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Cargo.html">Cargo</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Departamento.html">Departamento</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Solicitud de equipo.html">Solicitud de equipo</a></li>
-          </ul>
-        </li>
+
 
         <!-- MOVILIZACIÓN -->
         <li class="pc-item pc-hasmenu">
@@ -233,11 +220,7 @@
             <li class="pc-item"><a class="pc-link" href="../Procesos/plantel/Empleados.html">Empleados</a></li>
             <li class="pc-item"><a class="pc-link" href="../Procesos/plantel/Cargos.html">Cargos</a></li>
             <li class="pc-item"><a class="pc-link" href="../Procesos/plantel/Departamentos.html">Departamentos</a></li>
-            <!-- Asignación -->
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Empleado.html">Empleado (Asignación)</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Cargo.html">Cargo (Asignación)</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Departamento.html">Departamento (Asignación)</a></li>
-            <li class="pc-item"><a class="pc-link" href="../Procesos/asignacion/Solicitud de equipo.html">Solicitud de Equipo</a></li>
+
             <!-- Solicitudes -->
             <li class="pc-item"><a class="pc-link" href="../Procesos/solicitudes/Solicitudes.html">Gestionar Solicitudes</a></li>
             <li class="pc-item"><a class="pc-link" href="../Procesos/solicitudes/SolicitudesRecibidas.html">Solicitudes Recibidas</a></li>
@@ -551,9 +534,9 @@
                           <th>Acción</th>
                         </tr>
                       </thead>
-                        <tbody id="recent-equipment-table">
-                          <!-- La tabla se llena dinámicamente con JS. Si no hay datos, se muestra mensaje de vacío. -->
-                        </tbody>
+                      <tbody id="recent-equipment-table">
+                        <!-- La tabla se llena dinámicamente con JS. Si no hay datos, se muestra mensaje de vacío. -->
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -576,9 +559,34 @@
                           <th>Acción</th>
                         </tr>
                       </thead>
-                        <tbody id="recent-employee-table">
-                          <!-- La tabla se llena dinámicamente con JS. -->
-                        </tbody>
+                      <tbody id="recent-employee-table">
+                        <!-- La tabla se llena dinámicamente con JS. -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- TABLA DEPARTAMENTOS -->
+            <div class="col-xl-12 col-md-12 mt-4">
+              <div class="card Recent-Users table-card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5><i class="ph ph-buildings me-2" style="color:#6366f1;"></i>Departamentos y Equipos Asignados</h5>
+                </div>
+                <div class="card-body px-0 py-3">
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>Departamento</th>
+                          <th>Código</th>
+                          <th style="text-align:center;">Equipos asignados</th>
+                          <th>Detalle</th>
+                        </tr>
+                      </thead>
+                      <tbody id="departamentos-table">
+                        <!-- Llenado dinámicamente -->
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -692,11 +700,48 @@
       </div>
     </div>
   </div>
+  <!-- Modal Detalle de Departamento -->
+  <div class="modal fade" id="deptoDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content"
+        style="border-radius: 16px; overflow: hidden; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.15);">
+        <div class="modal-header"
+          style="background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%); color: white; border: none; padding: 24px 28px;">
+          <div>
+            <h5 class="modal-title mb-1"><i class="ph ph-buildings me-2"></i><span
+                id="depto-modal-nombre">Departamento</span></h5>
+            <span id="depto-modal-codigo" style="font-size:13px; opacity:0.8;"></span>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div style="padding: 24px 28px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+            <div class="row" id="depto-modal-info">
+              <!-- Info del departamento -->
+            </div>
+          </div>
+          <div style="padding: 24px 28px;">
+            <h6 style="font-weight:800; color:#1e293b; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+              <i class="ph ph-desktop" style="color:#6366f1;"></i> Equipos Asignados a este Departamento
+            </h6>
+            <div id="depto-equipos-lista">
+              <!-- Equipos cargados dinámicamente -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #e2e8f0; background: #f8fafc;">
+          <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal Alerta Estilizada -->
   <div class="modal fade" id="styledAlertModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div id="alert-modal-header" class="modal-header" style="background: #1e5694; color: white; border-bottom: none;">
+        <div id="alert-modal-header" class="modal-header"
+          style="background: #1e5694; color: white; border-bottom: none;">
           <h5 class="modal-title" id="alert-modal-title">Mensaje del Sistema</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -706,7 +751,8 @@
           <p id="alert-modal-message" class="text-muted mb-0"></p>
         </div>
         <div class="modal-footer justify-content-center border-top-0">
-          <button type="button" class="btn btn-primary px-5" data-bs-dismiss="modal" style="border-radius: 20px;">Entendido</button>
+          <button type="button" class="btn btn-primary px-5" data-bs-dismiss="modal"
+            style="border-radius: 20px;">Entendido</button>
         </div>
       </div>
     </div>
@@ -715,14 +761,17 @@
   <!-- Modal Detalle de Registros (SPA) -->
   <div class="modal fade" id="detailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+      <div class="modal-content"
+        style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
         <div id="details-modal-header" class="modal-header" style="background: #1e5694; color: white;">
           <h5 class="modal-title"><i class="ph ph-magnifying-glass me-2"></i>Detalles del Registro</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body p-0">
-          <div id="details-modal-banner" style="background: #f8fafc; padding: 20px; border-bottom: 1px solid #edf2f7; text-align: center;">
-            <div id="details-type-icon" class="avtar avtar-l mb-2" style="width: 60px; height: 60px; font-size: 30px; margin: 0 auto;">
+          <div id="details-modal-banner"
+            style="background: #f8fafc; padding: 20px; border-bottom: 1px solid #edf2f7; text-align: center;">
+            <div id="details-type-icon" class="avtar avtar-l mb-2"
+              style="width: 60px; height: 60px; font-size: 30px; margin: 0 auto;">
               <i class="ph ph-desktop"></i>
             </div>
             <h4 id="details-modal-name" class="mb-1">Nombre del Equipo</h4>
@@ -743,7 +792,8 @@
   <!-- Modal Edición de Equipo -->
   <div class="modal fade" id="editEquipmentModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+      <div class="modal-content"
+        style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
         <div class="modal-header" style="background: #f59e0b; color: white;">
           <h5 class="modal-title"><i class="ph ph-pencil me-2"></i>Modificar Equipo</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -756,29 +806,31 @@
           </div>
           <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label text-muted small fw-bold">Tipo de Bien</label>
-                <input type="text" class="form-control" id="edit-eq-tipo" />
-                <div class="invalid-feedback">Este espacio es obligatorio</div>
+              <label class="form-label text-muted small fw-bold">Tipo de Bien</label>
+              <input type="text" class="form-control" id="edit-eq-tipo" />
+              <div class="invalid-feedback">Este espacio es obligatorio</div>
             </div>
             <div class="col-md-6 mb-3">
-                <label class="form-label text-muted small fw-bold">Estatus</label>
-                <select class="form-select" id="edit-eq-estatus">
-                    <option value="Operativo">Operativo</option>
-                    <option value="En Mantenimiento">En Mantenimiento</option>
-                    <option value="Dañado">Dañado</option>
-                </select>
+              <label class="form-label text-muted small fw-bold">Estatus</label>
+              <select class="form-select" id="edit-eq-estatus">
+                <option value="Operativo">Operativo</option>
+                <option value="En Mantenimiento">En Mantenimiento</option>
+                <option value="Dañado">Dañado</option>
+              </select>
             </div>
           </div>
           <hr class="border-light" />
           <div id="edit-dynamic-fields">
-              <!-- Se llenará dinámicamente -->
+            <!-- Se llenará dinámicamente -->
           </div>
         </div>
         <div class="modal-footer bg-light d-flex justify-content-between">
-          <button type="button" class="btn btn-outline-danger px-4" onclick="deleteEquipmentModal()"><i class="ph ph-trash me-2"></i>Borrar</button>
+          <button type="button" class="btn btn-outline-danger px-4" onclick="deleteEquipmentModal()"><i
+              class="ph ph-trash me-2"></i>Borrar</button>
           <div>
-              <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-warning px-4 text-white" onclick="saveEquipmentEdit()"><i class="ph ph-floppy-disk me-2"></i>Guardar</button>
+            <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-warning px-4 text-white" onclick="saveEquipmentEdit()"><i
+                class="ph ph-floppy-disk me-2"></i>Guardar</button>
           </div>
         </div>
       </div>
@@ -796,11 +848,14 @@
         <div class="modal-body text-center p-4">
           <i class="ph ph-trash f-50 text-danger mb-3" style="font-size: 50px;"></i>
           <h5 class="mb-2">¿Estás seguro de borrar este equipo?</h5>
-          <p class="text-muted">Si lo borras, desaparecerá completamente del inventario y no podrás recuperarlo. Esta acción no se puede deshacer.</p>
+          <p class="text-muted">Si lo borras, desaparecerá completamente del inventario y no podrás recuperarlo. Esta
+            acción no se puede deshacer.</p>
         </div>
         <div class="modal-footer justify-content-center border-top-0 pb-4">
-          <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal" style="border-radius: 20px;">Cancelar</button>
-          <button type="button" class="btn btn-danger px-4" id="btn-confirm-delete-eq" style="border-radius: 20px;">Sí, borrar equipo</button>
+          <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal"
+            style="border-radius: 20px;">Cancelar</button>
+          <button type="button" class="btn btn-danger px-4" id="btn-confirm-delete-eq" style="border-radius: 20px;">Sí,
+            borrar equipo</button>
         </div>
       </div>
     </div>
@@ -809,7 +864,8 @@
   <!-- Modal Edición de Empleado -->
   <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+      <div class="modal-content"
+        style="border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
         <div class="modal-header" style="background: #0ea5e9; color: white;">
           <h5 class="modal-title"><i class="ph ph-user-circle-gear me-2"></i>Modificar Empleado</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -848,8 +904,8 @@
             <div class="col-md-6 mb-3">
               <label class="form-label text-muted small fw-bold">Género</label>
               <select class="form-select" id="edit-emp-genero">
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
               </select>
             </div>
             <div class="col-md-6 mb-3">
@@ -860,10 +916,12 @@
           </div>
         </div>
         <div class="modal-footer bg-light d-flex justify-content-between">
-          <button type="button" class="btn btn-outline-danger px-4" onclick="deleteEmployeeModal()"><i class="ph ph-trash me-2"></i>Borrar</button>
+          <button type="button" class="btn btn-outline-danger px-4" onclick="deleteEmployeeModal()"><i
+              class="ph ph-trash me-2"></i>Borrar</button>
           <div>
-              <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-info px-4 text-white" onclick="saveEmployeeEdit()"><i class="ph ph-floppy-disk me-2"></i>Guardar</button>
+            <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-info px-4 text-white" onclick="saveEmployeeEdit()"><i
+                class="ph ph-floppy-disk me-2"></i>Guardar</button>
           </div>
         </div>
       </div>
@@ -881,11 +939,14 @@
         <div class="modal-body text-center p-4">
           <i class="ph ph-trash f-50 text-danger mb-3" style="font-size: 50px;"></i>
           <h5 class="mb-2">¿Estás seguro de borrar este empleado?</h5>
-          <p class="text-muted">Si lo borras, desaparecerá completamente del registro y no podrás asignarle equipos. Esta acción no se puede deshacer.</p>
+          <p class="text-muted">Si lo borras, desaparecerá completamente del registro y no podrás asignarle equipos.
+            Esta acción no se puede deshacer.</p>
         </div>
         <div class="modal-footer justify-content-center border-top-0 pb-4">
-          <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal" style="border-radius: 20px;">Cancelar</button>
-          <button type="button" class="btn btn-danger px-4" id="btn-confirm-delete-emp" style="border-radius: 20px;">Sí, borrar empleado</button>
+          <button type="button" class="btn btn-secondary px-4 me-2" data-bs-dismiss="modal"
+            style="border-radius: 20px;">Cancelar</button>
+          <button type="button" class="btn btn-danger px-4" id="btn-confirm-delete-emp" style="border-radius: 20px;">Sí,
+            borrar empleado</button>
         </div>
       </div>
     </div>
@@ -904,8 +965,10 @@
           <p id="question-modal-message" class="text-muted"></p>
         </div>
         <div class="modal-footer justify-content-center border-top-0 pb-4">
-          <button type="button" id="question-no-btn" class="btn btn-secondary px-4 me-2" style="border-radius: 20px;">No, volver al inicio</button>
-          <button type="button" id="question-yes-btn" class="btn btn-primary px-4" style="border-radius: 20px;">Sí, crear documento</button>
+          <button type="button" id="question-no-btn" class="btn btn-secondary px-4 me-2"
+            style="border-radius: 20px;">No, volver al inicio</button>
+          <button type="button" id="question-yes-btn" class="btn btn-primary px-4" style="border-radius: 20px;">Sí,
+            crear documento</button>
         </div>
       </div>
     </div>
@@ -944,7 +1007,152 @@
           if (modalName) modalName.textContent = eqName;
         });
       });
+
+      // ── Tabla de Departamentos ─────────────────────────────────────────────
+      loadDepartamentosTable();
     });
+
+    function loadDepartamentosTable() {
+      const tbody = document.getElementById('departamentos-table');
+      if (!tbody) return;
+
+      const deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+      const inventario = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+
+      if (deptos.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">
+          <i class="ph ph-buildings" style="font-size:32px; display:block; margin-bottom:8px;"></i>
+          No hay departamentos registrados aún.
+        </td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      deptos.forEach(function (depto) {
+        const eqCount = inventario.filter(function (eq) {
+          return eq.data && eq.data.departamento === depto.nombre;
+        }).length;
+
+        const iconColor = eqCount > 0 ? '#6366f1' : '#94a3b8';
+        const countBadge = eqCount > 0
+          ? `<span class="badge" style="background:#ede9fe; color:#6366f1; font-weight:700; font-size:13px; padding:5px 12px; border-radius:20px;">${eqCount} equipo${eqCount !== 1 ? 's' : ''}</span>`
+          : `<span class="badge" style="background:#f1f5f9; color:#94a3b8; font-size:12px; padding:5px 12px; border-radius:20px;">Sin equipos</span>`;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#ede9fe,#c7d2fe); display:flex; align-items:center; justify-content:center;">
+                  <i class="ph ph-buildings" style="font-size:20px; color:${iconColor};"></i>
+                </div>
+                <div>
+                  <div style="font-weight:700; color:#1e293b;">${depto.nombre}</div>
+                  ${depto.descripcion ? `<div style="font-size:12px; color:#64748b;">${depto.descripcion}</div>` : ''}
+                </div>
+              </div>
+            </td>
+            <td><code style="background:#f1f5f9; padding:3px 8px; border-radius:6px; color:#6366f1; font-weight:700;">${depto.codigo || 'N/A'}</code></td>
+            <td style="text-align:center;">${countBadge}</td>
+            <td>
+              <button class="btn btn-sm" onclick="verDetalleDepartamento('${depto.nombre}')"
+                style="background:#6366f1; color:white; border-radius:8px; font-weight:600; border:none; padding:6px 14px;">
+                <i class="ph ph-eye me-1"></i> Ver Detalle
+              </button>
+            </td>
+          </tr>`;
+      });
+    }
+
+    function verDetalleDepartamento(nombre) {
+      const deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+      const inventario = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+      const depto = deptos.find(function (d) { return d.nombre === nombre; });
+      if (!depto) return;
+
+      document.getElementById('depto-modal-nombre').textContent = depto.nombre;
+      document.getElementById('depto-modal-codigo').textContent = 'Código: ' + (depto.codigo || 'N/A');
+
+      const infoDiv = document.getElementById('depto-modal-info');
+      infoDiv.innerHTML = `
+        <div class="col-md-6 mb-2">
+          <div style="display:flex; align-items:center; gap:10px; background:white; padding:14px; border-radius:12px; border:1px solid #e2e8f0;">
+            <i class="ph ph-hash" style="font-size:24px; color:#6366f1;"></i>
+            <div><div style="font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:.5px;">Código</div>
+            <div style="font-weight:700; color:#1e293b;">${depto.codigo || 'No especificado'}</div></div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-2">
+          <div style="display:flex; align-items:center; gap:10px; background:white; padding:14px; border-radius:12px; border:1px solid #e2e8f0;">
+            <i class="ph ph-info" style="font-size:24px; color:#0284c7;"></i>
+            <div><div style="font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:.5px;">Descripción</div>
+            <div style="font-weight:700; color:#1e293b;">${depto.descripcion || 'No especificada'}</div></div>
+          </div>
+        </div>`;
+
+      const equipos = inventario.filter(function (eq) {
+        return eq.data && eq.data.departamento === nombre;
+      });
+
+      const listaDiv = document.getElementById('depto-equipos-lista');
+      if (equipos.length === 0) {
+        listaDiv.innerHTML = `
+          <div style="text-align:center; padding:40px 20px; color:#94a3b8; background:#f8fafc; border-radius:12px; border:2px dashed #e2e8f0;">
+            <i class="ph ph-tray" style="font-size:48px; display:block; margin-bottom:12px;"></i>
+            <p style="margin:0; font-weight:600;">Este departamento no tiene equipos asignados actualmente.</p>
+          </div>`;
+      } else {
+        const iconMap = {
+          'laptop': 'ph-laptop',
+          'portátil': 'ph-laptop',
+          'portatil': 'ph-laptop',
+          'computador': 'ph-desktop',
+          'pc': 'ph-desktop',
+          'computadora': 'ph-desktop',
+          'impresora': 'ph-printer',
+          'monitor': 'ph-monitor',
+          'componente': 'ph-cpu',
+          'tablet': 'ph-device-tablet',
+          'router': 'ph-wifi-high',
+          'switch': 'ph-squares-four'
+        };
+
+        const colorMap = {
+          'ph-laptop': '#dc2626',
+          'ph-desktop': '#2563eb',
+          'ph-printer': '#d97706',
+          'ph-monitor': '#dc2626',
+          'ph-cpu': '#059669',
+          'ph-device-tablet': '#0891b2',
+          'ph-wifi-high': '#16a34a',
+          'ph-squares-four': '#9333ea'
+        };
+
+        let html = '<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:12px;">';
+        equipos.forEach(function (eq) {
+          const tipo = (eq.tipo || '').toLowerCase();
+          let iconClass = 'ph-desktop';
+          Object.keys(iconMap).forEach(function (key) {
+            if (tipo.includes(key)) iconClass = iconMap[key];
+          });
+          const color = colorMap[iconClass] || '#6366f1';
+          html += `
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:12px; padding:16px; display:flex; align-items:center; gap:12px; transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 4px 15px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
+              <div style="width:44px; height:44px; border-radius:10px; background:${color}18; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <i class="ph ${iconClass}" style="font-size:22px; color:${color};"></i>
+              </div>
+              <div style="min-width:0;">
+                <div style="font-weight:700; color:#1e293b; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${eq.identificador}</div>
+                <div style="font-size:12px; color:#64748b;">${eq.tipo || 'Equipo'}</div>
+              </div>
+            </div>`;
+        });
+        html += '</div>';
+        listaDiv.innerHTML = html;
+      }
+
+      var modal = new bootstrap.Modal(document.getElementById('deptoDetailModal'));
+      modal.show();
+    }
   </script>
   <!-- [Page Specific JS] end -->
   <!-- Required Js -->

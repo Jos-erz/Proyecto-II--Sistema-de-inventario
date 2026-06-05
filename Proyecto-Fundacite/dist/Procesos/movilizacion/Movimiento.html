@@ -4,91 +4,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movilización de Equipos | Fundacite Yaracuy</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Traslado de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
 <body>
-
     <header>
         <span>Fundacite Yaracuy — Movilización de Equipos Informáticos</span>
-        <img src="Logofundacite.webp" alt="logo" class="logo">
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
     </header>
 
     <main>
-
-
-
         <section class="clase-card">
-            <div class="clase-titulo">
-                <h3>Documento</h3>
+            <div class="clase-titulo" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3><i class="ph ph-arrows-left-right me-2"></i>Traslado de Equipos Pendientes</h3>
             </div>
 
-            <table class="clase-tabla">
-                <tr>
-                    <td>
-                        <label for="doc-fecha">Fecha de emisión <span class="req">*</span></label>
-                        <input type="date" id="doc-fecha" name="doc-fecha">
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        <label for="doc-numero">Número de Documento <span class="req">*</span></label>
-                        <input type="text" id="doc-numero" name="doc-numero" placeholder="Correlativo de registro"
-                            maxlength="15">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="doc-archivo">Motivo<span class="req">*</span></label>
-                        <input type="text" id="doc-archivo" name="doc-archivo"
-                            placeholder="Dirección de almacenamiento o nombre del archivo" maxlength="100">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="estatus_final">Estado fisico <span class="req">*</span></label>
-                        <select name="estatus_final">
-                            <option value="">Seleccionar...</option>
-                            <option value="En proceso">Operativo</option>
-                            <option value="Completado">Obsoleto</option>
-                        </select>
-                    </td>
-                </tr>
-                 <tr>
-                    <td>
-                        <label for="estatus_final">Estado fisico <span class="req">*</span></label>
-                        <select name="estatus_final">
-                            <option value="">Seleccionar equipo...</option>
-                            <option value="En proceso"></option>
-                            <option value="Completado"></option>
-                        </select>
-                    </td>
-                </tr>
-            </table>
+            <div class="table-responsive">
+                <table class="clase-tabla" id="tabla-traslados">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb;">
+                            <th style="padding: 10px; text-align: left;">Departamento Solicitante (Origen)</th>
+                            <th style="padding: 10px; text-align: left;">Motivo</th>
+                            <th style="padding: 10px; text-align: left;">Fecha Programada</th>
+                            <th style="padding: 10px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-traslados">
+                        <tr id="empty-row">
+                            <td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">
+                                Cargando solicitudes...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <div class="form-actions">
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-            </form>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="GUARDAR" value="GUARDAR" class="btn btn-primary">
-            </form>
-        </div>
-
-        <br><br><br>
-        <center>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
-            </form>
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
         </center>
     </main>
+
+    <script>
+        function getPendientes() {
+            try { return JSON.parse(localStorage.getItem('accepted_transfers') || '[]'); }
+            catch(e) { return []; }
+        }
+
+        renderTabla();
+
+        function renderTabla() {
+            const pendientes = getPendientes();
+            const cuerpo = document.getElementById('lista-traslados');
+            if (pendientes.length === 0) {
+                cuerpo.innerHTML = '<tr id="empty-row"><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay solicitudes de traslado pendientes.</td></tr>';
+                return;
+            }
+            cuerpo.innerHTML = '';
+            pendientes.forEach((r, i) => {
+                cuerpo.innerHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px; font-weight: bold; color: #1e3a5f;">${r.data?.departamento || r.identificador || '—'}</td>
+                        <td style="padding: 10px;">${r.data?.motivo || '—'}</td>
+                        <td style="padding: 10px;">${r.fecha || '—'}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button class="btn btn-sm btn-primary" onclick="ejecutarTraslado('${r.id}')">Realizar</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function ejecutarTraslado(id) {
+            localStorage.setItem('current_transfer_id', id);
+            if (window.loadContentGlobal) {
+                window.loadContentGlobal('../Procesos/movilizacion/EjecutarTraslado.html', 'Ejecutar Traslado', 'Movilizacion');
+            } else {
+                window.location.href = 'EjecutarTraslado.html';
+            }
+        }
+    </script>
+
+    <style>
+        .modal-body label { margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #4b5563; }
+        .form-control { display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px; margin-bottom: 5px; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; }
+    </style>
 
     <footer>
         <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
     </footer>
-</body>
 
+    <script src="../../assets/js/spa.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

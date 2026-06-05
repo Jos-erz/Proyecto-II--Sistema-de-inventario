@@ -355,11 +355,13 @@
                     bootstrap.Modal.getOrCreateInstance(document.getElementById('modalAsig')).show();
 
                 } else if (r.tipo === 'traslado') {
-                    if (window.loadContentGlobal) {
-                        window.loadContentGlobal('../Procesos/movilizacion/Movimiento.html', 'Movimiento', 'Movilizacion');
-                    } else {
-                        window.location.href = '../movilizacion/Movimiento.html';
-                    }
+                    const acceptedTransfers = JSON.parse(localStorage.getItem('accepted_transfers') || '[]');
+                    acceptedTransfers.push(r);
+                    localStorage.setItem('accepted_transfers', JSON.stringify(acceptedTransfers));
+
+                    if (window.showStyledAlert) showStyledAlert('Solicitud de traslado aprobada. Procesar en "Traslado de Equipo".', 'Éxito', 'ph-check-circle', '#16a34a');
+                    else alert('Solicitud de traslado aprobada.');
+                    
                     window.del(id);
                 }
             };

@@ -122,6 +122,14 @@
             const modal = bootstrap.Modal.getInstance(document.getElementById('cargoModal'));
             modal.hide();
             document.getElementById('form-cargo').reset();
+
+            setTimeout(() => {
+                if (window.showStyledAlert) {
+                    showStyledAlert('Cargo "' + nombre + '" registrado exitosamente.', 'Éxito', 'ph-check-circle', '#16a34a');
+                } else {
+                    alert('Cargo registrado exitosamente.');
+                }
+            }, 400);
         }
 
         function renderTabla() {

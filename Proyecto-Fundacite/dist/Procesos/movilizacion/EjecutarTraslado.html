@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejecutar Traslado | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="../ingreso/styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <header>
+        <span>Fundacite Yaracuy — Ejecución de Traslado</span>
+        <img src="../ingreso/Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <style>
+            .panel-card {
+                background: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+                border: 1px solid #e2e8f0;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                transition: transform 0.3s ease;
+            }
+
+            .panel-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 16px 50px rgba(0, 0, 0, 0.12);
+            }
+
+            .panel-header-custom {
+                padding: 24px;
+                position: relative;
+            }
+
+            .header-origen {
+                background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+                color: white;
+            }
+
+            .header-destino {
+                background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+                color: white;
+            }
+
+            .panel-header-custom h4 {
+                margin: 0;
+                font-size: 20px;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                letter-spacing: -0.5px;
+            }
+
+            .panel-body-custom {
+                padding: 0;
+                flex: 1;
+                overflow-y: auto;
+                min-height: 400px;
+                max-height: 500px;
+                background: #f8fafc;
+            }
+
+            .table-custom {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .table-custom th {
+                background: #e2e8f0;
+                padding: 14px 20px;
+                font-size: 14px;
+                font-weight: 800;
+                color: #334155;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                border-bottom: 2px solid #cbd5e1;
+                text-align: left;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .table-custom td {
+                padding: 16px 20px;
+                border-bottom: 1px solid #e2e8f0;
+                font-size: 15px;
+                vertical-align: middle;
+                background: white;
+                transition: background 0.2s;
+            }
+
+            .table-custom tr:hover td {
+                background: #f1f5f9;
+            }
+
+            .btn-transfer {
+                font-weight: 700;
+                font-size: 14px;
+                padding: 8px 16px;
+                border-radius: 10px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;
+                border: none;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                width: 130px;
+            }
+
+            .btn-transfer-right {
+                background: #2563eb;
+                color: #ffffff;
+            }
+
+            .btn-transfer-right:hover {
+                background: #1d4ed8;
+                box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+                transform: translateX(4px);
+            }
+
+            .btn-transfer-left {
+                background: #dc2626;
+                color: #ffffff;
+            }
+
+            .btn-transfer-left:hover {
+                background: #b91c1c;
+                box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+                transform: translateX(-4px);
+            }
+
+            .empty-state {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 80px 20px;
+                color: #64748b;
+                text-align: center;
+            }
+
+            .empty-state i {
+                font-size: 64px;
+                margin-bottom: 20px;
+                color: #94a3b8;
+            }
+
+            .empty-state p {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 600;
+            }
+
+            /* Custom Select Styling */
+            .select-modern {
+                width: 100%;
+                padding: 12px 16px;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                border-radius: 10px;
+                font-size: 15px;
+                font-weight: 600;
+                color: #1e293b;
+                background: rgba(255, 255, 255, 0.95);
+                transition: all 0.3s;
+                outline: none;
+                margin-top: 16px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .select-modern:focus {
+                border-color: #ffffff;
+                background: #ffffff;
+                box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.3);
+            }
+        </style>
+
+        <section style="margin-bottom: 30px;">
+            <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; background: #ffffff; padding: 24px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #000000;">
+                <div>
+                    <h2 style="margin:0; font-size:28px; font-weight:900; color:#000000; letter-spacing:-0.5px;">
+                        <i class="ph ph-arrows-left-right me-2" style="color:#ea580c;"></i>Ejecución de Traslado
+                    </h2>
+                    <p style="margin:6px 0 0 0; color:#475569; font-size:15px; font-weight:500;">Mueve los equipos de
+                        forma interactiva entre el departamento de origen y el de destino.</p>
+                </div>
+                <button class="btn btn-outline-secondary" onclick="volverAtras()"
+                    style="border-radius: 10px; font-weight: 600; padding: 10px 20px;">
+                    <i class="ph ph-arrow-left me-2"></i> Volver a Pendientes
+                </button>
+            </div>
+
+            <div class="row">
+                <!-- PANEL ORIGEN -->
+                <div class="col-lg-6 mb-4">
+                    <div class="panel-card">
+                        <div class="panel-header-custom header-origen">
+                            <h4>
+                                <i class="ph ph-upload-simple"></i> Departamento Solicitante (Origen)
+                            </h4>
+                            <p id="origen-nombre"
+                                style="margin:12px 0 0 0; font-size:18px; font-weight:700; color:rgba(255,255,255,0.9); border-top: 1px solid rgba(255,255,255,0.2); padding-top: 12px;">
+                                Cargando...</p>
+                        </div>
+                        <div class="panel-body-custom">
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Identificador de Equipo</th>
+                                        <th style="width:140px; text-align:center;">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-origen">
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="empty-state">
+                                                <i class="ph ph-spinner-gap ph-spin"></i>
+                                                <p>Cargando inventario de equipos...</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL DESTINO -->
+                <div class="col-lg-6 mb-4">
+                    <div class="panel-card">
+                        <div class="panel-header-custom header-destino">
+                            <h4>
+                                <i class="ph ph-download-simple"></i> Departamento Destino
+                            </h4>
+                            <select id="select-destino" class="select-modern" onchange="cargarEquipos()">
+                                <option value="">Seleccione el departamento a recibir...</option>
+                            </select>
+                        </div>
+                        <div class="panel-body-custom">
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th style="width:140px; text-align:center;">Acción</th>
+                                        <th>Identificador de Equipo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-destino">
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="empty-state">
+                                                <i class="ph ph-buildings"></i>
+                                                <p>Seleccione un departamento destino para empezar.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                style="background: #ffffff; border-radius: 16px; padding: 24px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-top: 10px;">
+                <span style="color:#475569; font-size:15px; font-weight:600;">
+                    <i class="ph ph-info me-2" style="color: #0284c7; font-size: 20px; vertical-align: middle;"></i>
+                    Verifique que los equipos se hayan trasladado correctamente a la tabla derecha antes de guardar.
+                </span>
+                <button class="btn px-5 py-3" onclick="completarSolicitud()"
+                    style="background: #10b981; color: white; font-weight:800; font-size:16px; border-radius: 12px; box-shadow: 0 4px 15px rgba(16,185,129,0.3); border:none; transition: all 0.2s;">
+                    <i class="ph ph-check-circle me-2" style="font-size:20px;"></i> Completar Solicitud
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let reqId = localStorage.getItem('current_transfer_id');
+        let deptoOrigen = '';
+        let deptoDestino = '';
+
+        function inicializar() {
+            if (!reqId) {
+                alert("No hay solicitud de traslado activa.");
+                volverAtras();
+                return;
+            }
+
+            const pendientes = JSON.parse(localStorage.getItem('accepted_transfers') || '[]');
+            const req = pendientes.find(x => x.id === reqId);
+            if (!req) {
+                alert("Solicitud no encontrada.");
+                volverAtras();
+                return;
+            }
+
+            deptoOrigen = req.data?.departamento || req.identificador;
+            document.getElementById('origen-nombre').innerHTML = `<i class="ph ph-briefcase me-2"></i> ${deptoOrigen}`;
+
+            const selectDestino = document.getElementById('select-destino');
+            const deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+            deptos.forEach(d => {
+                if (d.nombre !== deptoOrigen) {
+                    const opt = document.createElement('option');
+                    opt.value = d.nombre;
+                    opt.textContent = `${d.codigo} — ${d.nombre}`;
+                    selectDestino.appendChild(opt);
+                }
+            });
+
+            cargarEquipos();
+        }
+
+        function cargarEquipos() {
+            deptoDestino = document.getElementById('select-destino').value;
+            const inv = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+
+            // Filtrar origen
+            const eqOrigen = inv.filter(i => i.data && i.data.departamento === deptoOrigen);
+            const tbodyOrigen = document.getElementById('tabla-origen');
+            tbodyOrigen.innerHTML = '';
+
+            if (eqOrigen.length === 0) {
+                tbodyOrigen.innerHTML = `
+                    <tr><td colspan="2">
+                        <div class="empty-state">
+                            <i class="ph ph-tray" style="color: #fca5a5;"></i>
+                            <p style="color: #ef4444;">Este departamento ya no posee equipos asignados.</p>
+                        </div>
+                    </td></tr>`;
+            } else {
+                eqOrigen.forEach(eq => {
+                    tbodyOrigen.innerHTML += `
+                        <tr>
+                            <td>
+                                <div style="font-weight:800; color:#0f172a; font-size:16px;">${eq.identificador}</div>
+                                <div style="font-size:13px; color:#64748b; font-weight:600; margin-top:2px;">
+                                    <i class="ph ph-tag me-1"></i> ${eq.tipo} ${eq.data?.marca ? '— ' + eq.data.marca : ''}
+                                </div>
+                            </td>
+                            <td style="text-align:center;">
+                                <button class="btn-transfer btn-transfer-right" onclick="moverEquipo('${eq.identificador}', '${deptoDestino}')" ${!deptoDestino ? 'disabled title="Seleccione un destino primero" style="opacity:0.4; cursor:not-allowed;"' : ''}>
+                                    Trasladar <i class="ph ph-arrow-right-bold"></i>
+                                </button>
+                            </td>
+                        </tr>`;
+                });
+            }
+
+            // Filtrar destino
+            const tbodyDestino = document.getElementById('tabla-destino');
+            tbodyDestino.innerHTML = '';
+
+            if (!deptoDestino) {
+                tbodyDestino.innerHTML = `
+                    <tr><td colspan="2">
+                        <div class="empty-state">
+                            <i class="ph ph-buildings"></i>
+                            <p>Seleccione un departamento arriba para ver sus equipos.</p>
+                        </div>
+                    </td></tr>`;
+                return;
+            }
+
+            const eqDestino = inv.filter(i => i.data && i.data.departamento === deptoDestino);
+            if (eqDestino.length === 0) {
+                tbodyDestino.innerHTML = `
+                    <tr><td colspan="2">
+                        <div class="empty-state">
+                            <i class="ph ph-tray" style="color:#94a3b8;"></i>
+                            <p>El departamento destino no posee equipos actualmente.</p>
+                        </div>
+                    </td></tr>`;
+            } else {
+                eqDestino.forEach(eq => {
+                    tbodyDestino.innerHTML += `
+                        <tr>
+                            <td style="text-align:center;">
+                                <button class="btn-transfer btn-transfer-left" onclick="moverEquipo('${eq.identificador}', '${deptoOrigen}')">
+                                    <i class="ph ph-arrow-left-bold"></i> Devolver
+                                </button>
+                            </td>
+                            <td>
+                                <div style="font-weight:800; color:#0f172a; font-size:16px;">${eq.identificador}</div>
+                                <div style="font-size:13px; color:#64748b; font-weight:600; margin-top:2px;">
+                                    <i class="ph ph-tag me-1"></i> ${eq.tipo} ${eq.data?.marca ? '— ' + eq.data.marca : ''}
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+            }
+        }
+
+        function moverEquipo(identificador, nuevoDepto) {
+            if (!nuevoDepto) return;
+
+            let inv = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            let eqItem = inv.find(i => String(i.identificador) === String(identificador));
+            if (eqItem) {
+                if (!eqItem.data) eqItem.data = {};
+                eqItem.data.departamento = nuevoDepto;
+                localStorage.setItem('recent_activity', JSON.stringify(inv));
+
+                let actas = JSON.parse(localStorage.getItem('actas_asignacion') || '[]');
+                let lastActa = actas.slice().reverse().find(a => a.equipo && String(a.equipo.identificador) === String(identificador));
+                if (lastActa) {
+                    lastActa.receptor.departamento = nuevoDepto;
+                    localStorage.setItem('actas_asignacion', JSON.stringify(actas));
+                }
+
+                cargarEquipos();
+            }
+        }
+
+        function completarSolicitud() {
+            if (confirm('¿Está seguro que desea completar y cerrar esta solicitud?')) {
+                let pendientes = JSON.parse(localStorage.getItem('accepted_transfers') || '[]');
+                pendientes = pendientes.filter(x => x.id !== reqId);
+                localStorage.setItem('accepted_transfers', JSON.stringify(pendientes));
+
+                localStorage.removeItem('current_transfer_id');
+
+                if (window.showStyledAlert) {
+                    showStyledAlert('Traslado ejecutado y solicitud completada con éxito.', 'Operación Exitosa', 'ph-check-circle', '#10b981');
+                    setTimeout(volverAtras, 1500);
+                } else {
+                    alert('Solicitud completada con éxito');
+                    volverAtras();
+                }
+            }
+        }
+
+        function volverAtras() {
+            if (window.loadContentGlobal) {
+                window.loadContentGlobal('../Procesos/movilizacion/Movimiento.html', 'Movimiento', 'Movilizacion');
+            } else {
+                window.location.href = 'Movimiento.html';
+            }
+        }
+
+        inicializar();
+    </script>
+
+    <script src="../../assets/js/spa.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

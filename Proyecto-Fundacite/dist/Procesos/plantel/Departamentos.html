@@ -127,6 +127,14 @@
 
             bootstrap.Modal.getInstance(document.getElementById('deptoModal')).hide();
             document.getElementById('form-depto').reset();
+
+            setTimeout(() => {
+                if (window.showStyledAlert) {
+                    showStyledAlert('Departamento "' + nombre + '" registrado exitosamente.', 'Éxito', 'ph-check-circle', '#16a34a');
+                } else {
+                    alert('Departamento registrado exitosamente.');
+                }
+            }, 400);
         }
 
         function renderTabla() {

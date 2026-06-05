@@ -143,8 +143,11 @@
                         <input type="text" id="req-cargo" class="form-control" placeholder="Se rellena al seleccionar empleado" readonly style="background:#f8fafc; color:#64748b;">
                     </div>
                     <div class="col-md-6">
-                        <label for="req-depto">Departamento</label>
-                        <input type="text" id="req-depto" class="form-control" placeholder="Se rellena al seleccionar empleado" readonly style="background:#f8fafc; color:#64748b;">
+                        <label for="req-depto">Departamento <span class="req">*</span></label>
+                        <select id="req-depto" class="form-control">
+                            <option value="">Seleccione el departamento...</option>
+                        </select>
+                        <small style="color:#64748b; font-size:11px;"><i class="ph ph-info"></i> Se preselecciona al elegir empleado, puede cambiarlo</small>
                     </div>
                 </div>
                 <div>
@@ -162,9 +165,9 @@
             <div style="padding: 24px;">
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="tras-equipo">Equipo a movilizar <span class="req">*</span></label>
-                        <select id="tras-equipo" class="form-control">
-                            <option value="">Seleccionar equipo del inventario...</option>
+                        <label for="tras-depto">Departamento Solicitante (Origen) <span class="req">*</span></label>
+                        <select id="tras-depto" class="form-control">
+                            <option value="">Seleccione su departamento...</option>
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -172,19 +175,9 @@
                         <input type="date" id="tras-fecha" class="form-control">
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="tras-origen">Ubicación Actual (Origen) <span class="req">*</span></label>
-                        <input type="text" id="tras-origen" class="form-control" placeholder="Ej: Piso 2 / Oficina de Administración">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="tras-destino">Ubicación Nueva (Destino) <span class="req">*</span></label>
-                        <input type="text" id="tras-destino" class="form-control" placeholder="Ej: Piso 1 / Sala de Reuniones">
-                    </div>
-                </div>
                 <div>
                     <label for="tras-motivo">Motivo del traslado <span class="req">*</span></label>
-                    <textarea id="tras-motivo" class="form-control" rows="3" placeholder="Ej: Cambio de oficina, reparación externa..."></textarea>
+                    <textarea id="tras-motivo" class="form-control" rows="3" placeholder="Ej: Necesidad de equipo extra para el personal de contabilidad..."></textarea>
                 </div>
             </div>
         </section>
@@ -219,9 +212,10 @@
                 populateEquipos('mant-equipo');
             } else if (tipo === 'equipo') {
                 document.getElementById('sec-sol-equipo').style.display = 'block';
+                populateDeptos('req-depto');
             } else if (tipo === 'traslado') {
                 document.getElementById('sec-sol-traslado').style.display = 'block';
-                populateEquipos('tras-equipo');
+                populateDeptos('tras-depto');
             }
         }
 
@@ -233,6 +227,18 @@
                 const opt = document.createElement('option');
                 opt.value = item.identificador;
                 opt.textContent = `${item.tipo}: ${item.identificador}`;
+                select.appendChild(opt);
+            });
+        }
+
+        function populateDeptos(selectId) {
+            const select = document.getElementById(selectId);
+            const deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+            select.innerHTML = '<option value="">Seleccionar departamento...</option>';
+            deptos.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d.nombre;
+                opt.textContent = `${d.codigo} — ${d.nombre}`;
                 select.appendChild(opt);
             });
         }
@@ -284,15 +290,14 @@
                 requestData.data = { cargo, departamento: depto, justificacion: j };
                 message = 'Su requerimiento de equipo ha sido registrado para evaluación.';
             } else if (tipo === 'traslado') {
-                const eq = document.getElementById('tras-equipo').value;
+                const d  = document.getElementById('tras-depto').value;
                 const f  = document.getElementById('tras-fecha').value;
-                const d  = document.getElementById('tras-destino').value.trim();
-                const o  = document.getElementById('tras-origen').value.trim();
                 const m  = document.getElementById('tras-motivo').value.trim();
-                if (!eq || !f || !d || !o || !m) isValid = false;
-                requestData.fecha = f; requestData.identificador = eq;
-                requestData.data = { origen: o, destino: d, motivo: m };
-                message = 'La orden de traslado ha sido generada y notificada al personal logístico.';
+                if (!d || !f || !m) isValid = false;
+                requestData.fecha = f; 
+                requestData.identificador = d; // El departamento es quien solicita el traslado
+                requestData.data = { departamento: d, motivo: m };
+                message = 'Su solicitud de traslado ha sido enviada y está a la espera de aprobación.';
             }
 
             if (!isValid) {
@@ -355,7 +360,13 @@
                         document.getElementById('req-empleado-input').value = `${emp.nombre} ${emp.apellido}`;
                         document.getElementById('req-empleado').value = `${emp.nombre} ${emp.apellido}`;
                         document.getElementById('req-cargo').value = emp.cargo || '';
-                        document.getElementById('req-depto').value = emp.departamento || '';
+                        // Preseleccionar departamento en el select
+                        const deptoSelect = document.getElementById('req-depto');
+                        if (deptoSelect && emp.departamento) {
+                            const opts = Array.from(deptoSelect.options);
+                            const match = opts.find(o => o.value === emp.departamento || o.textContent.includes(emp.departamento));
+                            if (match) deptoSelect.value = match.value;
+                        }
                         suggestions.style.display = 'none';
                     };
                     suggestions.appendChild(div);

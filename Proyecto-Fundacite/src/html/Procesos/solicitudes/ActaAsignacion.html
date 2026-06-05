@@ -194,6 +194,16 @@
                         observaciones: document.getElementById('f-obs').value
                     });
                     localStorage.setItem('actas_asignacion', JSON.stringify(actas));
+
+                    // Actualizar el departamento asignado en el inventario principal
+                    let inv = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+                    let eqItem = inv.find(i => String(i.identificador) === String(id));
+                    if (eqItem) {
+                        if (!eqItem.data) eqItem.data = {};
+                        eqItem.data.departamento = depto;
+                        localStorage.setItem('recent_activity', JSON.stringify(inv));
+                    }
+
                     localStorage.removeItem('current_acta_data');
 
                     if (window.showStyledAlert) {
