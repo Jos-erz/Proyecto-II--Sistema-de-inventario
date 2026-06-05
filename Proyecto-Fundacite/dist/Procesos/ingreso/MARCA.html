@@ -4,68 +4,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ingreso de Equipos | Fundacite Yaracuy</title>
+    <title>Registro de Marcas | Fundacite Yaracuy</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
 <body>
-
     <header>
-        <span>Fundacite Yaracuy — Ingreso de Equipos Informáticos</span>
+        <span>Fundacite Yaracuy — Registro de Marcas</span>
         <img src="Logofundacite.webp" alt="logo" class="logo">
     </header>
 
     <main>
-
-
         <section class="clase-card">
-            <div class="clase-titulo">
-                <h3>Marca</h3>
+            <div class="clase-titulo" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3><i class="ph ph-tag" style="margin-right:8px;"></i>Marcas Registradas</h3>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 13px; color: #64748b; font-weight: 500; font-style: italic;">Presione aquí
+                        para agregar</span>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#marcaModal"
+                        style="border-radius: 50%; width: 40px; height: 40px; padding: 0; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(30, 86, 148, 0.2);">
+                        +
+                    </button>
+                </div>
             </div>
 
-            <table class="clase-tabla">
-                <tr>
-                    <td>
-                        <label for="marca-id">Identificador <span class="req">*</span></label>
-                        <input type="text" id="marca-id" name="marca-id" placeholder="Identificador único"
-                            maxlength="10">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="marca-nombre">Nombre <span class="req">*</span></label>
-                        <input type="text" id="marca-nombre" name="marca-nombre" placeholder="Nombre del fabricante"
-                            maxlength="50">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="marca-descripcion">Descripción <span class="req">*</span></label>
-                        <textarea id="marca-descripcion" name="marca-descripcion" rows="2"
-                            placeholder="Información adicional sobre la marca" maxlength="150"></textarea>
-                    </td>
-                </tr>
-            </table>
+            <div class="table-responsive">
+                <table class="clase-tabla" id="tabla-marcas">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb;">
+                            <th style="padding: 10px; text-align: left;">#</th>
+                            <th style="padding: 10px; text-align: left;">Nombre de la Marca</th>
+                            <th style="padding: 10px; text-align: left;">Descripción</th>
+                            <th style="padding: 10px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-marcas-body">
+                        <tr id="empty-row">
+                            <td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">
+                                No hay marcas creadas. Haga clic en "+" para agregar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
-        <div class="form-actions">
-            <form method="get" action="INSTITUCION.html">
-                <input type="submit" name="ATRÁS" value="ATRÁS" class="btn btn-secondary">
-            </form>
-            <form method="get" action="Modelo.html">
-                <input type="submit" name="SIGUIENTE" value="SIGUIENTE" class="btn btn-primary">
-            </form>
+
+        <!-- Modal -->
+        <div class="modal fade" id="marcaModal" tabindex="-1" aria-labelledby="marcaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="border-radius: 12px; border: none;">
+                    <div class="modal-header" style="background: #1e5694; color: white;">
+                        <h5 class="modal-title" id="marcaModalLabel"><i class="ph ph-tag me-2"></i>Nueva Marca</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="form-marca">
+                            <div class="mb-3">
+                                <label for="marca-nombre">Nombre de la Marca <span class="req">*</span></label>
+                                <input type="text" id="marca-nombre" class="form-control"
+                                    placeholder="Ej: Dell, HP, Lenovo, Síragon" maxlength="50" required
+                                    autocomplete="off">
+                            </div>
+                            <div class="mb-3">
+                                <label for="marca-desc">Descripción <span
+                                        style="color:#9ba5b2;">(opcional)</span></label>
+                                <textarea id="marca-desc" class="form-control" rows="2"
+                                    placeholder="País de origen, tipo de productos, etc."></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="agregarMarca()">Crear Marca</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <br><br><br>
-        <center>
-            <form method="get" action="../../dashboard/index.html">
-                <input type="submit" name="Salir" value="SALIR" class="btn btn-primary">
-            </form>
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary"
+                onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">ATRÁS</button>
+            <button type="button" class="btn btn-primary" onclick="guardarMarcas()">GUARDAR Y FINALIZAR</button>
+        </div>
+
+        <center style="margin-top: 2rem;">
+            <button type="button" class="btn btn-outline-primary"
+                onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
         </center>
-
-
     </main>
 
+    <script>
+        let marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
+        renderTabla();
+
+        function agregarMarca() {
+            const nombre = document.getElementById('marca-nombre').value.trim();
+            const desc = document.getElementById('marca-desc').value.trim();
+
+            if (!nombre) {
+                if (window.showStyledAlert) showStyledAlert('El nombre de la marca es obligatorio.', 'Error', 'ph-warning', '#dc2626');
+                else alert('El nombre de la marca es obligatorio.');
+                return;
+            }
+
+            if (marcas.find(m => m.nombre.toLowerCase() === nombre.toLowerCase())) {
+                if (window.showStyledAlert) showStyledAlert('Ya existe una marca con ese nombre.', 'Duplicado', 'ph-warning', '#dc2626');
+                else alert('Ya existe esa marca.');
+                return;
+            }
+
+            marcas.push({ id: String(Date.now()), nombre, descripcion: desc });
+            localStorage.setItem('marcas', JSON.stringify(marcas));
+            renderTabla();
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('marcaModal'));
+            if (modal) modal.hide();
+            document.getElementById('form-marca').reset();
+
+            if (window.showStyledAlert) showStyledAlert('Marca "' + nombre + '" registrada.', 'Éxito', 'ph-check-circle', '#16a34a');
+        }
+
+        function renderTabla() {
+            const cuerpo = document.getElementById('lista-marcas-body');
+            if (marcas.length === 0) {
+                cuerpo.innerHTML = '<tr id="empty-row"><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay marcas creadas. Haga clic en "+" para agregar.</td></tr>';
+                return;
+            }
+            cuerpo.innerHTML = '';
+            marcas.forEach((m, i) => {
+                cuerpo.innerHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 10px; color: #9ba5b2;">${i + 1}</td>
+                        <td style="padding: 10px; font-weight: bold;">${m.nombre}</td>
+                        <td style="padding: 10px; color: #64748b;">${m.descripcion || '—'}</td>
+                        <td style="padding: 10px; text-align: center;">
+                            <button class="btn btn-sm btn-danger" onclick="eliminarMarca(${i})">X</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function eliminarMarca(index) {
+            marcas.splice(index, 1);
+            localStorage.setItem('marcas', JSON.stringify(marcas));
+            renderTabla();
+        }
+
+        function guardarMarcas() {
+            localStorage.setItem('marcas', JSON.stringify(marcas));
+            if (window.showStyledAlert) showStyledAlert('¡Marcas guardadas correctamente!', 'Éxito', 'ph-check-circle', '#16a34a');
+            else alert('¡Guardado correctamente!');
+        }
+    </script>
+
+    <style>
+        .modal-body label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            margin-bottom: 5px;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .req {
+            color: #dc2626;
+        }
+    </style>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
 </body>
 
 </html>

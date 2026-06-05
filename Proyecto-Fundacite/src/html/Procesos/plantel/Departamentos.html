@@ -19,10 +19,14 @@
         <section class="clase-card">
             <div class="clase-titulo" style="display: flex; justify-content: space-between; align-items: center;">
                 <h3>Lista de Departamentos</h3>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deptoModal"
-                    style="border-radius: 50%; width: 40px; height: 40px; padding: 0; font-size: 20px; line-height: 1;">
-                    +
-                </button>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 13px; color: #64748b; font-weight: 500; font-style: italic;">Presione aquí
+                        para agregar </span>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deptoModal"
+                        style="border-radius: 50%; width: 40px; height: 40px; padding: 0; font-size: 20px; line-height: 1; box-shadow: 0 4px 6px -1px rgba(30, 86, 148, 0.2);">
+                        +
+                    </button>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -52,40 +56,48 @@
             <div class="modal-dialog">
                 <div class="modal-content" style="border-radius: 12px; border: none;">
                     <div class="modal-header" style="background: #1e5694; color: white;">
-                        <h5 class="modal-title" id="deptoModalLabel"><i class="ph ph-buildings me-2"></i>Nuevo Departamento</h5>
+                        <h5 class="modal-title" id="deptoModalLabel"><i class="ph ph-buildings me-2"></i>Nuevo
+                            Departamento</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body p-4">
                         <form id="form-depto">
                             <div class="mb-3">
                                 <label for="depto-codigo">Código <span class="req">*</span></label>
-                                <input type="text" id="depto-codigo" class="form-control" placeholder="Ej: DTIC, RRHH, ADM" maxlength="10" required>
+                                <input type="text" id="depto-codigo" class="form-control"
+                                    placeholder="Ej: DTIC, RRHH, ADM" maxlength="10" required>
                             </div>
                             <div class="mb-3">
                                 <label for="depto-nombre">Nombre del Departamento <span class="req">*</span></label>
-                                <input type="text" id="depto-nombre" class="form-control" placeholder="Ej: Tecnología de Información" maxlength="60" required>
+                                <input type="text" id="depto-nombre" class="form-control"
+                                    placeholder="Ej: Tecnología de Información" maxlength="60" required>
                             </div>
                             <div class="mb-3">
-                                <label for="depto-desc">Descripción <span style="color:#9ba5b2;">(opcional)</span></label>
-                                <textarea id="depto-desc" class="form-control" rows="3" placeholder="Funciones o responsabilidades del departamento..."></textarea>
+                                <label for="depto-desc">Descripción <span
+                                        style="color:#9ba5b2;">(opcional)</span></label>
+                                <textarea id="depto-desc" class="form-control" rows="3"
+                                    placeholder="Funciones o responsabilidades del departamento..."></textarea>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer bg-light">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary px-4" onclick="agregarDepto()">Crear Departamento</button>
+                        <button type="button" class="btn btn-primary px-4" onclick="agregarDepto()">Crear
+                            Departamento</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="form-actions">
-            <button type="button" class="btn btn-secondary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">ATRÁS</button>
+            <button type="button" class="btn btn-secondary"
+                onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">ATRÁS</button>
             <button type="button" class="btn btn-primary" onclick="guardarDeptos()">GUARDAR Y FINALIZAR</button>
         </div>
 
         <center style="margin-top: 2rem;">
-            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
+            <button type="button" class="btn btn-outline-primary"
+                onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
         </center>
     </main>
 
@@ -96,7 +108,7 @@
         function agregarDepto() {
             const codigo = document.getElementById('depto-codigo').value.trim().toUpperCase();
             const nombre = document.getElementById('depto-nombre').value.trim();
-            const desc   = document.getElementById('depto-desc').value.trim();
+            const desc = document.getElementById('depto-desc').value.trim();
 
             if (!codigo || !nombre) {
                 if (window.showStyledAlert) showStyledAlert('El código y el nombre son obligatorios.', 'Error', 'ph-warning', '#dc2626');
@@ -152,10 +164,30 @@
     </script>
 
     <style>
-        .modal-body label { margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #4b5563; }
-        .form-control { display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px; margin-bottom: 5px; }
-        .btn-sm { padding: 4px 8px; font-size: 12px; }
-        .req { color: #dc2626; }
+        .modal-body label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #4b5563;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            margin-bottom: 5px;
+        }
+
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+
+        .req {
+            color: #dc2626;
+        }
     </style>
 
     <footer>
