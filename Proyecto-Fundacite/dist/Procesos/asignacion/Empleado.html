@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asignacion de Equipos | Fundacite Yaracuy</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .info-readonly { background: #f8fafc; color: #64748b; border: 1.5px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; font-size: 14px; width: 100%; box-sizing: border-box; }
+        .field-hint { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+        .create-link { font-size: 12px; color: #1e5694; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; }
+        .create-link:hover { text-decoration: underline; }
+        .search-wrap { position: relative; }
+        #emp-dropdown { display:none; position:absolute; top:100%; left:0; right:0; background:white; border:1.5px solid #1e5694; border-top:none; border-radius:0 0 8px 8px; max-height:220px; overflow-y:auto; z-index:999; box-shadow:0 8px 20px rgba(0,0,0,.1); }
+        .emp-item { padding:10px 14px; cursor:pointer; border-bottom:1px solid #f1f5f9; }
+        .emp-item:hover { background:#f0f7ff; }
+        .emp-nombre { font-weight:700; color:#1e3a5f; }
+        .emp-sub { font-size:12px; color:#64748b; margin-top:2px; }
+        .empty-msg { padding:12px; color:#9ba5b2; font-size:13px; text-align:center; }
+    </style>
 </head>
 
 <body>
@@ -17,8 +30,6 @@
 
     <main>
 
-
-
         <section class="clase-card">
             <div class="clase-titulo">
                 <h3>Empleado</h3>
@@ -27,40 +38,50 @@
             <table class="clase-tabla">
                 <tr>
                     <td>
-                        <label for="comp-Cedula">Cedula <span class="req">*</span></label>
-                        <input type="text" id="comp-Cedula" name="comp-Cedula" placeholder="Documento de identidad"
-                            maxlength="8">
+                        <label for="emp-buscar">Buscar Empleado <span class="req">*</span></label>
+                        <div class="search-wrap">
+                            <input type="text" id="emp-buscar" class="form-control"
+                                placeholder="Nombre o cédula del empleado..." autocomplete="off"
+                                oninput="filtrarEmpleados()" onfocus="filtrarEmpleados()">
+                            <div id="emp-dropdown"></div>
+                        </div>
+                        <input type="hidden" id="emp-seleccionado">
+                        <p class="field-hint">Escriba para buscar entre los empleados registrados en Plantel.</p>
+                        <a class="create-link" href="../plantel/Empleados.html">
+                            ＋ Crear empleado en Plantel
+                        </a>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="comp-nombre">Nombre <span class="req">*</span></label>
-                        <input type="text" id="comp-nombre" name="comp-nombre" placeholder="1er y 2do nombre"
-                            maxlength="30">
+                        <label>Cédula</label>
+                        <div class="info-readonly" id="inf-cedula">—</div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="comp-apellido">Apellido <span class="req">*</span></label>
-                        <input type="text" id="comp-apellido" name="comp-apellido" placeholder="1er y 2do apellido"
-                            maxlength="30">
+                        <label>Nombre completo</label>
+                        <div class="info-readonly" id="inf-nombre">—</div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="comp-genero">Genero <span class="req">*</span></label>
-                        <input type="radio" name="comp-genero" value="M"> Masculino
-                        <input type="radio" name="comp-genero" value="F"> Femenino
+                        <label>Cargo</label>
+                        <div class="info-readonly" id="inf-cargo">—</div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="comp-telefono">Telefono <span class="req">*</span></label>
-                        <input type="text" name="comp-telefono" value="" placeholder="Numero de telefono"
-                            maxlength="11">
+                        <label>Departamento</label>
+                        <div class="info-readonly" id="inf-depto">—</div>
                     </td>
                 </tr>
-
+                <tr>
+                    <td>
+                        <label>Teléfono</label>
+                        <div class="info-readonly" id="inf-tel">—</div>
+                    </td>
+                </tr>
             </table>
         </section>
 
@@ -80,12 +101,63 @@
             </form>
         </center>
 
-
-
     </main>
+
     <footer>
         <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
     </footer>
+
+    <script>
+        function filtrarEmpleados() {
+            const query = (document.getElementById('emp-buscar').value || '').trim().toLowerCase();
+            const dropdown = document.getElementById('emp-dropdown');
+            const empleados = JSON.parse(localStorage.getItem('empleados') || '[]');
+            dropdown.innerHTML = '';
+
+            const matches = query.length === 0
+                ? empleados
+                : empleados.filter(e =>
+                    (e.nombre || '').toLowerCase().includes(query) ||
+                    (e.apellido || '').toLowerCase().includes(query) ||
+                    `${e.nombre} ${e.apellido}`.toLowerCase().includes(query) ||
+                    (e.cedula || '').includes(query)
+                );
+
+            if (matches.length === 0) {
+                dropdown.innerHTML = '<div class="empty-msg">No se encontraron empleados registrados.</div>';
+            } else {
+                matches.forEach(emp => {
+                    const div = document.createElement('div');
+                    div.className = 'emp-item';
+                    div.innerHTML = `
+                        <div class="emp-nombre">${emp.nombre} ${emp.apellido}</div>
+                        <div class="emp-sub">C.I: ${emp.cedula} &nbsp;|&nbsp; ${emp.cargo || '—'} &nbsp;|&nbsp; ${emp.departamento || '—'}</div>`;
+                    div.onclick = () => seleccionarEmpleado(emp);
+                    dropdown.appendChild(div);
+                });
+            }
+            dropdown.style.display = 'block';
+        }
+
+        function seleccionarEmpleado(emp) {
+            document.getElementById('emp-buscar').value = `${emp.nombre} ${emp.apellido}`;
+            document.getElementById('emp-seleccionado').value = emp.cedula;
+            document.getElementById('inf-cedula').textContent = emp.cedula || '—';
+            document.getElementById('inf-nombre').textContent = `${emp.nombre} ${emp.apellido}`;
+            document.getElementById('inf-cargo').textContent = emp.cargo || '—';
+            document.getElementById('inf-depto').textContent = emp.departamento || '—';
+            document.getElementById('inf-tel').textContent = emp.telefono || '—';
+            document.getElementById('emp-dropdown').style.display = 'none';
+        }
+
+        document.addEventListener('click', function(e) {
+            const dd = document.getElementById('emp-dropdown');
+            const inp = document.getElementById('emp-buscar');
+            if (dd && inp && !dd.contains(e.target) && e.target !== inp) {
+                dd.style.display = 'none';
+            }
+        });
+    </script>
 
 </body>
 

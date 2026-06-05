@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asignacion de Equipos | Fundacite Yaracuy</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .info-readonly { background: #f8fafc; color: #64748b; border: 1.5px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; font-size: 14px; width: 100%; box-sizing: border-box; }
+        .field-hint { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+        .create-link { font-size: 12px; color: #1e5694; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; }
+        .create-link:hover { text-decoration: underline; }
+        select.form-control { display: block; width: 100%; padding: 8px 12px; border: 1.5px solid #d1d5db; border-radius: 6px; font-size: 14px; background: white; }
+    </style>
 </head>
 
 <body>
@@ -17,8 +24,6 @@
 
     <main>
 
-
-
         <section class="clase-card">
             <div class="clase-titulo">
                 <h3>Cargo</h3>
@@ -27,19 +32,22 @@
             <table class="clase-tabla">
                 <tr>
                     <td>
-                        <label for="comp-cargo">ID cargo <span class="req">*</span></label>
-                        <input type="text" id="comp-cargo" name="comp-cargo" placeholder="Codigo identificador"
-                            maxlength="10">
+                        <label for="sel-cargo">Cargo <span class="req">*</span></label>
+                        <select id="sel-cargo" class="form-control" onchange="mostrarInfoCargo()">
+                            <option value="">Seleccionar cargo...</option>
+                        </select>
+                        <p class="field-hint">Seleccione un cargo registrado en el maestro de Plantel.</p>
+                        <a class="create-link" href="../plantel/Cargos.html">
+                            ＋ Crear cargo en Plantel
+                        </a>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <label for="comp-nombre">Nombre del Cargo <span class="req">*</span></label>
-                        <input type="text" id="comp-nombre" name="comp-nombre" placeholder="Denominacion del puesto"
-                            maxlength="50">
+                        <label>Nombre del Cargo (confirmación)</label>
+                        <div class="info-readonly" id="inf-cargo-nombre">—</div>
                     </td>
                 </tr>
-
             </table>
         </section>
 
@@ -59,6 +67,40 @@
             </form>
         </center>
     </main>
+
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+
+    <script>
+        // Cargar cargos desde localStorage (maestro Plantel > Cargos)
+        function cargarCargos() {
+            const select = document.getElementById('sel-cargo');
+            const cargos = JSON.parse(localStorage.getItem('cargos') || '[]');
+            select.innerHTML = '<option value="">Seleccionar cargo...</option>';
+            if (cargos.length === 0) {
+                const opt = document.createElement('option');
+                opt.disabled = true;
+                opt.textContent = '— No hay cargos registrados —';
+                select.appendChild(opt);
+            } else {
+                cargos.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.nombre || c;
+                    opt.textContent = c.nombre || c;
+                    select.appendChild(opt);
+                });
+            }
+        }
+
+        function mostrarInfoCargo() {
+            const val = document.getElementById('sel-cargo').value;
+            document.getElementById('inf-cargo-nombre').textContent = val || '—';
+        }
+
+        cargarCargos();
+    </script>
+
 </body>
 
 </html>
