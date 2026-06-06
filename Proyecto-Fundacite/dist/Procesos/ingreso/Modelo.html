@@ -109,7 +109,7 @@
     </main>
 
     <script>
-        let modelos = JSON.parse(localStorage.getItem('modelos') || '[]');
+        var modelos = JSON.parse(localStorage.getItem('modelos') || '[]');
         renderTabla();
         cargarMarcasEnSelect();
 

@@ -738,5 +738,137 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
   
+  // ── Directorio de Marcas y Modelos ─────────────────────────────────────────────
+  window.updateMarcasModelosTable = function() {
+    const isMarca = document.getElementById('btnradio-marca') ? document.getElementById('btnradio-marca').checked : true;
+    const tbody = document.getElementById('marcas-modelos-table');
+    const thead = document.getElementById('marcas-modelos-thead');
+    if (!tbody || !thead) return;
+
+    if (isMarca) {
+      thead.innerHTML = `<tr><th>Nombre</th><th>Descripción</th><th>Acción</th></tr>`;
+      const marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
+      if (marcas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center p-4"><p class="text-muted m-0">No hay marcas registradas</p></td></tr>';
+      } else {
+        tbody.innerHTML = marcas.map((m, i) => `
+          <tr>
+            <td><div class="d-flex align-items-center"><div class="avtar avtar-s bg-light-warning me-2"><i class="ph ph-tag text-warning"></i></div><h6 class="mb-0">${m.nombre}</h6></div></td>
+            <td><span class="text-muted">${m.descripcion || '—'}</span></td>
+            <td>
+              <button class="btn btn-sm btn-warning" onclick="openEditMarcaModal(${i})" title="Modificar Marca"><i class="ph ph-pencil"></i></button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    } else {
+      thead.innerHTML = `<tr><th>Nombre</th><th>Marca</th><th>Especificaciones</th><th>Acción</th></tr>`;
+      const modelos = JSON.parse(localStorage.getItem('modelos') || '[]');
+      if (modelos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center p-4"><p class="text-muted m-0">No hay modelos registrados</p></td></tr>';
+      } else {
+        tbody.innerHTML = modelos.map((m, i) => `
+          <tr>
+            <td><div class="d-flex align-items-center"><div class="avtar avtar-s bg-light-primary me-2"><i class="ph ph-squares-four text-primary"></i></div><h6 class="mb-0">${m.nombre}</h6></div></td>
+            <td><span class="badge bg-light-primary text-primary">${m.marca}</span></td>
+            <td><span class="text-muted" style="font-size:13px;">${m.especificaciones || '—'}</span></td>
+            <td>
+              <button class="btn btn-sm btn-primary" style="background-color: #8b5cf6; border-color: #8b5cf6;" onclick="openEditModeloModal(${i})" title="Modificar Modelo"><i class="ph ph-pencil"></i></button>
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+  };
+
+  let currentEditMarcaIndex = -1;
+  window.openEditMarcaModal = function(index) {
+    const marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
+    const m = marcas[index];
+    if (!m) return;
+    currentEditMarcaIndex = index;
+    document.getElementById('edit-marca-id').value = m.id || index;
+    document.getElementById('edit-marca-nombre').value = m.nombre;
+    document.getElementById('edit-marca-desc').value = m.descripcion || '';
+    new bootstrap.Modal(document.getElementById('editMarcaModal')).show();
+  };
+  window.saveMarcaEdit = function() {
+    const nombre = document.getElementById('edit-marca-nombre').value.trim();
+    if (!nombre) { alert('El nombre es obligatorio'); return; }
+    const marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
+    const isDup = marcas.findIndex(m => m.nombre.toLowerCase() === nombre.toLowerCase());
+    if (isDup !== -1 && isDup !== currentEditMarcaIndex) {
+      alert('Ya existe otra marca con ese nombre.');
+      return;
+    }
+    marcas[currentEditMarcaIndex].nombre = nombre;
+    marcas[currentEditMarcaIndex].descripcion = document.getElementById('edit-marca-desc').value.trim();
+    localStorage.setItem('marcas', JSON.stringify(marcas));
+    updateMarcasModelosTable();
+    bootstrap.Modal.getInstance(document.getElementById('editMarcaModal')).hide();
+    if(window.showStyledAlert) showStyledAlert('Marca actualizada exitosamente', 'Éxito', 'ph-check-circle', '#16a34a');
+  };
+  window.deleteMarcaModal = function() {
+    if (!confirm('¿Seguro que desea eliminar esta marca?')) return;
+    const marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
+    marcas.splice(currentEditMarcaIndex, 1);
+    localStorage.setItem('marcas', JSON.stringify(marcas));
+    updateMarcasModelosTable();
+    bootstrap.Modal.getInstance(document.getElementById('editMarcaModal')).hide();
+    if(window.showStyledAlert) showStyledAlert('Marca eliminada', 'Borrado', 'ph-trash', '#dc2626');
+  };
+
+  let currentEditModeloIndex = -1;
+  window.openEditModeloModal = function(index) {
+    const modelos = JSON.parse(localStorage.getItem('modelos') || '[]');
+    const marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
+    const m = modelos[index];
+    if (!m) return;
+    currentEditModeloIndex = index;
+    document.getElementById('edit-modelo-nombre').value = m.nombre;
+    document.getElementById('edit-modelo-specs').value = m.especificaciones || '';
+    const selectMarca = document.getElementById('edit-modelo-marca');
+    selectMarca.innerHTML = '';
+    marcas.forEach(marca => {
+        const opt = document.createElement('option');
+        opt.value = marca.nombre;
+        opt.textContent = marca.nombre;
+        if(marca.nombre === m.marca) opt.selected = true;
+        selectMarca.appendChild(opt);
+    });
+    if(!marcas.find(x => x.nombre === m.marca)) {
+        selectMarca.innerHTML += `<option value="${m.marca}" selected>${m.marca} (Marca eliminada)</option>`;
+    }
+    new bootstrap.Modal(document.getElementById('editModeloModal')).show();
+  };
+  window.saveModeloEdit = function() {
+    const nombre = document.getElementById('edit-modelo-nombre').value.trim();
+    const marca = document.getElementById('edit-modelo-marca').value;
+    if (!nombre || !marca) { alert('Nombre y Marca son obligatorios'); return; }
+    const modelos = JSON.parse(localStorage.getItem('modelos') || '[]');
+    const isDup = modelos.findIndex(m => m.nombre.toLowerCase() === nombre.toLowerCase() && m.marca === marca);
+    if (isDup !== -1 && isDup !== currentEditModeloIndex) {
+      alert('Ya existe otro modelo igual con esa marca.');
+      return;
+    }
+    modelos[currentEditModeloIndex].nombre = nombre;
+    modelos[currentEditModeloIndex].marca = marca;
+    modelos[currentEditModeloIndex].especificaciones = document.getElementById('edit-modelo-specs').value.trim();
+    localStorage.setItem('modelos', JSON.stringify(modelos));
+    updateMarcasModelosTable();
+    bootstrap.Modal.getInstance(document.getElementById('editModeloModal')).hide();
+    if(window.showStyledAlert) showStyledAlert('Modelo actualizado exitosamente', 'Éxito', 'ph-check-circle', '#16a34a');
+  };
+  window.deleteModeloModal = function() {
+    if (!confirm('¿Seguro que desea eliminar este modelo?')) return;
+    const modelos = JSON.parse(localStorage.getItem('modelos') || '[]');
+    modelos.splice(currentEditModeloIndex, 1);
+    localStorage.setItem('modelos', JSON.stringify(modelos));
+    updateMarcasModelosTable();
+    bootstrap.Modal.getInstance(document.getElementById('editModeloModal')).hide();
+    if(window.showStyledAlert) showStyledAlert('Modelo eliminado', 'Borrado', 'ph-trash', '#dc2626');
+  };
+
   updateDashboardTable();
+  if (window.updateMarcasModelosTable) window.updateMarcasModelosTable();
 });

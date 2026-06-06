@@ -269,7 +269,7 @@
 
     <script>
         // ─── HELPERS: borrador en localStorage en lugar de variable global ───────
-        const ADQ_DRAFT_KEY = 'adquisicion_draft';
+        var ADQ_DRAFT_KEY = 'adquisicion_draft';
 
         function getAdq() {
             try { return JSON.parse(localStorage.getItem(ADQ_DRAFT_KEY) || '[]'); }
@@ -472,7 +472,7 @@
         }
 
         // Bloqueo para evitar doble envío
-        let _guardando = false;
+        var _guardando = false;
 
         function guardarTodo() {
             if (_guardando) return;

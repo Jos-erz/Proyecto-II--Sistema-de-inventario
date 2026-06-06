@@ -96,7 +96,7 @@
     </main>
 
     <script>
-        let cargos = JSON.parse(localStorage.getItem('cargos') || '[]');
+        var cargos = JSON.parse(localStorage.getItem('cargos') || '[]');
         renderTabla();
 
         function agregarCargo() {

@@ -96,7 +96,7 @@
     </main>
 
     <script>
-        let marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
+        var marcas = JSON.parse(localStorage.getItem('marcas') || '[]');
         renderTabla();
 
         function agregarMarca() {

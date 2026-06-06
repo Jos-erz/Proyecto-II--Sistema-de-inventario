@@ -102,7 +102,7 @@
     </main>
 
     <script>
-        let deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
+        var deptos = JSON.parse(localStorage.getItem('departamentos') || '[]');
         renderTabla();
 
         function agregarDepto() {
