@@ -1062,7 +1062,7 @@
 
   <script src="../assets/js/dashboard/dashboard-default.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    (function () {
       var viewBtns = document.querySelectorAll('.view-details-btn');
       viewBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -1074,7 +1074,7 @@
 
       // ── Tabla de Departamentos ─────────────────────────────────────────────
       loadDepartamentosTable();
-    });
+    })();
 
     function loadDepartamentosTable() {
       const tbody = document.getElementById('departamentos-table');
@@ -1218,11 +1218,9 @@
       modal.show();
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      setTimeout(() => {
-        if(window.updateMarcasModelosTable) window.updateMarcasModelosTable();
-      }, 500);
-    });
+    setTimeout(() => {
+      if(window.updateMarcasModelosTable) window.updateMarcasModelosTable();
+    }, 500);
   </script>
   <!-- [Page Specific JS] end -->
   <!-- Required Js -->

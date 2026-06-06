@@ -63,6 +63,8 @@ document.addEventListener('DOMContentLoaded', function () {
     initDetailsButtons();
     updateDashboardTable();
     if(window.updateEmployeeTable) window.updateEmployeeTable();
+    if(window.loadDepartamentosTable) window.loadDepartamentosTable();
+    if(window.updateMarcasModelosTable) window.updateMarcasModelosTable();
   };
 
   function updateDashboardTable() {
