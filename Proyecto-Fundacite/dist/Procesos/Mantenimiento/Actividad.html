@@ -18,7 +18,7 @@
     <main>
         <section class="clase-card">
             <div class="clase-titulo">
-                <h3>Equipos en Mantenimiento</h3>
+                <h3>Equipos en Mantenimiento — Actividad</h3>
             </div>
 
             <div class="table-responsive">
@@ -28,12 +28,13 @@
                             <th style="padding: 10px; text-align: left;">#</th>
                             <th style="padding: 10px; text-align: left;">Equipo / Identificador</th>
                             <th style="padding: 10px; text-align: left;">Tipo</th>
+                            <th style="padding: 10px; text-align: left;">Estado del Ciclo</th>
                             <th style="padding: 10px; text-align: center;">Acción</th>
                         </tr>
                     </thead>
                     <tbody id="lista-mantenimiento-body">
                         <!-- Llenado por JS -->
-                        <tr><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">Cargando...</td></tr>
+                        <tr><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -41,13 +42,40 @@
 
         <!-- Modal Actividad -->
         <div class="modal fade" id="actividadModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content" style="border-radius: 12px; border: none;">
                     <div class="modal-header" style="background: #1e5694; color: white;">
                         <h5 class="modal-title"><i class="ph ph-wrench me-2"></i>Registrar Actividad</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body p-4">
+
+                        <!-- Panel: Diagnóstico Previo (visible solo si existe) -->
+                        <div id="panel-diag-previo" style="display:none; background:#fef3c7; border:1.5px solid #f59e0b; border-radius:10px; padding:16px; margin-bottom:20px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                                <i class="ph ph-stethoscope" style="font-size:18px; color:#b45309;"></i>
+                                <strong style="color:#b45309; font-size:14px;">⚠ Diagnóstico previo registrado</strong>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
+                                <div>
+                                    <span style="font-weight:bold; color:#64748b;">Tipo de Falla:</span><br>
+                                    <span id="prev-tipo" style="color:#1e293b;"></span>
+                                </div>
+                                <div>
+                                    <span style="font-weight:bold; color:#64748b;">Fecha del Diagnóstico:</span><br>
+                                    <span id="prev-fecha-diag" style="color:#1e293b;"></span>
+                                </div>
+                                <div style="grid-column:1/-1;">
+                                    <span style="font-weight:bold; color:#64748b;">Hallazgo:</span><br>
+                                    <span id="prev-hallazgo" style="color:#1e293b;"></span>
+                                </div>
+                                <div style="grid-column:1/-1;">
+                                    <span style="font-weight:bold; color:#64748b;">Respuesta del Técnico:</span><br>
+                                    <span id="prev-respuesta" style="color:#1e293b; white-space:pre-wrap;"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <form id="form-actividad">
                             <input type="hidden" id="act-eq-index">
                             <div class="mb-3">
@@ -59,12 +87,14 @@
                                 <input type="date" id="act-fecha" class="form-control" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
                             </div>
                             <div class="mb-3">
-                                <label for="act-gravedad" style="font-weight: bold; font-size: 13px; color: #4b5563;">Gravedad de la Falla <span class="req">*</span></label>
+                                <label for="act-gravedad" style="font-weight: bold; font-size: 13px; color: #4b5563;">Resultado de la Actividad <span class="req">*</span></label>
                                 <select id="act-gravedad" class="form-select" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
                                     <option value="">Seleccionar...</option>
-                                    <option value="Leve">Leve (Reparado - Pasa a Operativo)</option>
-                                    <option value="Grave">Grave (No reparable - Pasa a Diagnóstico)</option>
+                                    <option value="Leve">✅ Sin fallas graves — Vuelve a Operativo</option>
+                                    <option value="Requiere Reparación">🔧 Necesita Reparación — Pasa a Reparación</option>
+                                    <option value="Grave">🔴 Falla grave — Pasa a Diagnóstico</option>
                                 </select>
+                                <small id="hint-gravedad" style="color:#64748b; font-size:12px; margin-top:4px; display:block;"></small>
                             </div>
                         </form>
                     </div>
@@ -84,35 +114,39 @@
     </main>
 
     <script>
-        // Función para renderizar la tabla de equipos en mantenimiento
+        // Renderiza la tabla de equipos en mantenimiento
         window.renderMantenimiento = function() {
             try {
-                console.log("Iniciando renderMantenimiento...");
                 const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
                 const cuerpo = document.getElementById('lista-mantenimiento-body');
-                
-                if (!cuerpo) {
-                    console.warn("No se encontró el cuerpo de la tabla 'lista-mantenimiento-body'");
-                    return;
-                }
-                
+                if (!cuerpo) return;
+
                 let html = '';
                 let count = 0;
-                
+
                 if (Array.isArray(equipos)) {
                     equipos.forEach((eq, index) => {
-                        // Verificación flexible del estatus
                         const estatus = eq.estatus ? String(eq.estatus).toLowerCase() : '';
                         if (estatus === 'en mantenimiento') {
                             count++;
+                            const tieneDiag = eq.historialDiagnostico && eq.historialDiagnostico.length > 0;
+                            const badgeDiag = tieneDiag
+                                ? `<span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:12px; font-size:11px; font-weight:bold; margin-left:6px; border:1px solid #f59e0b;">⚠ Con Diagnóstico Previo</span>`
+                                : '';
                             html += `
                                 <tr style="border-bottom: 1px solid #eee;">
                                     <td style="padding: 10px; color: #9ba5b2;">${count}</td>
                                     <td style="padding: 10px; font-weight: bold;">
-                                        ${eq.identificador} <br>
+                                        ${eq.identificador} ${badgeDiag}<br>
                                         <small style="color: #64748b; font-weight: normal;">${eq.marca || 'Sin marca'} - ${eq.modelo || 'Sin modelo'}</small>
                                     </td>
                                     <td style="padding: 10px;"><span style="background:#dbeafe; color:#1e5694; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:bold;">${eq.tipo || 'Equipo'}</span></td>
+                                    <td style="padding: 10px;">
+                                        ${tieneDiag
+                                            ? `<span style="background:#fef3c7; color:#92400e; font-size:12px; padding:2px 8px; border-radius:8px;">2ª vuelta (post-diagnóstico)</span>`
+                                            : `<span style="background:#f0fdf4; color:#166534; font-size:12px; padding:2px 8px; border-radius:8px;">1ª actividad</span>`
+                                        }
+                                    </td>
                                     <td style="padding: 10px; text-align: center;">
                                         <button class="btn btn-sm btn-primary" onclick="window.abrirActividad(${index})">Registrar Actividad</button>
                                     </td>
@@ -123,27 +157,49 @@
                 }
 
                 if (count === 0) {
-                    html = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay equipos en mantenimiento actualmente.</td></tr>';
+                    html = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay equipos en mantenimiento actualmente.</td></tr>';
                 }
-                
                 cuerpo.innerHTML = html;
-                console.log("renderMantenimiento finalizado con éxito. Equipos encontrados:", count);
             } catch (error) {
                 console.error('Error renderMantenimiento:', error);
                 const cuerpo = document.getElementById('lista-mantenimiento-body');
-                if (cuerpo) cuerpo.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Error cargando equipos: ' + error.message + '</td></tr>';
+                if (cuerpo) cuerpo.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error cargando equipos: ' + error.message + '</td></tr>';
             }
         };
 
-        // Abrir el modal
+        // Abre el modal y carga datos del equipo (incluyendo diagnóstico previo si existe)
         window.abrirActividad = function(index) {
+            const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            const eq = equipos[index];
+
             document.getElementById('act-eq-index').value = index;
             document.getElementById('form-actividad').reset();
+
+            // Mostrar/ocultar panel de diagnóstico previo
+            const panelDiag = document.getElementById('panel-diag-previo');
+            const tieneDiag = eq && eq.historialDiagnostico && eq.historialDiagnostico.length > 0;
+
+            if (tieneDiag) {
+                const ultimo = eq.historialDiagnostico[eq.historialDiagnostico.length - 1];
+                document.getElementById('prev-tipo').textContent = ultimo.tipo || '—';
+                document.getElementById('prev-hallazgo').textContent = ultimo.hallazgo || '—';
+                document.getElementById('prev-respuesta').textContent = ultimo.respuesta || '—';
+                document.getElementById('prev-fecha-diag').textContent = ultimo.fecha || '—';
+                panelDiag.style.display = 'block';
+
+                // Hint contextual
+                document.getElementById('hint-gravedad').textContent =
+                    'Este equipo regresó del Diagnóstico. Puedes enviarlo a Reparación, devolverlo a Operativo, o enviarlo nuevamente a Diagnóstico.';
+            } else {
+                panelDiag.style.display = 'none';
+                document.getElementById('hint-gravedad').textContent = '';
+            }
+
             const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('actividadModal'));
             modal.show();
         };
 
-        // Guardar la actividad
+        // Guarda la actividad y cambia el estatus del equipo
         window.guardarActividad = function() {
             const nro = document.getElementById('act-nro').value.trim();
             const fecha = document.getElementById('act-fecha').value;
@@ -161,18 +217,26 @@
 
             let nuevoEstatus = '';
             let msjExito = '';
+            let iconExito = 'ph-check-circle';
+            let colorExito = '#16a34a';
 
             if (gravedad === 'Leve') {
                 nuevoEstatus = 'Operativo';
-                msjExito = 'Actividad registrada. El equipo vuelve a estar Operativo.';
+                msjExito = 'Actividad registrada. El equipo vuelve a estar Operativo. ✅';
+            } else if (gravedad === 'Requiere Reparación') {
+                nuevoEstatus = 'Requiere Reparación';
+                msjExito = 'El equipo pasa al módulo de Reparación. 🔧';
+                iconExito = 'ph-wrench';
+                colorExito = '#d97706';
             } else if (gravedad === 'Grave') {
                 nuevoEstatus = 'Requiere Diagnóstico';
-                msjExito = 'Falla grave registrada. El equipo pasa a Diagnóstico.';
+                msjExito = 'Falla grave registrada. El equipo pasa a Diagnóstico. 🔴';
+                iconExito = 'ph-warning';
+                colorExito = '#dc2626';
             }
 
             equipos[index].estatus = nuevoEstatus;
-            
-            if(!equipos[index].historialMantenimiento) equipos[index].historialMantenimiento = [];
+            if (!equipos[index].historialMantenimiento) equipos[index].historialMantenimiento = [];
             equipos[index].historialMantenimiento.push({ nro, fecha, gravedad });
 
             localStorage.setItem('recent_activity', JSON.stringify(equipos));
@@ -180,14 +244,13 @@
             const mEl = document.getElementById('actividadModal');
             const mInst = bootstrap.Modal.getInstance(mEl);
             if (mInst) mInst.hide();
-            
+
             window.renderMantenimiento();
 
-            if (window.showStyledAlert) showStyledAlert(msjExito, 'Éxito', 'ph-check-circle', '#16a34a');
+            if (window.showStyledAlert) showStyledAlert(msjExito, 'Actividad Guardada', iconExito, colorExito);
             else alert(msjExito);
         };
 
-        // Ejecutar con un pequeño delay para asegurar que el DOM esté listo tras la inyección del SPA
         setTimeout(function() {
             if (typeof window.renderMantenimiento === 'function') {
                 window.renderMantenimiento();

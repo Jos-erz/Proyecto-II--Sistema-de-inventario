@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mantenimiento de Equipos | Fundacite Yaracuy</title>
+    <title>Diagnóstico de Equipos | Fundacite Yaracuy</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -28,12 +28,13 @@
                             <th style="padding: 10px; text-align: left;">#</th>
                             <th style="padding: 10px; text-align: left;">Equipo / Identificador</th>
                             <th style="padding: 10px; text-align: left;">Tipo</th>
+                            <th style="padding: 10px; text-align: left;">Etapa</th>
                             <th style="padding: 10px; text-align: center;">Acción</th>
                         </tr>
                     </thead>
                     <tbody id="lista-diagnostico-body">
                         <!-- Llenado por JS -->
-                        <tr><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">Cargando...</td></tr>
+                        <tr><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -41,32 +42,61 @@
 
         <!-- Modal Diagnostico -->
         <div class="modal fade" id="diagnosticoModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content" style="border-radius: 12px; border: none;">
                     <div class="modal-header" style="background: #1e5694; color: white;">
                         <h5 class="modal-title"><i class="ph ph-stethoscope me-2"></i>Realizar Diagnóstico</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body p-4">
+
+                        <!-- Banner diagnóstico final (visible solo si viene de reparación fallida) -->
+                        <div id="banner-diag-final" style="display:none; background:#fee2e2; border:1.5px solid #dc2626; border-radius:10px; padding:14px; margin-bottom:18px; text-align:center;">
+                            <i class="ph ph-warning-octagon" style="font-size:20px; color:#dc2626;"></i>
+                            <strong style="color:#dc2626; font-size:14px; display:block; margin-top:4px;">
+                                Diagnóstico Final — La reparación no tuvo éxito
+                            </strong>
+                            <small style="color:#7f1d1d;">En este punto el equipo solo puede ser desincorporado.</small>
+                        </div>
+
+                        <!-- Panel: Historial de Reparación fallida -->
+                        <div id="panel-rep-fallida" style="display:none; background:#fff7ed; border:1.5px solid #f97316; border-radius:10px; padding:14px; margin-bottom:18px;">
+                            <strong style="color:#c2410c; font-size:13px;">🔧 Reparación previa registrada (Fallida)</strong>
+                            <div style="margin-top:8px; font-size:13px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                                <div><span style="font-weight:bold; color:#64748b;">Técnico:</span><br><span id="rep-tecnico-prev"></span></div>
+                                <div><span style="font-weight:bold; color:#64748b;">Fecha:</span><br><span id="rep-fecha-prev"></span></div>
+                                <div style="grid-column:1/-1;"><span style="font-weight:bold; color:#64748b;">Trabajo realizado:</span><br><span id="rep-trabajo-prev"></span></div>
+                            </div>
+                        </div>
+
                         <form id="form-diagnostico">
                             <input type="hidden" id="diag-eq-index">
+                            <input type="hidden" id="diag-es-final">
                             <div class="mb-3">
                                 <label for="diag-tipo" style="font-weight: bold; font-size: 13px; color: #4b5563;">Tipo de Falla <span class="req">*</span></label>
                                 <input type="text" id="diag-tipo" class="form-control" placeholder="Hardware, Software, Eléctrico" maxlength="20" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
                             </div>
                             <div class="mb-3">
                                 <label for="diag-hallazgo" style="font-weight: bold; font-size: 13px; color: #4b5563;">Hallazgo <span class="req">*</span></label>
-                                <input type="text" id="diag-hallazgo" class="form-control" placeholder="Observación técnica" maxlength="50" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
+                                <input type="text" id="diag-hallazgo" class="form-control" placeholder="Observación técnica" maxlength="100" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
                             </div>
                             <div class="mb-3">
-                                <label for="diag-respuesta" style="font-weight: bold; font-size: 13px; color: #4b5563;">Respuesta <span class="req">*</span></label>
-                                <textarea id="diag-respuesta" class="form-control" rows="3" placeholder="Acción tomada o solución" maxlength="255" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;"></textarea>
+                                <label for="diag-respuesta" style="font-weight: bold; font-size: 13px; color: #4b5563;">Respuesta / Conclusión <span class="req">*</span></label>
+                                <textarea id="diag-respuesta" class="form-control" rows="3" placeholder="Acción tomada o conclusión técnica" maxlength="255" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;"></textarea>
                             </div>
                         </form>
                     </div>
-                    <div class="modal-footer bg-light d-flex justify-content-between">
+                    <div class="modal-footer bg-light" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
                         <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger px-4" onclick="guardarDiagnostico()">Sentenciar (Desincorporar)</button>
+                        <div style="display:flex; gap:8px;">
+                            <!-- Botón "Regresar a Actividades" — se oculta si es diagnóstico final -->
+                            <button type="button" id="btn-regresar-act" class="btn btn-success px-4" onclick="regresarAActividades()">
+                                <i class="ph ph-arrow-counter-clockwise me-1"></i>Regresar a Actividades
+                            </button>
+                            <button type="button" class="btn btn-danger px-4" onclick="confirmarDesincorporar()">
+                                <i class="ph ph-warning-octagon me-1"></i>Desincorporar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -82,31 +112,31 @@
     <script>
         window.renderDiagnostico = function() {
             try {
-                console.log("Iniciando renderDiagnostico...");
                 const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
                 const cuerpo = document.getElementById('lista-diagnostico-body');
-                
-                if (!cuerpo) {
-                    console.warn("No se encontró el cuerpo de la tabla 'lista-diagnostico-body'");
-                    return;
-                }
-                
+                if (!cuerpo) return;
+
                 let html = '';
                 let count = 0;
-                
+
                 if (Array.isArray(equipos)) {
                     equipos.forEach((eq, index) => {
                         const estatus = eq.estatus ? String(eq.estatus).toLowerCase() : '';
                         if (estatus === 'requiere diagnóstico' || estatus === 'requiere diagnostico') {
                             count++;
+                            const esFinal = eq.diagnosticoFinal === true;
+                            const badgeEtapa = esFinal
+                                ? `<span style="background:#fee2e2; color:#dc2626; font-size:11px; padding:2px 8px; border-radius:8px; font-weight:bold;">⚠ Diagnóstico Final</span>`
+                                : `<span style="background:#fef3c7; color:#92400e; font-size:11px; padding:2px 8px; border-radius:8px; font-weight:bold;">Diagnóstico inicial</span>`;
                             html += `
                                 <tr style="border-bottom: 1px solid #eee;">
                                     <td style="padding: 10px; color: #9ba5b2;">${count}</td>
                                     <td style="padding: 10px; font-weight: bold;">
-                                        ${eq.identificador} <br>
+                                        ${eq.identificador}<br>
                                         <small style="color: #64748b; font-weight: normal;">${eq.marca || 'Sin marca'} - ${eq.modelo || 'Sin modelo'}</small>
                                     </td>
                                     <td style="padding: 10px;"><span style="background:#fee2e2; color:#dc2626; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:bold;">${eq.tipo || 'Equipo'}</span></td>
+                                    <td style="padding: 10px;">${badgeEtapa}</td>
                                     <td style="padding: 10px; text-align: center;">
                                         <button class="btn btn-sm btn-primary" onclick="window.abrirDiagnostico(${index})">Realizar Diagnóstico</button>
                                     </td>
@@ -117,71 +147,136 @@
                 }
 
                 if (count === 0) {
-                    html = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay equipos que requieran diagnóstico actualmente.</td></tr>';
+                    html = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay equipos que requieran diagnóstico actualmente.</td></tr>';
                 }
-                
                 cuerpo.innerHTML = html;
-                console.log("renderDiagnostico finalizado con éxito. Equipos encontrados:", count);
             } catch (error) {
                 console.error('Error renderDiagnostico:', error);
                 const cuerpo = document.getElementById('lista-diagnostico-body');
-                if (cuerpo) cuerpo.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Error cargando equipos: ' + error.message + '</td></tr>';
+                if (cuerpo) cuerpo.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error: ' + error.message + '</td></tr>';
             }
         };
 
         window.abrirDiagnostico = function(index) {
+            const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            const eq = equipos[index];
+
             document.getElementById('diag-eq-index').value = index;
             document.getElementById('form-diagnostico').reset();
+
+            const esFinal = eq && eq.diagnosticoFinal === true;
+            document.getElementById('diag-es-final').value = esFinal ? '1' : '0';
+
+            // Banner diagnóstico final
+            document.getElementById('banner-diag-final').style.display = esFinal ? 'block' : 'none';
+
+            // Botón regresar: ocultar si es diagnóstico final
+            const btnRegresar = document.getElementById('btn-regresar-act');
+            btnRegresar.style.display = esFinal ? 'none' : 'inline-block';
+
+            // Panel reparación fallida
+            const panelRepFallida = document.getElementById('panel-rep-fallida');
+            if (esFinal && eq.historialReparacion && eq.historialReparacion.length > 0) {
+                const ultimaRep = eq.historialReparacion[eq.historialReparacion.length - 1];
+                document.getElementById('rep-tecnico-prev').textContent = ultimaRep.tecnico || '—';
+                document.getElementById('rep-fecha-prev').textContent = ultimaRep.fecha || '—';
+                document.getElementById('rep-trabajo-prev').textContent = ultimaRep.trabajo || '—';
+                panelRepFallida.style.display = 'block';
+            } else {
+                panelRepFallida.style.display = 'none';
+            }
+
             const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('diagnosticoModal'));
             modal.show();
         };
 
-        window.guardarDiagnostico = function() {
+        // Valida el formulario y devuelve los datos, o null si hay error
+        function _validarFormDiag() {
             const tipo = document.getElementById('diag-tipo').value.trim();
             const hallazgo = document.getElementById('diag-hallazgo').value.trim();
             const respuesta = document.getElementById('diag-respuesta').value.trim();
-            const index = document.getElementById('diag-eq-index').value;
-
             if (!tipo || !hallazgo || !respuesta) {
                 if (window.showStyledAlert) showStyledAlert('Todos los campos son obligatorios.', 'Error', 'ph-warning', '#dc2626');
                 else alert('Campos incompletos.');
-                return;
+                return null;
             }
+            return { tipo, hallazgo, respuesta };
+        }
 
-            if (window.showStyledQuestion) {
-                window.showStyledQuestion(
-                    '¿Estás seguro de sentenciar este equipo a la desincorporación? Esta acción es irreversible.',
-                    'Confirmar Sentencia',
-                    function() {
-                        window.procesarDiagnostico(index, tipo, hallazgo, respuesta);
-                    }
-                );
-            } else {
-                if (confirm('¿Estás seguro de sentenciar este equipo a la desincorporación?')) {
-                    window.procesarDiagnostico(index, tipo, hallazgo, respuesta);
-                }
-            }
-        };
+        // Botón: Regresar a Actividades
+        window.regresarAActividades = function() {
+            const datos = _validarFormDiag();
+            if (!datos) return;
+            const index = document.getElementById('diag-eq-index').value;
 
-        window.procesarDiagnostico = function(index, tipo, hallazgo, respuesta) {
             const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
             if (!equipos[index]) return;
 
-            equipos[index].estatus = 'Desincorporado';
-            
-            if(!equipos[index].historialDiagnostico) equipos[index].historialDiagnostico = [];
-            equipos[index].historialDiagnostico.push({ tipo, hallazgo, respuesta, fecha: new Date().toLocaleDateString() });
+            if (!equipos[index].historialDiagnostico) equipos[index].historialDiagnostico = [];
+            equipos[index].historialDiagnostico.push({ ...datos, fecha: new Date().toLocaleDateString() });
+
+            // Regresa al estado "En Mantenimiento" para aparecer en Actividad
+            equipos[index].estatus = 'En Mantenimiento';
 
             localStorage.setItem('recent_activity', JSON.stringify(equipos));
 
             const mEl = document.getElementById('diagnosticoModal');
             const mInst = bootstrap.Modal.getInstance(mEl);
             if (mInst) mInst.hide();
-            
+
             window.renderDiagnostico();
 
-            if (window.showStyledAlert) showStyledAlert('El equipo ha sido sentenciado a Desincorporación.', 'Sentencia Ejecutada', 'ph-warning-octagon', '#dc2626');
-            else alert('El equipo ha sido sentenciado a Desincorporación.');
+            if (window.showStyledAlert) showStyledAlert(
+                'Diagnóstico guardado. El equipo regresa a Actividades con el diagnóstico registrado.',
+                'Regreso a Actividades',
+                'ph-arrow-counter-clockwise',
+                '#16a34a'
+            );
+            else alert('El equipo regresa a Actividades.');
+        };
+
+        // Botón: Desincorporar (con confirmación)
+        window.confirmarDesincorporar = function() {
+            const datos = _validarFormDiag();
+            if (!datos) return;
+            const index = document.getElementById('diag-eq-index').value;
+
+            if (window.showStyledQuestion) {
+                window.showStyledQuestion(
+                    '¿Estás seguro de sentenciar este equipo a la Desincorporación? Esta acción es irreversible.',
+                    'Confirmar Desincorporación',
+                    function() { window._procesarDesincorporacion(index, datos); }
+                );
+            } else {
+                if (confirm('¿Desincorporar el equipo? Esta acción es irreversible.')) {
+                    window._procesarDesincorporacion(index, datos);
+                }
+            }
+        };
+
+        window._procesarDesincorporacion = function(index, datos) {
+            const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            if (!equipos[index]) return;
+
+            if (!equipos[index].historialDiagnostico) equipos[index].historialDiagnostico = [];
+            equipos[index].historialDiagnostico.push({ ...datos, fecha: new Date().toLocaleDateString() });
+            equipos[index].estatus = 'Desincorporado';
+
+            localStorage.setItem('recent_activity', JSON.stringify(equipos));
+
+            const mEl = document.getElementById('diagnosticoModal');
+            const mInst = bootstrap.Modal.getInstance(mEl);
+            if (mInst) mInst.hide();
+
+            window.renderDiagnostico();
+
+            if (window.showStyledAlert) showStyledAlert(
+                'El equipo ha sido sentenciado a Desincorporación.',
+                'Sentencia Ejecutada',
+                'ph-warning-octagon',
+                '#dc2626'
+            );
+            else alert('El equipo ha sido Desincorporado.');
         };
 
         setTimeout(function() {
@@ -194,10 +289,6 @@
     <style>
         .req { color: #dc2626; }
     </style>
-        <style>
-            .req { color: #dc2626; }
-        </style>
-    </main>
     <footer>
         <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
     </footer>

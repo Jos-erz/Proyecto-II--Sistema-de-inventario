@@ -278,7 +278,8 @@
         function saveAdq(arr) { localStorage.setItem(ADQ_DRAFT_KEY, JSON.stringify(arr)); }
         function clearAdq() { localStorage.removeItem(ADQ_DRAFT_KEY); }
 
-        // Al entrar a la página, restaurar borrador si existe y renderizar
+        // Al entrar a la página, limpiar borrador anterior y renderizar tabla vacía
+        clearAdq();
         renderTabla();
 
         function toggleSections() {

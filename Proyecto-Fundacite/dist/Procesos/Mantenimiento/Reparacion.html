@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reparación de Equipos | Fundacite Yaracuy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header>
+        <span>Fundacite Yaracuy — Mantenimiento de Equipos Informáticos</span>
+        <img src="Logofundacite.webp" alt="logo" class="logo">
+    </header>
+
+    <main>
+        <section class="clase-card">
+            <div class="clase-titulo">
+                <h3>Equipos en Reparación</h3>
+            </div>
+
+            <div class="table-responsive">
+                <table class="clase-tabla">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #e2e6eb;">
+                            <th style="padding: 10px; text-align: left;">#</th>
+                            <th style="padding: 10px; text-align: left;">Equipo / Identificador</th>
+                            <th style="padding: 10px; text-align: left;">Tipo</th>
+                            <th style="padding: 10px; text-align: left;">Diagnóstico Previo</th>
+                            <th style="padding: 10px; text-align: center;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-reparacion-body">
+                        <tr><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Modal Reparación -->
+        <div class="modal fade" id="reparacionModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content" style="border-radius: 12px; border: none;">
+                    <div class="modal-header" style="background: #d97706; color: white;">
+                        <h5 class="modal-title"><i class="ph ph-wrench me-2"></i>Registrar Reparación</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+
+                        <!-- Panel diagnóstico previo -->
+                        <div id="rep-panel-diag" style="display:none; background:#fef3c7; border:1.5px solid #f59e0b; border-radius:10px; padding:16px; margin-bottom:20px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                                <i class="ph ph-stethoscope" style="font-size:18px; color:#b45309;"></i>
+                                <strong style="color:#b45309; font-size:14px;">Diagnóstico que motiva la Reparación</strong>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px;">
+                                <div>
+                                    <span style="font-weight:bold; color:#64748b;">Tipo de Falla:</span><br>
+                                    <span id="rep-diag-tipo"></span>
+                                </div>
+                                <div>
+                                    <span style="font-weight:bold; color:#64748b;">Fecha Diagnóstico:</span><br>
+                                    <span id="rep-diag-fecha"></span>
+                                </div>
+                                <div style="grid-column:1/-1;">
+                                    <span style="font-weight:bold; color:#64748b;">Hallazgo:</span><br>
+                                    <span id="rep-diag-hallazgo"></span>
+                                </div>
+                                <div style="grid-column:1/-1;">
+                                    <span style="font-weight:bold; color:#64748b;">Respuesta del Técnico:</span><br>
+                                    <span id="rep-diag-respuesta" style="white-space:pre-wrap;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form id="form-reparacion">
+                            <input type="hidden" id="rep-eq-index">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="rep-fecha" style="font-weight: bold; font-size: 13px; color: #4b5563;">Fecha de Reparación <span class="req">*</span></label>
+                                    <input type="date" id="rep-fecha" class="form-control" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="rep-tecnico" style="font-weight: bold; font-size: 13px; color: #4b5563;">Técnico Responsable <span class="req">*</span></label>
+                                    <input type="text" id="rep-tecnico" class="form-control" placeholder="Nombre del técnico" maxlength="50" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="rep-trabajo" style="font-weight: bold; font-size: 13px; color: #4b5563;">Trabajo Realizado <span class="req">*</span></label>
+                                <textarea id="rep-trabajo" class="form-control" rows="3" placeholder="Descripción detallada de la reparación efectuada..." maxlength="400" required style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="rep-resultado" style="font-weight: bold; font-size: 13px; color: #4b5563;">Resultado de la Reparación <span class="req">*</span></label>
+                                <select id="rep-resultado" class="form-select" required onchange="actualizarHintResultado()" style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px; font-weight: bold;">
+                                    <option value="">Seleccionar resultado...</option>
+                                    <option value="Exitosa">✅ Exitosa — El equipo queda Operativo</option>
+                                    <option value="Fallida">❌ Fallida — Pasa a Diagnóstico Final</option>
+                                </select>
+                                <div id="hint-resultado" style="margin-top:8px; padding:10px; border-radius:8px; font-size:13px; display:none;"></div>
+                            </div>
+                            <div class="mb-0">
+                                <label for="rep-observaciones" style="font-weight: bold; font-size: 13px; color: #4b5563;">Observaciones adicionales</label>
+                                <input type="text" id="rep-observaciones" class="form-control" placeholder="Opcional" maxlength="200" style="display: block; width: 100%; padding: 8px; border: 1.5px solid #d1d5db; border-radius: 6px;">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-warning px-4" style="color:white;" onclick="guardarReparacion()">
+                            <i class="ph ph-floppy-disk me-1"></i>Guardar Reparación
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br><br><br>
+        <center>
+            <button type="button" class="btn btn-outline-primary" onclick="if(window.goHome) window.goHome(); else window.location.href='../../dashboard/index.html'">SALIR</button>
+        </center>
+
+    </main>
+
+    <script>
+        window.renderReparacion = function() {
+            try {
+                const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+                const cuerpo = document.getElementById('lista-reparacion-body');
+                if (!cuerpo) return;
+
+                let html = '';
+                let count = 0;
+
+                if (Array.isArray(equipos)) {
+                    equipos.forEach((eq, index) => {
+                        const estatus = eq.estatus ? String(eq.estatus).toLowerCase() : '';
+                        if (estatus === 'requiere reparación' || estatus === 'requiere reparacion') {
+                            count++;
+                            const tieneDiag = eq.historialDiagnostico && eq.historialDiagnostico.length > 0;
+                            const ultimoDiag = tieneDiag ? eq.historialDiagnostico[eq.historialDiagnostico.length - 1] : null;
+
+                            html += `
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 10px; color: #9ba5b2;">${count}</td>
+                                    <td style="padding: 10px; font-weight: bold;">
+                                        ${eq.identificador}<br>
+                                        <small style="color: #64748b; font-weight: normal;">${eq.marca || 'Sin marca'} - ${eq.modelo || 'Sin modelo'}</small>
+                                    </td>
+                                    <td style="padding: 10px;">
+                                        <span style="background:#fef3c7; color:#92400e; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:bold;">${eq.tipo || 'Equipo'}</span>
+                                    </td>
+                                    <td style="padding: 10px; font-size: 13px;">
+                                        ${ultimoDiag
+                                            ? `<strong>${ultimoDiag.tipo}</strong><br><small style="color:#64748b;">${ultimoDiag.hallazgo}</small>`
+                                            : '<span style="color:#9ba5b2;">Sin diagnóstico</span>'
+                                        }
+                                    </td>
+                                    <td style="padding: 10px; text-align: center;">
+                                        <button class="btn btn-sm" style="background:#d97706; color:white;" onclick="window.abrirReparacion(${index})">Registrar Reparación</button>
+                                    </td>
+                                </tr>
+                            `;
+                        }
+                    });
+                }
+
+                if (count === 0) {
+                    html = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: #9ba5b2;">No hay equipos pendientes de reparación actualmente.</td></tr>';
+                }
+                cuerpo.innerHTML = html;
+            } catch (error) {
+                console.error('Error renderReparacion:', error);
+                const cuerpo = document.getElementById('lista-reparacion-body');
+                if (cuerpo) cuerpo.innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">Error: ' + error.message + '</td></tr>';
+            }
+        };
+
+        window.abrirReparacion = function(index) {
+            const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            const eq = equipos[index];
+
+            document.getElementById('rep-eq-index').value = index;
+            document.getElementById('form-reparacion').reset();
+            document.getElementById('hint-resultado').style.display = 'none';
+
+            // Mostrar diagnóstico previo en el panel
+            const panelDiag = document.getElementById('rep-panel-diag');
+            const tieneDiag = eq && eq.historialDiagnostico && eq.historialDiagnostico.length > 0;
+            if (tieneDiag) {
+                const ultimo = eq.historialDiagnostico[eq.historialDiagnostico.length - 1];
+                document.getElementById('rep-diag-tipo').textContent = ultimo.tipo || '—';
+                document.getElementById('rep-diag-fecha').textContent = ultimo.fecha || '—';
+                document.getElementById('rep-diag-hallazgo').textContent = ultimo.hallazgo || '—';
+                document.getElementById('rep-diag-respuesta').textContent = ultimo.respuesta || '—';
+                panelDiag.style.display = 'block';
+            } else {
+                panelDiag.style.display = 'none';
+            }
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('reparacionModal'));
+            modal.show();
+        };
+
+        window.actualizarHintResultado = function() {
+            const resultado = document.getElementById('rep-resultado').value;
+            const hint = document.getElementById('hint-resultado');
+            if (resultado === 'Exitosa') {
+                hint.style.display = 'block';
+                hint.style.background = '#f0fdf4';
+                hint.style.border = '1px solid #16a34a';
+                hint.style.color = '#166534';
+                hint.innerHTML = '<strong>✅ El equipo será marcado como Operativo</strong> y saldrá del ciclo de mantenimiento.';
+            } else if (resultado === 'Fallida') {
+                hint.style.display = 'block';
+                hint.style.background = '#fee2e2';
+                hint.style.border = '1px solid #dc2626';
+                hint.style.color = '#7f1d1d';
+                hint.innerHTML = '<strong>❌ El equipo pasará al Diagnóstico Final</strong> donde únicamente se podrá proceder a la Desincorporación.';
+            } else {
+                hint.style.display = 'none';
+            }
+        };
+
+        window.guardarReparacion = function() {
+            const fecha = document.getElementById('rep-fecha').value;
+            const tecnico = document.getElementById('rep-tecnico').value.trim();
+            const trabajo = document.getElementById('rep-trabajo').value.trim();
+            const resultado = document.getElementById('rep-resultado').value;
+            const observaciones = document.getElementById('rep-observaciones').value.trim();
+            const index = document.getElementById('rep-eq-index').value;
+
+            if (!fecha || !tecnico || !trabajo || !resultado) {
+                if (window.showStyledAlert) showStyledAlert('Todos los campos marcados con * son obligatorios.', 'Error', 'ph-warning', '#dc2626');
+                else alert('Campos incompletos.');
+                return;
+            }
+
+            const equipos = JSON.parse(localStorage.getItem('recent_activity') || '[]');
+            if (!equipos[index]) return;
+
+            // Guardar reparación en historial
+            if (!equipos[index].historialReparacion) equipos[index].historialReparacion = [];
+            equipos[index].historialReparacion.push({ fecha, tecnico, trabajo, resultado, observaciones });
+
+            let nuevoEstatus = '';
+            let msjExito = '';
+            let iconExito = '';
+            let colorExito = '';
+
+            if (resultado === 'Exitosa') {
+                nuevoEstatus = 'Operativo';
+                msjExito = '¡Reparación exitosa! El equipo vuelve a estar Operativo. ✅';
+                iconExito = 'ph-check-circle';
+                colorExito = '#16a34a';
+                equipos[index].diagnosticoFinal = false;
+            } else {
+                // Reparación fallida → diagnóstico final (solo puede desincorporarse)
+                nuevoEstatus = 'Requiere Diagnóstico';
+                equipos[index].diagnosticoFinal = true;
+                msjExito = 'Reparación fallida. El equipo pasa al Diagnóstico Final para Desincorporación.';
+                iconExito = 'ph-warning-octagon';
+                colorExito = '#dc2626';
+            }
+
+            equipos[index].estatus = nuevoEstatus;
+            localStorage.setItem('recent_activity', JSON.stringify(equipos));
+
+            const mEl = document.getElementById('reparacionModal');
+            const mInst = bootstrap.Modal.getInstance(mEl);
+            if (mInst) mInst.hide();
+
+            window.renderReparacion();
+
+            if (window.showStyledAlert) showStyledAlert(msjExito, 'Reparación Registrada', iconExito, colorExito);
+            else alert(msjExito);
+        };
+
+        setTimeout(function() {
+            if (typeof window.renderReparacion === 'function') {
+                window.renderReparacion();
+            }
+        }, 300);
+    </script>
+
+    <style>
+        .req { color: #dc2626; }
+        .row { display: flex; flex-wrap: wrap; margin: 0 -8px; }
+        .col-md-6 { flex: 0 0 50%; max-width: 50%; padding: 0 8px; box-sizing: border-box; }
+        @media (max-width: 600px) { .col-md-6 { flex: 0 0 100%; max-width: 100%; } }
+    </style>
+    <footer>
+        <p>&copy; 2026 Fundacite Yaracuy — Sistema de Inventario</p>
+    </footer>
+
+</body>
+
+</html>
