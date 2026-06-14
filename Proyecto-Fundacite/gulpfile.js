@@ -18,6 +18,9 @@ var browsersync = require('browser-sync');
 // -----------   Datta able Theme Configuration  -----------
 // =======================================================
 
+// Ruta de XAMPP — Gulp copiará los assets compilados aquí automáticamente
+const XAMPP_ASSETS = 'C:/xampp/htdocs/inventario_fundacite/assets';
+
 const caption_show = 'true'; // [ false , true ]
 const preset_theme = 'preset-1'; // [ preset-1 to preset-10 ]
 const dark_layout = 'false'; // [ false , true , default ]
@@ -37,14 +40,14 @@ const version = 'v2.2.0';
 
 //  [ scss compiler ] start
 gulp.task('sass', function () {
-  // main style css
   return gulp
     .src('src/assets/scss/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sass())
     .pipe(autoprefixer())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist/assets/css'));
+    .pipe(gulp.dest('dist/assets/css'))           // destino original
+    .pipe(gulp.dest(XAMPP_ASSETS + '/css'));       // → también a XAMPP
 });
 //  [ scss compiler ] end
 
@@ -132,9 +135,15 @@ gulp.task('build-html', function () {
 
 //  [ build js ] start
 gulp.task('build-js', function () {
-  var layoutjs = gulp.src('src/assets/js/*.js').pipe(gulp.dest('dist/assets/js'));
+  var layoutjs = gulp
+    .src('src/assets/js/*.js')
+    .pipe(gulp.dest('dist/assets/js'))
+    .pipe(gulp.dest(XAMPP_ASSETS + '/js'));        // → también a XAMPP
 
-  var pagesjs = gulp.src('src/assets/js/pages/*.js').pipe(gulp.dest('dist/assets/js/pages'));
+  var pagesjs = gulp
+    .src('src/assets/js/pages/*.js')
+    .pipe(gulp.dest('dist/assets/js/pages'))
+    .pipe(gulp.dest(XAMPP_ASSETS + '/js/pages'));  // → también a XAMPP
 
   return merge(layoutjs, pagesjs);
 });
@@ -178,6 +187,8 @@ gulp.task('imgmin', function () {
 
 //  [ browser reload ] start
 gulp.task('browserSync', function () {
+  // Abre el dist/ local para previsualizar el template puro
+  // El sistema real corre en XAMPP: http://localhost/inventario_fundacite/
   browsersync.init({
     server: {
       baseDir: 'dist/'

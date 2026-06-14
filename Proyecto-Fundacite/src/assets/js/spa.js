@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   </div>
                   <div class="col-md-12">
                     <ul class="breadcrumb mb-0">
-                      <li class="breadcrumb-item"><a href="../dashboard/index.html" class="spa-link">Menu Principal</a></li>
+                      <li class="breadcrumb-item"><a href="../dashboard/index.php" class="spa-link">Menu Principal</a></li>
                       <li class="breadcrumb-item"><a href="javascript: void(0)">${parentText}</a></li>
                       <li class="breadcrumb-item" aria-current="page">${text}</li>
                     </ul>
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   </div>
                   <div class="col-md-12">
                     <ul class="breadcrumb mb-0">
-                      <li class="breadcrumb-item"><a href="../dashboard/index.html" class="spa-link">Menu Principal</a></li>
+                      <li class="breadcrumb-item"><a href="../dashboard/index.php" class="spa-link">Menu Principal</a></li>
                       <li class="breadcrumb-item"><a href="javascript: void(0)">Panel</a></li>
                       <li class="breadcrumb-item" aria-current="page">Inicio</li>
                     </ul>
@@ -624,13 +624,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const href = link.getAttribute('href');
     if (!href || href === '#!' || href.startsWith('http') || href.startsWith('javascript:')) return;
 
-    if (href.includes('.html')) {
+    if (href.includes('.html') || href.includes('.php')) {
       e.preventDefault();
       e.stopPropagation();
 
       const absoluteUrl = new URL(href, window.location.href).pathname;
       
-      if (absoluteUrl.includes('dashboard/index.html')) {
+      if (absoluteUrl.includes('dashboard/index.html') || absoluteUrl.includes('dashboard/index.php')) {
         goHome();
       } else {
         const mtext = link.querySelector('.pc-mtext') || link.querySelector('span') || link;
@@ -707,7 +707,7 @@ document.addEventListener('DOMContentLoaded', function () {
           handleFormButtons(baseUrl);
           window.scrollTo(0, 0);
           
-          if (url.includes('dashboard/index.html')) {
+          if (url.includes('dashboard/index.html') || url.includes('dashboard/index.php')) {
             updateDashboardTable();
           }
         } else {
@@ -729,7 +729,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const button = e.submitter;
           const buttonText = button ? button.value || button.name : 'Continuar';
 
-          if (action.includes('dashboard/index.html')) {
+          if (action.includes('dashboard/index.html') || action.includes('dashboard/index.php')) {
             goHome();
           } else {
             const nextUrl = baseUrl + action;
